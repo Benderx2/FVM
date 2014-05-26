@@ -1,8 +1,10 @@
 ;; Simple test. Compile with FASM.
 ;; macros for fasm
 include 'fvm.inc'
+;; Load R0 with F_CON_WRITE
 ld0 F_CON_WRITE
 ld1 'H'
+;; fcall - function call, call the F_CON_WRITE, with R1 = 'H'
 fcall 
 ld1 'E'
 fcall 
