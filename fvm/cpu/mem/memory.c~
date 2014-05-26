@@ -1,0 +1,9 @@
+#include <stdint.h>
+#include <stdlib.h>
+#include <fvm/cpu/mem/memory.h>
+uint8_t* virtual_to_physical(uint8_t MEM_LOC, uint8_t* MEMORY_BUFFER)
+{
+	uint8_t* a = MEM_LOC + MEMORY_BUFFER;
+	return a;
+}
+
