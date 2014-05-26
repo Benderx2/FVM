@@ -9,7 +9,7 @@ a standard C library for your system. Mainly cstdio, cstdlib, cstdint, cstring, 
 Then you must compile all the *.c files into object files, and link them to create an executable that<br>
 runs on your system. Note that the sources use angle brackets, so you must tell the compiler the source directory through the<br>
 -I flag<br>
-It's recommended that you compile with these options '-Wall -Wextra -pedantic -std=gnu99 -I $FVM_INCLUDE (where FVM_INCLUDE is your directory where you downloaded the sources)'. <br>
+It's recommended that you compile with these options '-Wall -Wextra -pedantic -std=gnu99 -I$FVM_INCLUDE (where FVM_INCLUDE is your directory where you downloaded the sources)'. <br>
 There is a readymade build script for bash users. 
 <h1>Using the emulator</h1>
 The emulator isn't usbale for running at least "okayish" programs (YET.), but there is a hello world program that can be compiled using fasm.<br>
