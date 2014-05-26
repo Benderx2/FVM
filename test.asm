@@ -26,6 +26,7 @@ ld1 'L'
 fcall 
 ld1 'D'
 fcall
+;; Jump to address 0, loop
 jtx 0
 exit
 ;; Infinite Loop
