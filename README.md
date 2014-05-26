@@ -19,8 +19,8 @@ But anyways the syntax is: <br>
 Well, I was always interested in computers, and my interest grew more as I approached<br>
 the OSDev.org people. As I got closer and closer to bare metal, it made me think: "Why not write your own bare metal if you've come this far?" :D<br>
 <h1>Contributing</h1>
-Please DON'T! I will not accept any changes, because this project isn't something like "Taking over the world", it's a learning project<br>
-If you think this crap toy is good for you (the code isn't what I personally call "good", neither the emulator is close to "functional"), better fork() it. 
+Please DON'T! I will not accept any changes, because this project isn't something like "FVM FTW!", it's a personal learning project<br>
+If you think this crap toy is good for you (the code isn't what I personally call "good", neither the emulator is close to "functional"), better fork() it. If you badly want to contribute something (until you burst out), better it be a bug or a suggesstion, no code.
 This readme and the emulator aren't complete btw.
 <h1>TODO</h1>
 Remove all C99 style comments '//'<br>
