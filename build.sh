@@ -1,5 +1,5 @@
 # Better change this to your fucking directory ok?
-export FVM_INCLUDE=~/Desktop/FVM/
+export FVM_INCLUDE=~/FVM
 #!/bin/bash   
 set -o verbose
 gcc -c fvm.c -o fvm.o -I$FVM_INCLUDE -Wall -Wextra -pedantic -std=gnu99
