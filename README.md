@@ -22,3 +22,10 @@ the OSDev.org people. As I got closer and closer to bare metal, it made me think
 Please DON'T! I will not accept any changes, because this project isn't something like "Taking over the world", it's a learning project<br>
 If you think this crap toy is good for you (the code isn't what I personally call "good", neither the emulator is close to "functional"), better fork() it. 
 This readme and the emulator aren't complete btw.
+<h1>TODO</h1>
+Remove all C99 style comments '//'<br>
+Test on more systems <br>
+Add support for CMP, JEX, JNEX instructions (in testing)<br>
+Make fcall better (Current implemation SUCKS)<br>
+Add support for 'MOV' like instruction rather than crap stuff like 'ldn'<br>
+There are some bugs with the current jtx instruction, fix them<br>
