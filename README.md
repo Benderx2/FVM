@@ -1,7 +1,7 @@
 FVM
 ===
 
-Flouronix Virtual Machine. A 16-bit Machine written in C<br>
+Flouronix Virtual Machine. A 32-bit Machine written in C<br>
 <h1>Compiling and Running</h1>
 Please use the GNU C Compiler, (from gcc.gnu.org), and the GNU Binutils. You'll need a <br>
 system linker which produces binaries for your system. Along with all this you'll also need <br>
