@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <fvm/error.h>
 //! Load a ROM into memory
-int loadrom(const char* ROMFILE, uint16_t* addr, uint16_t total_mem)
+int loadrom(const char* ROMFILE, void* addr, uint16_t total_mem)
 {
 	uint32_t rom_file_size;
 	//! open the file in Read + Binary mode

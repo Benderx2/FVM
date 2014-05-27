@@ -12,6 +12,8 @@
 #include <fvm/cpu/opcodes.h>
 #include <fvm/rom/rom.h>
 #include <fvm/fcall/fcall.h>
+#include <fvm/cpu/registers.h>
+int StackCount = 0;
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
 {
@@ -29,7 +31,7 @@ int main (int argc, const char *argv[])
 			FVM_EXIT(FVM_NO_ERR);
 	}
 	else if(strcmp(argv[1], "-h") == 0) {
-		printf("\nFVM - Flouronix Virtual Machine Version [%s]\nUsage: fvm [memory] [ROM File]", FVM_VER);
+		printf("\nFVM - Flouronix Virtual Machine Version [%s]\nUsage: fvm [memory (bytes)] [ROM File]", FVM_VER);
 		FVM_EXIT(FVM_NO_ERR);
 	}
 	//! Proccess command line arguments
@@ -47,7 +49,7 @@ int main (int argc, const char *argv[])
 	//! Set CPU to Default State
 	NewCPU_state->interrupts_enabled = true; //! Enable Interrupts
 	NewCPU_state->fpu_present = false; //! No FPU present
-	NewCPU_state->stack_limit = 0xFFFF; //! Maximum stack limit
+	NewCPU_state->stack_limit = total_mem; //! Maximum stack limit
 	//! Zero all this out
 	NewCPU_state->reserved0 = 0;
 	NewCPU_state->reserved1 = 0;
@@ -71,6 +73,8 @@ int main (int argc, const char *argv[])
 	CPU_regs->r9 = 0x0000;
 	CPU_regs->r10 = 0x0000;
 	CPU_regs->r11 = 0x0000;
+	/* Configure r12 to be the end of memory */
+	CPU_regs->r12 = (FVM_REG_t)total_mem;
 	CPU_regs->ON = 0x0001;
 	//! Fault register must be configured
 	CPU_regs->r16 = E_NOERR; //! Reacts violently to ALL CAPS :)
@@ -80,7 +84,7 @@ int main (int argc, const char *argv[])
 	printf("\nFVM Initialization Complete.");
 	printf("\nPreparing to allocate memory for emulator");
 	FVM_MEM_t* CPU_memory = (FVM_MEM_t*)malloc(sizeof(FVM_MEM_t));
-	uint16_t* PhysicalMEM = (uint16_t*)malloc(total_mem); 
+	FVM_REG_t* PhysicalMEM = (FVM_REG_t*)malloc(total_mem); 
 	CPU_memory->MEM_START = PhysicalMEM;
 	CPU_memory->MEM_SIZE = total_mem;
 	printf("\nEmulator has allocated Memory, Memory Address = [%p], Memory Range = [%d]", (void *)CPU_memory->MEM_START, CPU_memory->MEM_SIZE);
@@ -104,14 +108,63 @@ int main (int argc, const char *argv[])
 				break;
 			//! LD0 - Load R0
 			case FVM_LD0:
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r0 = CPU_regs->r1;
+					CPU_regs->r11 += 2;
+					break;
+				}
 				CPU_regs->r0 = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 += 2;
 				break;
 			//! LD1 Load R1
 			//! ld1 value
 			case FVM_LD1:
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r1 = CPU_regs->r0;
+					CPU_regs->r11 += 2;
+					break;
+				}
 				CPU_regs->r1 = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 += 2;
+				break;
+			/* LD12 -- Load Stack Pointer */
+			case FVM_LD12:
+				CPU_regs->r12 = PhysicalMEM[CPU_regs->r11+1];
+				CPU_regs->r11 += 2;
+				break;
+			/* PUSH -- Push to the stack pointer */
+			case FVM_PUSH:
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r0];
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1) {
+					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r1];
+				}
+				else {
+					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r11+1];
+				}
+				CPU_regs->r12--;
+				StackCount++;
+				if (StackCount >= NewCPU_state->stack_limit)
+				{
+					printf("\n>>>>>>Stack F**K Up. Exitting Emulator\n");
+					FVM_EXIT(FVM_STACK_ERR);
+				}
+				CPU_regs->r11 += 2;
+				break;
+			/* Pop out something from the stack into R1 */
+			case FVM_POP1:
+				CPU_regs->r1 = PhysicalMEM[CPU_regs->r12+1];
+				CPU_regs->r12++;
+				StackCount--;
+				if (StackCount < 0)
+				{
+					printf("\n>>>>>F**K UP: STACK COUNT IS UNDER ZERO (0) : [%d]\n", StackCount);
+				}
+				CPU_regs->r11++;
 				break;
 			//! FCALL - Call the operating system
 			//! fcall call_number
@@ -123,6 +176,10 @@ int main (int argc, const char *argv[])
 			//! jtx address
 			case FVM_JTX:
 				CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1];
+				break;
+			case FVM_DEBUG:
+				printf("\n>>>>>>DEBUG Instruction OPCODE:{%d} Executed, Will print CPU status: \n>R0 : [%d]\n>R1 : [%d]\n>R12 : [%d]\n>R11 : [%d]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r12, CPU_regs->r11);
+				CPU_regs->r11++;	
 				break;
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);

@@ -1,6 +1,6 @@
 # Better change this to your fucking directory ok?
-export FVM_INCLUDE=~/Desktop/FVM/
-#!/bin/bash   
+export FVM_INCLUDE=.
+#!/bin/bash
 set -o verbose
 gcc -c fvm.c -o fvm.o -I$FVM_INCLUDE -Wall -Wextra -pedantic -std=gnu99
 gcc -c fvm/error.c -o error.o -I$FVM_INCLUDE -Wall -Wextra -pedantic -std=gnu99

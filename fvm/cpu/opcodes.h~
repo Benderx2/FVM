@@ -16,6 +16,15 @@
 //! Call Address X
 #define CALLX 0x0005
 //! RETX - Return to Address X
+#define RETX 0x0006
+//! LD12 - Load Stack Pointer 
+#define FVM_LD12 0x0007
+//! PUSH - Push to stack
+#define FVM_PUSH 0x0008
+//! POP1 - Pop something to stack into R1
+#define FVM_POP1 0x0009
+//! DEBUG - halt and print cpu status
+#define FVM_DEBUG 0x000A
 
 #endif
 

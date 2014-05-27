@@ -1,4 +1,4 @@
 #ifndef __ROM_H
 #define __ROM_H
-int loadrom(const char* ROMFILE, uint8_t* addr, uint16_t total_mem);
+int loadrom(const char* ROMFILE, void* addr, uint16_t total_mem);
 #endif

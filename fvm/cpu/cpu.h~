@@ -5,9 +5,10 @@
 #include <stdbool.h>
 #endif
 #include <stdint.h>
-typedef uint16_t FVM_REG_t;
+typedef int32_t FVM_REG_t;
+typedef uint8_t FVM_BYTE_t;
 struct FVM_MEM {
-	uint16_t* MEM_START;
+	FVM_REG_t* MEM_START;
 	uint32_t MEM_SIZE;
 };
 typedef struct FVM_MEM FVM_MEM_t;
@@ -25,31 +26,31 @@ typedef struct FVM_MEM FVM_MEM_t;
 // r15 - Hardware Status Register - Contains Various Information about the hardware
 struct FVM_REGISTERS {
 	/* GPRs R0 - R10 */
-	uint16_t r0;
-	uint16_t r1;
-	uint16_t r2;
-	uint16_t r3;
-	uint16_t r4;
-	uint16_t r5;
-	uint16_t r6;
-	uint16_t r7;
-	uint16_t r8;
-	uint16_t r9;
-	uint16_t r10;
+	FVM_REG_t r0;
+	FVM_REG_t r1;
+	FVM_REG_t r2;
+	FVM_REG_t r3;
+	FVM_REG_t r4;
+	FVM_REG_t r5;
+	FVM_REG_t r6;
+	FVM_REG_t r7;
+	FVM_REG_t r8;
+	FVM_REG_t r9;
+	FVM_REG_t r10;
 	/* Instruction Pointer */
-	uint16_t r11;
+	FVM_REG_t r11;
 	/* Stack Pointer */	
-	uint16_t r12;
+	FVM_REG_t r12;
 	/* Base Pointer */
-	uint16_t r13;
+	FVM_REG_t r13;
 	/* CPU Register */
-	uint16_t r14;
+	FVM_REG_t r14;
 	/* Hardware status register */
-	uint16_t r15;
+	FVM_REG_t r15;
 	/* Fault register */
-	uint16_t r16;
+	FVM_REG_t r16;
 	/* ON Register */
-	uint16_t ON;
+	FVM_REG_t ON;
 };
 typedef struct FVM_REGISTERS FVM_REGISTERS_t;
 struct FVM_CPU_STATE {
@@ -58,7 +59,7 @@ struct FVM_CPU_STATE {
 	// Is an internal CPU present?
 	bool fpu_present;
 	// Stack Limit
-	uint16_t stack_limit;
+	FVM_REG_t stack_limit;
 	// Reserved
 	uint32_t reserved0;	
 	uint32_t reserved1;	
@@ -75,7 +76,8 @@ struct FFLAGS
 	uint16_t G;
 	/* Lesser Than Flag */
 	uint16_t L;
-}
+};
+typedef struct FFLAGS FFLAGS_t;
 typedef struct FVM_CPU_STATE FVM_CPU_STATE_t;
 struct FVM_CPU {
 	/* This is an instance of a new CPU */
