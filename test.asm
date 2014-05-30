@@ -1,13 +1,10 @@
 ;; Simple test. Compile with FASM.
 ;; macros for fasm
 include 'fvm.inc'
-<<<<<<< HEAD
 use32
 org 0
 ;; Align addresses to 4-bytes please
 align 4
-=======
->>>>>>> 64282712f8d2c58e3908683ad227a81fb2f510ab
 push 0x09
 ;; Pop 0x09 into R1
 pop1
@@ -49,7 +46,6 @@ ld1 'D'
 fcall
 ld1 ' '
 fcall
-<<<<<<< HEAD
 ;; Jump to sample1
 jtx sample1
 sample1:
@@ -57,10 +53,8 @@ sample1:
 ld2 sample2
 ;; Exit
 ccall
-=======
 ;; Jump to address 0, loop
 jtx 0
->>>>>>> 64282712f8d2c58e3908683ad227a81fb2f510ab
 exit
 sample2:
 ;; Load String address in R0
