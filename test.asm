@@ -53,8 +53,6 @@ sample1:
 ld2 sample2
 ;; Exit
 ccall
-;; Jump to address 0, loop
-jtx 0
 exit
 sample2:
 ;; Load String address in R0
