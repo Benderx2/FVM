@@ -1,4 +1,3 @@
-use32
 DEFINE F_CON_WRITE 0
 DEFINE R0 -257
 DEFINE R1 -258
@@ -15,6 +14,11 @@ macro ld0 val
 macro ld1 val
 {
 	dd 0x03
+	dd val
+}
+macro ld2 val
+{
+	dd 0x0d
 	dd val
 }
 macro fcall val
@@ -43,3 +47,16 @@ macro exit
 {
 	dd 0xFF
 }
+macro ld1fa0
+{
+	dd 0xB
+}
+macro ccall
+{
+	dd 0xC	
+}
+macro fret
+{
+	dd 0x06
+}
+

@@ -14,9 +14,8 @@
 //! JTX - Jump to Address X
 #define FVM_JTX 0x0004
 //! Call Address X
-#define CALLX 0x0005
 //! RETX - Return to Address X
-#define RETX 0x0006
+#define FVM_RET 0x0006
 //! LD12 - Load Stack Pointer 
 #define FVM_LD12 0x0007
 //! PUSH - Push to stack
@@ -25,5 +24,11 @@
 #define FVM_POP1 0x0009
 //! DEBUG - halt and print cpu status
 #define FVM_DEBUG 0x000A
+//! LD1FA0 - Load R0 from address of FA1
+#define FVM_LD1FA0 0x000B
+// Call from address in R2
+#define FVM_CALL 0x000C
+//! LD2 - Load R2 - Address Register
+#define FVM_LD2 0x000D
 #endif
 

@@ -6,9 +6,9 @@
 #endif
 #include <stdint.h>
 typedef int32_t FVM_REG_t;
-typedef uint8_t FVM_BYTE_t;
+typedef int32_t FVM_BYTE_t;
 struct FVM_MEM {
-	FVM_REG_t* MEM_START;
+	FVM_BYTE_t* MEM_START;
 	uint32_t MEM_SIZE;
 };
 typedef struct FVM_MEM FVM_MEM_t;
@@ -47,8 +47,10 @@ struct FVM_REGISTERS {
 	FVM_REG_t r14;
 	/* Hardware status register */
 	FVM_REG_t r15;
-	/* Fault register */
+	/* Fault registereax */
 	FVM_REG_t r16;
+	/* Return Register */
+	FVM_REG_t r17;
 	/* ON Register */
 	FVM_REG_t ON;
 };
