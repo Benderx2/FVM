@@ -30,5 +30,9 @@
 #define FVM_CALL 0x000C
 //! LD2 - Load R2 - Address Register
 #define FVM_LD2 0x000D
+//! CMPV - Compare Register with value
+#define FVM_CMPV 0x000E
+//! JEX - Jump if Equal to address X
+#define FVM_JEX 0x000F
 #endif
 

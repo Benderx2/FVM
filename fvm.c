@@ -82,6 +82,9 @@ int main (int argc, const char *argv[])
 	//! Now initialize the CPU
 	NewCPU->CPU_REGS = CPU_regs;
 	NewCPU->CPU_STATE = NewCPU_state;
+	printf("\nAllocating Memory for FFLAGS");
+	FFLAGS_t* CPU_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
+	printf("\nFFLAGS Allocation Complete Address = [%p]", (void*)CPU_Flags);
 	printf("\nFVM Initialization Complete.");
 	printf("\nPreparing to allocate memory for emulator");
 	FVM_MEM_t* CPU_memory = (FVM_MEM_t*)malloc(sizeof(FVM_MEM_t));
@@ -198,7 +201,7 @@ int main (int argc, const char *argv[])
 				break;
 			case FVM_DEBUG:
 				printf("\033[31m");
-				printf("\n>>>>>>DEBUG Instruction OPCODE:{%d} Executed, Will print CPU status: \n>R0 : [%d]\n>R1 : [%d]\n>R2 : [%d]\n>R17 : [%d]\n>R12 : [%d]\n>R11 : [%d]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r2, CPU_regs->r17, CPU_regs->r12, CPU_regs->r11);
+				printf("\n>>>>>>DEBUG Instruction OPCODE:{%d} Executed, Will print CPU status: \n>R0 : [%d]\n>R1 : [%d]\n>R2 : [%d]\n>R17 : [%d]\n>R12 : [%d]\n>R11 : [%d]\nE : [%d]\nG : [%d]\nL : [%d]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r2, CPU_regs->r17, CPU_regs->r12, CPU_regs->r11, CPU_Flags->E, CPU_Flags->G, CPU_Flags->L);
 				printf("Memory Contents: \n");
 				uint8_t* tmp = (uint8_t*)PhysicalMEM;
 				uint32_t i = 0;
@@ -211,6 +214,8 @@ int main (int argc, const char *argv[])
 				break;
 			/* LD1FA0 - Load R1 from address of R0, Loads a BYTE from address R0, and increments R0 */
 			case FVM_LD1FA0:
+				/* Null out R1 */
+				CPU_regs->r1 = 0x00000000;
 				CPU_regs->r11 = CPU_regs->r11;
 				uint8_t* tmp2 = (uint8_t*)PhysicalMEM;
 				CPU_regs->r1 = tmp2[CPU_regs->r0];
@@ -227,6 +232,66 @@ int main (int argc, const char *argv[])
 				CPU_regs->r11 = CPU_regs->r17;
 				CPU_regs->r17 = 0;
 				break;
+			/* CMPR - Compare Register with value */
+			case FVM_CMPV:
+				CPU_regs->r11 = CPU_regs->r11;
+				int32_t value = PhysicalMEM[CPU_regs->r11+1+1];
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					if (CPU_regs->r0 == value)
+					{
+						CPU_Flags->E = 1;
+						CPU_Flags->G = 0;
+						CPU_Flags->L = 0;
+					}
+					else if (CPU_regs->r0 < value)
+					{
+						CPU_Flags->E = 0;	
+						CPU_Flags->G = 0;			
+						CPU_Flags->L = 1;
+					}		
+					else if (CPU_regs->r0 > value)
+					{
+						CPU_Flags->E = 0;
+						CPU_Flags->G = 1;
+						CPU_Flags->L = 0;		
+					}
+					CPU_regs->r11 += 3;
+					break;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					if (CPU_regs->r1 == value)
+					{
+						CPU_Flags->E = 1;
+						CPU_Flags->G = 0;
+						CPU_Flags->L = 0;
+					}
+					else if (CPU_regs->r1 < value)
+					{
+						CPU_Flags->E = 0;	
+						CPU_Flags->G = 0;			
+						CPU_Flags->L = 1;
+					}		
+					else if (CPU_regs->r1 > value)
+					{
+						CPU_Flags->E = 0;
+						CPU_Flags->G = 1;
+						CPU_Flags->L = 0;		
+					}	
+					CPU_regs->r11 += 3;
+					break;
+				}
+			case FVM_JEX:
+					if(CPU_Flags->E == 1)
+					{
+						CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
+						break;
+					}
+					else {
+						CPU_regs->r11 += 2;
+						break;
+					}
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
 				CPU_regs->ON = 0x0000;

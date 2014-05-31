@@ -10,7 +10,9 @@ FCALL - Call Operating System specific function (Arguments are R0 and R1)<br>
 CCALL - Jump to Address of value of R2 and set R17 to current instruction pointer + 1<br>
 FRET - Jump to R17 and set R17 to 0.<br>
 PUSH - Push a 32-bit value on stack <br>
-POP1 - Pop off a 32-bit value in R1 <br>
-LD1FA0 - Load a BYTE into R1 from address at R0 <br>
+POP1 - Pop off a 32-bit value from stack in R1 <br>
+LD1FA0 - Load a BYTE into R1 from address at R0 and increment R0<br>
+CMPV - Compare Register with "Value"<br>
+JEX - Jump if Equal Flag is 0<br>
 DEBUG - Dump CPU Status <br>
 EXIT - Exit Program <br>

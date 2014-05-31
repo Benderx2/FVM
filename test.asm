@@ -46,10 +46,12 @@ ld1 'D'
 fcall
 ld1 ' '
 fcall
-;; Jump to sample1
-jtx sample1
+ld0 F_CON_WRITE
+cmpv R0, 0
+jex sample1
+exit
+sample0:
 sample1:
-;; Call Sample2
 ld2 sample2
 ;; Exit
 ccall

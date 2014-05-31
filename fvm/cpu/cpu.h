@@ -71,13 +71,13 @@ struct FVM_CPU_STATE {
 struct FFLAGS 
 {
 	/* Equal Flag */
-	uint16_t E;
+	uint32_t E;
 	/* Zero Flag */
-	uint16_t Z;
+	uint32_t Z;
 	/* Greater Flag */
-	uint16_t G;
+	uint32_t G;
 	/* Lesser Than Flag */
-	uint16_t L;
+	uint32_t L;
 };
 typedef struct FFLAGS FFLAGS_t;
 typedef struct FVM_CPU_STATE FVM_CPU_STATE_t;
