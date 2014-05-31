@@ -24,6 +24,7 @@ macro ld2 val
 macro fcall val
 {
 	dd 0x02
+	dd val
 }
 macro jtx addr
 {
@@ -51,12 +52,24 @@ macro ld1fa0
 {
 	dd 0xB
 }
-macro ccall
+macro ccall addr
 {
 	dd 0xC	
+	dd addr
 }
 macro fret
 {
 	dd 0x06
+}
+macro cmpv register, value
+{
+	dd 0x0E
+	dd register
+	dd value
+}
+macro jex address
+{
+	dd 0x0F
+	dd address
 }
 

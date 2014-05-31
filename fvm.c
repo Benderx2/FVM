@@ -191,8 +191,8 @@ int main (int argc, const char *argv[])
 			//! FCALL - Call the operating system
 			//! fcall call_number
 			case FVM_FCALL:
-				fcall(CPU_regs->r0, CPU_regs->r1);
-				CPU_regs->r11 += 1;
+				fcall(PhysicalMEM[CPU_regs->r11+1], CPU_regs->r1);
+				CPU_regs->r11 += 2;
 				break;
 			//! JTX - Jump to Address X
 			//! jtx address
@@ -224,8 +224,8 @@ int main (int argc, const char *argv[])
 				break;
 			/* Jumps to a procedure whose address is in R2 */
 			case FVM_CALL:
-				CPU_regs->r17 = CPU_regs->r11 + 1;
-				CPU_regs->r11 = CPU_regs->r2 / 4;
+				CPU_regs->r17 = CPU_regs->r11 + 2;
+				CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
 				break;
 			/* Returns from a procedure done by FVM_CALL*/
 			case FVM_RET:

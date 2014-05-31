@@ -9,64 +9,18 @@ push 0x09
 ;; Pop 0x09 into R1
 pop1
 ;; execute debug instruction 
-;debug
+ld1 string
 ;; Load R1 into R0
 ld0 R1
-;; Load R0 with ASCII 'H'
-ld0 'H'
-;; Load R1 with R0
-ld1 R0
-;; Reload R0 with F_CON_WRITE (Means, write to stdout)
-ld0 F_CON_WRITE
-;; Call the Virtual Machine specific function
-;; Load R0 with F_CON_WRITE
-ld0 F_CON_WRITE
-ld1 'H'
-;; fcall - function call, call the F_CON_WRITE, with R1 = 'H'
-fcall 
-ld1 'E'
-fcall 
-ld1 'L'
-fcall 
-ld1 'L'
-fcall 
-ld1 'O'
-fcall 
-ld1 ' '
-fcall 
-ld1 'W'
-fcall 
-ld1 'O'
-fcall 
-ld1 'R'
-fcall 
-ld1 'L'
-fcall 
-ld1 'D'
-fcall
-ld1 ' '
-fcall
-ld0 F_CON_WRITE
-cmpv R0, 0
-jex sample1
+ccall print
 exit
-sample0:
-sample1:
-ld2 sample2
-;; Exit
-ccall
-exit
-sample2:
-;; Load String address in R0
-ld0 string+1
-;; Grab a byte from R0
-ld1fa0
-;; Print that byte
-ld0 F_CON_WRITE
-fcall
-;; Sleep for a while
-slp
-;; return from procedure
-fret
 ;; Some string
-string: db 'AOLX'
+print:
+	ld1fa0
+	fcall 0
+	cmpv R1, 0
+	jex .done
+	jtx print
+.done:
+	fret
+string: db 'Hi Guys, I made an OS :)', 0
