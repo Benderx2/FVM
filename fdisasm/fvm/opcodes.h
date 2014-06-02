@@ -40,5 +40,14 @@
 #define FVM_JLX 0x0011
 //! ST1TA0 - Store R0 to address of R0
 #define FVM_ST1TA0 0x0012
+//! END - End of Source
+#define FVM_END 0xFFFFFFFF
+#ifndef __REGISTERS_H
+#define __REGISTERS_H
+/* Defines OPCODES for several registers */
+#define OPCODE_R0 -257
+#define OPCODE_R1 -258
+#define OPCODE_R2 -259
+#endif
 #endif
 

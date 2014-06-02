@@ -17,7 +17,6 @@ int StackCount = 0;
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
 {
-	printf("\033[36m");
 	printf("Processing Command Line Arguments...");
 	if (argc < FVM_MIN_ARGS)
 	{
@@ -95,7 +94,7 @@ int main (int argc, const char *argv[])
 	printf("\nPreparing to load ROM into memory....");
 	printf("\nROM Image Address to be loaded at: [%d], ROM Name: [%s]", 0x0000, exec_name);
 	loadrom(exec_name, PhysicalMEM, total_mem);
-	printf("\nROM Loaded, now executing code!\nProgram Output: \033[32m\n");
+	printf("\nROM Loaded, \nProgram Output:\n");
 	while(CPU_regs->ON == 0x0001)
 	{
 		switch(PhysicalMEM[CPU_regs->r11])
@@ -118,6 +117,18 @@ int main (int argc, const char *argv[])
 					CPU_regs->r11 += 2;
 					break;
 				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r0 = CPU_regs->r2;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r2 = CPU_regs->r12;
+					CPU_regs->r11 += 2;
+					break;
+				}
 				CPU_regs->r0 = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 += 2;
 				break;
@@ -130,10 +141,22 @@ int main (int argc, const char *argv[])
 					CPU_regs->r11 += 2;
 					break;
 				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r1 = CPU_regs->r2;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r2 = CPU_regs->r12;
+					CPU_regs->r11 += 2;
+					break;
+				}
 				CPU_regs->r1 = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 += 2;
 				break;
-			/* LD2 -- Load Address Register */
+			/* LD2 -- Load R2 */
 			case FVM_LD2:
 				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
 				{
@@ -147,11 +170,35 @@ int main (int argc, const char *argv[])
 					CPU_regs->r11 += 2;
 					break;
 				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r2 = CPU_regs->r12;
+					CPU_regs->r11 += 2;
+					break;
+				}
 				CPU_regs->r2 = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 += 2;
 				break;
 			/* LD12 -- Load Stack Pointer */
 			case FVM_LD12:
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r12 = CPU_regs->r0;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r12 = CPU_regs->r1;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r12 = CPU_regs->r2;
+					CPU_regs->r11 += 2;
+					break;
+				}
 				CPU_regs->r12 = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 += 2;
 				break;
@@ -164,6 +211,10 @@ int main (int argc, const char *argv[])
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1) {
 					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r1];
 				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r2];
+				}
 				else {
 					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r11+1];
 				}
@@ -171,22 +222,34 @@ int main (int argc, const char *argv[])
 				StackCount++;
 				if (StackCount >= NewCPU_state->stack_limit)
 				{
+					printf("\nR12 : [%d]", CPU_regs->r12);
 					printf("\n>>>>>>Stack F**K Up. Exitting Emulator\n");
 					FVM_EXIT(FVM_STACK_ERR);
 				}
 				CPU_regs->r11 += 2;
 				break;
-			/* Pop out something from the stack into R1 */
-			case FVM_POP1:
-				CPU_regs->r1 = PhysicalMEM[CPU_regs->r12+1];
-				CPU_regs->r12++;
-				StackCount--;
+			/* Pop out something from the stack into Reg */
+			case FVM_POPR:
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)	
+				{
+						CPU_regs->r0 = PhysicalMEM[CPU_regs->r12+1];
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+						CPU_regs->r1 = PhysicalMEM[CPU_regs->r12+1];
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r2 = PhysicalMEM[CPU_regs->r12+1];
+				}
+						CPU_regs->r12++;
+						StackCount--;
 				if (StackCount < 0)
 				{
 					
-					printf("\n>>>>>F**K UP: STACK COUNT IS UNDER ZERO (0) : [%d]\n", StackCount);
+					printf("\n>>>>>F**K UP: STACK COUNT IS UNDER ZERO (0) : [%d] R12 : [%d]\n", StackCount, CPU_regs->r12);
 				}
-				CPU_regs->r11++;
+				CPU_regs->r11 += 2;
 				break;
 			//! FCALL - Call the operating system
 			//! fcall call_number
@@ -209,7 +272,6 @@ int main (int argc, const char *argv[])
 				{
 					printf(" %c", tmp[i]);
 				} 
-				printf("\n\033[32m");
 				CPU_regs->r11++;	
 				break;
 			/* LD1FA0 - Load R1 from address of R0, Loads a BYTE from address R0, and increments R0 */
@@ -282,6 +344,7 @@ int main (int argc, const char *argv[])
 					CPU_regs->r11 += 3;
 					break;
 				}
+			/* JEX - Jump if Equal Flag is SET */
 			case FVM_JEX:
 					if(CPU_Flags->E == 1)
 					{
@@ -292,12 +355,44 @@ int main (int argc, const char *argv[])
 						CPU_regs->r11 += 2;
 						break;
 					}
+			/* JGX - Jump if Greater than flag is set */
+			case FVM_JGX:
+					if (CPU_Flags->G == 1)
+					{
+						CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
+						break;
+					}
+					else {
+						CPU_regs->r11 += 2;
+						break;
+					}
+			/* JLX - Jump if lesser than flag is set */
+			case FVM_JLX:
+					if (CPU_Flags->L == 1)
+					{
+						CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
+						break;
+					}
+					else {
+						CPU_regs->r11 += 2;
+						break;
+					}
+			/* ST1TA0 - Store R1 to adddress of R0 (BYTE!) */
+			case FVM_ST1TA0:
+				CPU_regs->r11 = CPU_regs->r11;
+				uint8_t* tmp3 = (uint8_t*)PhysicalMEM;
+				tmp3[CPU_regs->r0] = CPU_regs->r1;
+				CPU_regs->r11++;
+				CPU_regs->r0++;
+				break;
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
 				CPU_regs->ON = 0x0000;
 				FVM_EXIT(FVM_PROGRAM_ERR);
 		}
-	}
+	}	
+	printf("\nEXIT(1) Called by program, press [ENTER] to quit");
+	while(getchar() != '\n');
 	//! Free Up Junk!
 	free(NewCPU);
 	free(NewCPU_state);
