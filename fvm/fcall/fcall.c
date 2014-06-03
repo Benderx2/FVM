@@ -7,8 +7,6 @@
 #ifdef __USE_GRAPHICS
 #include <fvm/sdl.h>
 #endif
-int screen_x;
-int screen_y;
 int fcall(FVM_REG_t r0, FVM_REG_t r1)
 {
 	if (r0 == FCALL_WRITE)

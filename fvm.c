@@ -45,7 +45,7 @@ int main (int argc, const char *argv[])
 	GL_SURFACE_t* bmp = FVM_SDL_loadbmp("init.bmp");
 	if (bmp == NULL)
 	{
-		printf("\nF**K OFF, 'init.bmp' is missing
+		printf("\nF**K OFF, 'init.bmp' is missing");
 	}
 	FVM_SDL_updatedisplay(bmp);
 	bmpfont = FVM_SDL_loadbmp("font.bmp");

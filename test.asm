@@ -8,6 +8,8 @@ align 4
 ld2 490
 ld12 R2
 ;; Load Stack Pointer
+ld2 490
+ld12 R2
 push 0x09
 ;; Pop 0x09 into R1
 popr R1
@@ -36,6 +38,5 @@ print:
 	popr R1
 	popr R0
 	fret
-;; Some string
-string: db 'Hello, World 500 1000 55000 50500050', 0
+string: db 'Hello, World', 0
 END
