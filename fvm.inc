@@ -1,7 +1,8 @@
 DEFINE F_CON_WRITE 0
 DEFINE R0 -257
 DEFINE R1 -258
-
+DEFINE R2 -259
+DEFINE R12 -260
 macro slp 
 {	
 	dd 0x00
@@ -36,9 +37,10 @@ macro push val
 	dd 0x08
 	dd val
 }
-macro pop1
+macro popr reg
 {
 	dd 0x9
+	dd reg
 }
 macro debug
 {
@@ -71,5 +73,18 @@ macro jex address
 {
 	dd 0x0F
 	dd address
+}
+macro st1ta0 
+{
+	dd 0x12
+}
+macro END
+{
+	dd 0xFFFFFFFF
+}
+macro ld12 val
+{
+	dd 0x07
+	dd val
 }
 
