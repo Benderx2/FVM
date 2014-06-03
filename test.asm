@@ -19,6 +19,12 @@ ld1 string
 ld0 R1
 ;; Call print
 ccall print
+read_key:
+	fcall 1
+	cmpv R1, 0
+	jex read_key
+	fcall 0
+	jtx read_key
 exit
 print:
 	;; Push (Save Register States)
@@ -31,12 +37,12 @@ print:
 	;; CMPV - Compare Value, Is R1 == NULL?
 	cmpv R1, 0
 	;; Yes. We're done
-	jex .done
+	jex .done	
 	;; ...Or print again
 	jtx print
 .done:
 	popr R1
 	popr R0
 	fret
-string: db 'Hello, World', 0
+string: db 'Hello FVM World! 1234567890+-*=()', 0x0A, 'Please Type in something: ', 0x0A, 0
 END

@@ -9,6 +9,7 @@
 #define FVM_PROGRAM_ERR -6
 #define FVM_STACK_ERR -7
 #define FVM_FONT_ERR -8
+#define FVM_RESOURCE_ERR -9
 #define FVM_NO_ERR 0
 void FVM_EXIT(int ERR_CODE);
 #endif

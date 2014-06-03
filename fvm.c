@@ -41,15 +41,24 @@ int main (int argc, const char *argv[])
 	uint32_t total_mem = atoi(argv[1]);
 	const char* exec_name = argv[2];
 	#ifdef __USE_GRAPHICS
+	SDL_EnableUNICODE(1);
 	FVM_SDL_init(GL_MAX_X, GL_MAX_Y, GL_COLOR);
 	GL_SURFACE_t* bmp = FVM_SDL_loadbmp("init.bmp");
 	if (bmp == NULL)
 	{
 		printf("\nF**K OFF, 'init.bmp' is missing");
+		FVM_EXIT(FVM_RESOURCE_ERR);
 	}
 	FVM_SDL_updatedisplay(bmp);
 	bmpfont = FVM_SDL_loadbmp("font.bmp");
+	if (bmpfont == NULL)
+	{
+		printf("\nF**K OFF, 'font.bmp' is missing");
+		FVM_EXIT(FVM_RESOURCE_ERR);
+	}
 	FVM_SDL_setwincaption("Flouronix VM (Running)");
+	SDL_printf(bmpfont, screen, "FVM %s Running.......\n", FVM_VER);
+	screen_x = 0;
 	FVM_SDL_updatedisplay(screen);
 	#endif
 	printf("\nFVM Version : %s, Requested Emulator Memory: %u, Requested ROM File: %s", FVM_VER, total_mem, exec_name);
@@ -114,9 +123,25 @@ int main (int argc, const char *argv[])
 	printf("Program Output:\n");
 	#else
 	printf("Program Output : In Graphics Mode (Please see SDL Window instead of Console");
-	#endif 
+	#endif
+	printf("\7"); 
 	while(CPU_regs->ON == 0x0001)
 	{
+		keycode = 0;
+		//! Query for SDL Event
+		//if(SDL_PollEvent(&event))
+		//{
+			//if(event.type == SDL_QUIT)
+			//{
+				//FVM_EXIT(FVM_NO_ERR);
+			//}
+			//If a key was pressed
+            		//else if(event.type == SDL_KEYDOWN)
+            		//{
+			//	SDL_EnableUNICODE( SDL_ENABLE );
+				//keycode = (char)event.key.keysym.unicode;
+			//}
+		//}
 		switch(PhysicalMEM[CPU_regs->r11])
 		{
 			//! Sleep
@@ -274,7 +299,17 @@ int main (int argc, const char *argv[])
 			//! FCALL - Call the operating system
 			//! fcall call_number
 			case FVM_FCALL:
-				fcall(PhysicalMEM[CPU_regs->r11+1], CPU_regs->r1);
+				CPU_regs->r11 = CPU_regs->r11;
+				int a = fcall(PhysicalMEM[CPU_regs->r11+1], CPU_regs->r1);
+				if (a == -2)
+				{
+					CPU_regs->r1 = 0;
+				}
+				else if (a == FCALL_READ)
+				{
+					CPU_regs->r1 = 0;
+					CPU_regs->r1 = keycode;
+				}
 				CPU_regs->r11 += 2;
 				break;
 			//! JTX - Jump to Address X
@@ -292,6 +327,7 @@ int main (int argc, const char *argv[])
 				{
 					printf(" %c", tmp[i]);
 				} 
+				printf("DICKBOOM!");
 				CPU_regs->r11++;	
 				break;
 			/* LD1FA0 - Load R1 from address of R0, Loads a BYTE from address R0, and increments R0 */
@@ -411,14 +447,27 @@ int main (int argc, const char *argv[])
 				FVM_EXIT(FVM_PROGRAM_ERR);
 		}
 	}	
-	printf("\nEXIT(1) Called by program, press [ENTER] to quit");
-	while(getchar() != '\n');
-	//! Free Up Junk!
+	printf("\nEXIT(1) Called by program");
+	int END = 0;	
+	while (END == 0)
+	{
+		if(SDL_PollEvent(&event))
+		{
+			if(event.type == SDL_QUIT)
+			{
+				END = 1;
+			}
+			else {
+			}
+		}
+	}
 	free(NewCPU);
 	free(NewCPU_state);
 	free(CPU_regs);
 	free(CPU_memory);
 	free(PhysicalMEM);
 	FVM_EXIT(FVM_NO_ERR);
+	//! Just in case if we haven't rescheduled
 	return FVM_NO_ERR;
+	for(;;);
 }

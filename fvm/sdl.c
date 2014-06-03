@@ -2,11 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdarg.h>
 #include <SDL.h>
 #include <fvm/sdl.h>
 #include <fvm/error.h>
 int screen_x = 0;
 int screen_y = 0;
+uint32_t keycode;
+GL_EVENT_t event;
 GL_SURFACE_t* screen;
 GL_SURFACE_t* bmpfont;
 SDL_Color COLOR = { 255, 255, 255, 60 };
@@ -74,11 +77,23 @@ void FVM_SDL_putentry(GL_SURFACE_t* font, GL_SURFACE_t* dest, int x, int y, unsi
 }
 void FVM_SDL_putchar(GL_SURFACE_t* font, GL_SURFACE_t* dest, unsigned char c)
 {	
-	FVM_SDL_putentry(font, dest, screen_x, screen_y, c);
-	screen_x += 10;
-	if (screen_x >= 320)
+	if (c == '\n')
 	{
-		screen_y += 10;
+		screen_x = 0;
+		screen_y += 20;
+	}
+	else {
+		FVM_SDL_putentry(font, dest, screen_x, screen_y, c);
+		screen_x += 10;
+	}
+	if (screen_x >= GL_MAX_X)
+	{
+		screen_y += 20;
+		screen_x = 0;
+	}
+	if (screen_y >= GL_MAX_Y)
+	{
+		// TODO: Implement scrolling
 	}
 }
 void FVM_SDL_putstring(GL_SURFACE_t* font, GL_SURFACE_t* dest, const char* string)
@@ -90,3 +105,26 @@ void FVM_SDL_putstring(GL_SURFACE_t* font, GL_SURFACE_t* dest, const char* strin
 		i++;
 	}
 }
+void FVM_SDL_putstringat(GL_SURFACE_t* font, GL_SURFACE_t* dest, int x, int y, const char* string)
+{
+	unsigned int i = 0;
+	while (i <= strlen(string))
+	{
+		FVM_SDL_putentry(font, dest, x, y, string[i]);
+		i++;
+	}
+}
+void SDL_printf(GL_SURFACE_t* font, GL_SURFACE_t*  dest, const char *fmt, ...) {
+	if (strlen(fmt) > 512)
+	{
+		return;
+	}
+       	char buf[512];
+	buf[512] = '\0'; // Null terminate
+        va_list pvar;
+        va_start(pvar, fmt);
+
+        vsnprintf(buf, 511, fmt, pvar);
+        FVM_SDL_putstring(font, dest, buf);
+}
+
