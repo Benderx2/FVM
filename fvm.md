@@ -1,9 +1,9 @@
 FVM Instruction Set
 ===
 SLP - Processor Sleep<br>
-LD0 - Load Register R0 with value (if value is -258 then it means that Load R0 with value of R1)<br>
-LD1 - Load Register R1 with value (if value is -257 then it means that Load R0 with value of R0)<br>
-LD2 - Load Register R2 <br>
+LD0 - Load R0<br>
+LD1 - Load R1<br>
+LD2 - Load R2 <br>
 LD3 - Load R3 <br>
 LD4 - Load R4 <br>
 LD5 - Load R5 <br>
@@ -20,6 +20,6 @@ CMPV - Compare Register with "Value"<br>
 JEX - Jump if Equal Flag is set<br>
 JGX, JLX - Jump if Greater Than and Lesser than Flag are set<br>
 DEBUG - Dump CPU Status <br>
-LITH - Load Interrupt. (R0 - Interrupt number (max 255), R1 - Interrupt address (aligned))
+LITH - Load Interrupt. (R0 - Interrupt number (max 255), R1 - Interrupt address (aligned))<br>
 INT - Execute interrupt <br>
 EXIT - Exit Program <br>
