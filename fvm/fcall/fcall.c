@@ -10,9 +10,9 @@
 #endif
 uint32_t retval;
 uint32_t returnval;
-int fcall(FVM_REG_t r0, FVM_REG_t r1)
+int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2)
 {
-	if (r0 == FCALL_WRITE)
+	if (callnum == FCALL_WRITE)
 		{
 			#ifdef __USE_GRAPHICS
 			putchar(r1);
@@ -25,7 +25,7 @@ int fcall(FVM_REG_t r0, FVM_REG_t r1)
 			//! Temporary buffer
 			return 0;
 		}
-	else if(r0 == FCALL_READ)
+	else if(callnum == FCALL_READ)
 	{
 	#ifdef __USE_GRAPHICS
 		keycode = 0;
@@ -50,6 +50,10 @@ int fcall(FVM_REG_t r0, FVM_REG_t r1)
 			return -2;
 		}
 	#endif
+	}
+	else if (callnum == FCALL_PUTPIXEL)
+	{
+		FVM_SDL_putpixel(screen,r0, r1, r2);
 	}
 	return F_ERR;
 }

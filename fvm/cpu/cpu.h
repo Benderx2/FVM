@@ -3,6 +3,7 @@
 #ifndef __cplusplus
 //! C doesn't have bool support.
 #include <stdbool.h>
+#include <fvm/cpu/cpu.h>
 #endif
 #include <stdint.h>
 typedef int32_t FVM_REG_t;
@@ -51,6 +52,8 @@ struct FVM_REGISTERS {
 	FVM_REG_t r16;
 	/* Return Register */
 	FVM_REG_t r17;
+	/* IRET Register */
+	FVM_REG_t r18;
 	/* ON Register */
 	FVM_REG_t ON;
 };

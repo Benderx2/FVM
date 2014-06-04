@@ -3,6 +3,9 @@ DEFINE F_CON_READ 1
 DEFINE R0 -257
 DEFINE R1 -258
 DEFINE R2 -259
+DEFINE R3 -261
+DEFINE R4 -262
+DEFINE R5 -263
 DEFINE R12 -260
 macro slp 
 {	
@@ -21,6 +24,21 @@ macro ld1 val
 macro ld2 val
 {
 	dd 0x0d
+	dd val
+}
+macro ld3 val
+{
+	dd 0x16
+	dd val
+}
+macro ld4 val
+{
+	dd 0x17
+	dd val
+}
+macro ld5 val
+{
+	dd 0x18
 	dd val
 }
 macro fcall val
@@ -55,12 +73,12 @@ macro ld1fa0
 {
 	dd 0xB
 }
-macro ccall addr
+macro call addr
 {
 	dd 0xC	
 	dd addr
 }
-macro fret
+macro ret
 {
 	dd 0x06
 }
@@ -87,5 +105,28 @@ macro ld12 val
 {
 	dd 0x07
 	dd val
+}
+macro int number
+{
+	dd 0x13
+	dd number
+}
+macro lith
+{
+	dd 0x14
+}
+macro iret
+{
+	dd 0x15
+}
+macro decr reg
+{
+	dd 0x19
+	dd reg
+}
+macro incr reg
+{
+	dd 0x1A
+	dd reg
 }
 

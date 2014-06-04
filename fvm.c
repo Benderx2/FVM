@@ -8,6 +8,7 @@
 #include <fvm/version.h>
 #include <fvm/cpu/cpu.h>
 #include <fvm/cpu/fault.h>
+#include <fvm/cpu/idt.h>
 #include <fvm/cpu/mem/memory.h>
 #include <fvm/cpu/opcodes.h>
 #include <fvm/rom/rom.h>
@@ -16,6 +17,7 @@
 #ifdef __USE_GRAPHICS
 #include <fvm/sdl.h>
 #endif
+FVM_IDT_HANDLER_t FVM_IDTR[256];
 int StackCount = 0;
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
@@ -118,6 +120,7 @@ int main (int argc, const char *argv[])
 	printf("\nPreparing to load ROM into memory....");
 	printf("\nROM Image Address to be loaded at: [%d], ROM Name: [%s]", 0x0000, exec_name);
 	loadrom(exec_name, PhysicalMEM, total_mem);
+	CPU_regs->r11 = 0;
 	printf("\nROM Loaded, \n");
 	#ifndef __USE_GRAPHICS
 	printf("Program Output:\n");
@@ -127,7 +130,7 @@ int main (int argc, const char *argv[])
 	printf("\7"); 
 	while(CPU_regs->ON == 0x0001)
 	{
-		keycode = 0;
+		//keycode = 0;
 		//! Query for SDL Event
 		//if(SDL_PollEvent(&event))
 		//{
@@ -170,7 +173,25 @@ int main (int argc, const char *argv[])
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
 				{
-					CPU_regs->r2 = CPU_regs->r12;
+					CPU_regs->r0 = CPU_regs->r12;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r0 = CPU_regs->r3;
+					CPU_regs->r11 += 2;
+					break;	
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r0 = CPU_regs->r4;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r0 = CPU_regs->r5;
 					CPU_regs->r11 += 2;
 					break;
 				}
@@ -194,7 +215,25 @@ int main (int argc, const char *argv[])
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
 				{
-					CPU_regs->r2 = CPU_regs->r12;
+					CPU_regs->r1 = CPU_regs->r12;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r1 = CPU_regs->r3;
+					CPU_regs->r11 += 2;
+					break;	
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r1 = CPU_regs->r4;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r1 = CPU_regs->r5;
 					CPU_regs->r11 += 2;
 					break;
 				}
@@ -221,7 +260,130 @@ int main (int argc, const char *argv[])
 					CPU_regs->r11 += 2;
 					break;
 				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r2 = CPU_regs->r3;
+					CPU_regs->r11 += 2;
+					break;	
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r2 = CPU_regs->r4;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r2 = CPU_regs->r5;
+					CPU_regs->r11 += 2;
+					break;
+				}
 				CPU_regs->r2 = PhysicalMEM[CPU_regs->r11+1];
+				CPU_regs->r11 += 2;
+				break;
+			/* LD3 Load R3 */
+			case FVM_LD3:
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r3 = CPU_regs->r0;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r3 = CPU_regs->r1;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r3 = CPU_regs->r12;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r3 = CPU_regs->r4;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r5 = CPU_regs->r5;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				CPU_regs->r3 = PhysicalMEM[CPU_regs->r11+1];
+				CPU_regs->r11 += 2;
+				break;
+			/* LD4 - Load R4 */
+			case FVM_LD4:
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r4 = CPU_regs->r0;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r4 = CPU_regs->r1;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r4 = CPU_regs->r12;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r4 = CPU_regs->r3;
+					CPU_regs->r11 += 2;
+					break;	
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r4 = CPU_regs->r5;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				CPU_regs->r4 = PhysicalMEM[CPU_regs->r11+1];
+				CPU_regs->r11 += 2;
+				break;
+			/* LD5 - Load R5 */
+			case FVM_LD5:
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r5 = CPU_regs->r0;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r5 = CPU_regs->r1;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r5 = CPU_regs->r12;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r5 = CPU_regs->r3;
+					CPU_regs->r11 += 2;
+					break;	
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r5 = CPU_regs->r4;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				CPU_regs->r5 = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 += 2;
 				break;
 			/* LD12 -- Load Stack Pointer */
@@ -244,6 +406,24 @@ int main (int argc, const char *argv[])
 					CPU_regs->r11 += 2;
 					break;
 				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r12 = CPU_regs->r3;
+					CPU_regs->r11 += 2;
+					break;	
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r12 = CPU_regs->r4;
+					CPU_regs->r11 += 2;
+					break;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r12 = CPU_regs->r5;
+					CPU_regs->r11 += 2;
+					break;
+				}
 				CPU_regs->r12 = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 += 2;
 				break;
@@ -251,14 +431,31 @@ int main (int argc, const char *argv[])
 			case FVM_PUSH:
 				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
 				{
-					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r0];
+					PhysicalMEM[CPU_regs->r12] = CPU_regs->r0;
 				}
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1) {
-					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r1];
+					printf("\nPUSH R1: [%d]", CPU_regs->r1);
+					PhysicalMEM[CPU_regs->r12] = CPU_regs->r1;
 				}
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
 				{
-					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r2];
+					PhysicalMEM[CPU_regs->r12] = CPU_regs->r2;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					PhysicalMEM[CPU_regs->r12] = CPU_regs->r3;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					PhysicalMEM[CPU_regs->r12] = CPU_regs->r4;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					PhysicalMEM[CPU_regs->r12] = CPU_regs->r5;
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					PhysicalMEM[CPU_regs->r12] = CPU_regs->r12;
 				}
 				else {
 					PhysicalMEM[CPU_regs->r12] = PhysicalMEM[CPU_regs->r11+1];
@@ -282,10 +479,27 @@ int main (int argc, const char *argv[])
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
 				{
 						CPU_regs->r1 = PhysicalMEM[CPU_regs->r12+1];
+						printf("\nR1: [%d]", CPU_regs->r1);
 				}
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
 				{
 					CPU_regs->r2 = PhysicalMEM[CPU_regs->r12+1];
+				}	
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r3 = PhysicalMEM[CPU_regs->r12+1];
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r4 = PhysicalMEM[CPU_regs->r12+1];
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r5 = PhysicalMEM[CPU_regs->r12+1];
+				}
+				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r12 = PhysicalMEM[CPU_regs->r12+1];
 				}
 						CPU_regs->r12++;
 						StackCount--;
@@ -300,7 +514,7 @@ int main (int argc, const char *argv[])
 			//! fcall call_number
 			case FVM_FCALL:
 				CPU_regs->r11 = CPU_regs->r11;
-				int a = fcall(PhysicalMEM[CPU_regs->r11+1], CPU_regs->r1);
+				int a = fcall(PhysicalMEM[CPU_regs->r11+1], CPU_regs->r1, CPU_regs->r0, CPU_regs->r2);
 				if (a == -2)
 				{
 					CPU_regs->r1 = 0;
@@ -319,7 +533,7 @@ int main (int argc, const char *argv[])
 				break;
 			case FVM_DEBUG:
 				printf("\033[31m");
-				printf("\n>>>>>>DEBUG Instruction OPCODE:{%d} Executed, Will print CPU status: \n>R0 : [%d]\n>R1 : [%d]\n>R2 : [%d]\n>R17 : [%d]\n>R12 : [%d]\n>R11 : [%d]\nE : [%d]\nG : [%d]\nL : [%d]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r2, CPU_regs->r17, CPU_regs->r12, CPU_regs->r11, CPU_Flags->E, CPU_Flags->G, CPU_Flags->L);
+				printf("\n>>>>>>DEBUG Instruction OPCODE:{%d} Executed, Will print CPU status: \n>R0 : [%d]\n>R1 : [%d]\n>R2 : [%d]\n>R3 [%d]\n>R4: [%d]\nR5 [%d]\n>R17 : [%d]\n>R12 : [%d]\n>R11 : [%d]\nE : [%d]\nG : [%d]\nL : [%d]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r2, CPU_regs->r3, CPU_regs->r4, CPU_regs->r5, CPU_regs->r17, CPU_regs->r12, CPU_regs->r11, CPU_Flags->E, CPU_Flags->G, CPU_Flags->L);
 				printf("Memory Contents: \n");
 				uint8_t* tmp = (uint8_t*)PhysicalMEM;
 				uint32_t i = 0;
@@ -342,13 +556,24 @@ int main (int argc, const char *argv[])
 				break;
 			/* Jumps to a procedure whose address is in R2 */
 			case FVM_CALL:
-				CPU_regs->r17 = CPU_regs->r11 + 2;
+				CPU_regs->r11 = CPU_regs->r11;
+				uint32_t returnaddress = CPU_regs->r11 + 2;
+				PhysicalMEM[CPU_regs->r12] = returnaddress;
 				CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
+				CPU_regs->r12--;
+				StackCount++;
+				//printf("\nR12: [%d]", CPU_regs->r12);
+				//CPU_regs->r17 = CPU_regs->r11 + 2;
+				//CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
 				break;
 			/* Returns from a procedure done by FVM_CALL*/
 			case FVM_RET:
-				CPU_regs->r11 = CPU_regs->r17;
-				CPU_regs->r17 = 0;
+				//CPU_regs->r11 = CPU_regs->r17;
+				//CPU_regs->r17 = 0;
+				CPU_regs->r11 = PhysicalMEM[CPU_regs->r12+1];
+				CPU_regs->r12++;
+				///printf("\nR12: [%d]", CPU_regs->r12);
+				StackCount--;
 				break;
 			/* CMPR - Compare Register with value */
 			case FVM_CMPV:
@@ -440,6 +665,87 @@ int main (int argc, const char *argv[])
 				tmp3[CPU_regs->r0] = CPU_regs->r1;
 				CPU_regs->r11++;
 				CPU_regs->r0++;
+				break;
+			/* Interrupt - Interrupt the processor */	
+			case FVM_INT:
+				CPU_regs->r18 = CPU_regs->r11 + 2;
+				uint32_t inum = PhysicalMEM[CPU_regs->r11+1]; 
+				CPU_regs->r11 = FVM_IDTR[inum].address;
+				break;
+			/* Register interrupt Handler */
+			/* R0 : Interrupt number */
+			/* R1 : Interrupt Handler Address */
+			case FVM_LITH:
+				FVM_IDTR[CPU_regs->r0].address = CPU_regs->r1 / 4;
+				CPU_regs->r11++;
+				break;
+			/* IRETX - Return from interrupt */
+			case FVM_IRETX:
+				CPU_regs->r11 = CPU_regs->r18;
+				break;
+			/* INCR - Increment Reigster */
+			case FVM_INCR:
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r0++;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r1++;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r2++;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r3++;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r4++;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r5++;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r12++;
+				}
+				CPU_regs->r11 += 2;
+				break;
+			/* DECR - Decrement Register */
+			case FVM_DECR:
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r0--;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r1--;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r2--;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r3--;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r4--;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r5--;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					CPU_regs->r12--;
+				}
+				CPU_regs->r11 += 2;
 				break;
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);

@@ -40,5 +40,21 @@
 #define FVM_JLX 0x0011
 //! ST1TA0 - Store R0 to address of R0
 #define FVM_ST1TA0 0x0012
+//! INT - Interrupt the processor
+#define FVM_INT 0x0013
+// LITH - Load Interrupt Handler
+#define FVM_LITH 0x0014
+// IRETX - Return from interrupt
+#define FVM_IRETX 0x00015
+// LD3 - Load R3
+#define FVM_LD3 0x00016
+// LD4 - Load R4
+#define FVM_LD4 0x00017
+// LD5 - Load R5
+#define FVM_LD5 0x00018
+// INCR - Increment Register
+#define FVM_INCR 0x0019
+// DECR - Decrement Register
+#define FVM_DECR 0x001A
 #endif
 
