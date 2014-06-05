@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <time.h>
 #include <fvm/error.h>
 #include <fvm/version.h>
 #include <fvm/cpu/cpu.h>
@@ -17,7 +18,10 @@
 #ifdef __USE_GRAPHICS
 #include <fvm/sdl.h>
 #endif
+// FVM IDT
 FVM_IDT_HANDLER_t FVM_IDTR[256];
+// FVM Timer
+clock_t FVM_TIMER = 0;
 int StackCount = 0;
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
@@ -128,8 +132,21 @@ int main (int argc, const char *argv[])
 	printf("Program Output : In Graphics Mode (Please see SDL Window instead of Console");
 	#endif
 	printf("\7"); 
+	FVM_TIMER = clock();
 	while(CPU_regs->ON == 0x0001)
 	{
+		//! Any pending clocks?
+		if(((clock() - FVM_TIMER) / CLOCKS_PER_SEC) >= 1 && FVM_IDTR[1].address != 0)
+		{
+			CPU_regs->r11 = CPU_regs->r11;
+			printf("\nTR11: [%d]", CPU_regs->r11);
+			uint32_t returnaddress2 = CPU_regs->r11;
+			PhysicalMEM[CPU_regs->r12] = returnaddress2;
+			CPU_regs->r12--;
+			StackCount++;
+			CPU_regs->r11 = FVM_IDTR[1].address;
+			FVM_TIMER = clock();
+		}
 		//keycode = 0;
 		//! Query for SDL Event
 		//if(SDL_PollEvent(&event))
@@ -145,6 +162,7 @@ int main (int argc, const char *argv[])
 				//keycode = (char)event.key.keysym.unicode;
 			//}
 		//}
+		
 		switch(PhysicalMEM[CPU_regs->r11])
 		{
 			//! Sleep
@@ -390,41 +408,41 @@ int main (int argc, const char *argv[])
 			case FVM_LD12:
 				if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
 				{
-					CPU_regs->r12 = CPU_regs->r0;
+					CPU_regs->r12 = CPU_regs->r0 / 4;
 					CPU_regs->r11 += 2;
 					break;
 				}
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
 				{
-					CPU_regs->r12 = CPU_regs->r1;
+					CPU_regs->r12 = CPU_regs->r1 / 4;
 					CPU_regs->r11 += 2;
 					break;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
 				{
-					CPU_regs->r12 = CPU_regs->r2;
+					CPU_regs->r12 = CPU_regs->r2 / 4;
 					CPU_regs->r11 += 2;
 					break;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
 				{
-					CPU_regs->r12 = CPU_regs->r3;
+					CPU_regs->r12 = CPU_regs->r3 / 4;
 					CPU_regs->r11 += 2;
 					break;	
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
 				{
-					CPU_regs->r12 = CPU_regs->r4;
+					CPU_regs->r12 = CPU_regs->r4 / 4;
 					CPU_regs->r11 += 2;
 					break;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
 				{
-					CPU_regs->r12 = CPU_regs->r5;
+					CPU_regs->r12 = CPU_regs->r5 / 4;
 					CPU_regs->r11 += 2;
 					break;
 				}
-				CPU_regs->r12 = PhysicalMEM[CPU_regs->r11+1];
+				CPU_regs->r12 = PhysicalMEM[CPU_regs->r11+1] / 4;
 				CPU_regs->r11 += 2;
 				break;
 			/* PUSH -- Push to the stack pointer */
@@ -662,13 +680,18 @@ int main (int argc, const char *argv[])
 			case FVM_ST1TA0:
 				CPU_regs->r11 = CPU_regs->r11;
 				uint8_t* tmp3 = (uint8_t*)PhysicalMEM;
-				tmp3[CPU_regs->r0] = CPU_regs->r1;
+				tmp3[CPU_regs->r0] = (uint8_t)CPU_regs->r1;
+				printf("%c", tmp3[CPU_regs->r0]);
 				CPU_regs->r11++;
 				CPU_regs->r0++;
 				break;
 			/* Interrupt - Interrupt the processor */	
 			case FVM_INT:
-				CPU_regs->r18 = CPU_regs->r11 + 2;
+				CPU_regs->r11 = CPU_regs->r11;
+				uint32_t returnaddress1 = CPU_regs->r11 + 2;
+				PhysicalMEM[CPU_regs->r12] = returnaddress1;
+				CPU_regs->r12--;
+				StackCount++;
 				uint32_t inum = PhysicalMEM[CPU_regs->r11+1]; 
 				CPU_regs->r11 = FVM_IDTR[inum].address;
 				break;
@@ -681,7 +704,11 @@ int main (int argc, const char *argv[])
 				break;
 			/* IRETX - Return from interrupt */
 			case FVM_IRETX:
-				CPU_regs->r11 = CPU_regs->r18;
+				printf("FRET()");
+				CPU_regs->r11 = PhysicalMEM[CPU_regs->r12+1];
+				printf("R11:%d", CPU_regs->r11);
+				CPU_regs->r12++;
+				StackCount--;
 				break;
 			/* INCR - Increment Reigster */
 			case FVM_INCR:

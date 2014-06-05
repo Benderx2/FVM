@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <SDL.h>
 #include <SDL_keyboard.h>
-#define GL_MAX_X 400
-#define GL_MAX_Y 300
+#define GL_MAX_X 640
+#define GL_MAX_Y 480
 #define GL_COLOR 32
 #define FONT_WIDTH 10
 #define FONT_HEIGHT 20
