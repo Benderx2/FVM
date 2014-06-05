@@ -15,7 +15,6 @@ int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2)
 	if (callnum == FCALL_WRITE)
 		{
 			#ifdef __USE_GRAPHICS
-			putchar(r1);
 			FVM_SDL_putchar(bmpfont, screen, r1);
 			FVM_SDL_updatedisplay(screen);
 			#else 

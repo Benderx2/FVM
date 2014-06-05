@@ -136,10 +136,9 @@ int main (int argc, const char *argv[])
 	while(CPU_regs->ON == 0x0001)
 	{
 		//! Any pending clocks?
-		if(((clock() - FVM_TIMER) / CLOCKS_PER_SEC) >= 1 && FVM_IDTR[1].address != 0)
+		if(((clock() - FVM_TIMER) / (CLOCKS_PER_SEC/10000)) >= 1 && FVM_IDTR[1].address != 0)
 		{
 			CPU_regs->r11 = CPU_regs->r11;
-			printf("\nTR11: [%d]", CPU_regs->r11);
 			uint32_t returnaddress2 = CPU_regs->r11;
 			PhysicalMEM[CPU_regs->r12] = returnaddress2;
 			CPU_regs->r12--;
@@ -149,19 +148,19 @@ int main (int argc, const char *argv[])
 		}
 		//keycode = 0;
 		//! Query for SDL Event
-		//if(SDL_PollEvent(&event))
-		//{
-			//if(event.type == SDL_QUIT)
-			//{
-				//FVM_EXIT(FVM_NO_ERR);
-			//}
+		if(SDL_PollEvent(&event))
+		{
+			if(event.type == SDL_QUIT)
+			{
+				FVM_EXIT(FVM_NO_ERR);
+			}
 			//If a key was pressed
             		//else if(event.type == SDL_KEYDOWN)
             		//{
 			//	SDL_EnableUNICODE( SDL_ENABLE );
 				//keycode = (char)event.key.keysym.unicode;
 			//}
-		//}
+		}
 		
 		switch(PhysicalMEM[CPU_regs->r11])
 		{
@@ -452,7 +451,6 @@ int main (int argc, const char *argv[])
 					PhysicalMEM[CPU_regs->r12] = CPU_regs->r0;
 				}
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1) {
-					printf("\nPUSH R1: [%d]", CPU_regs->r1);
 					PhysicalMEM[CPU_regs->r12] = CPU_regs->r1;
 				}
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
@@ -497,7 +495,6 @@ int main (int argc, const char *argv[])
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
 				{
 						CPU_regs->r1 = PhysicalMEM[CPU_regs->r12+1];
-						printf("\nR1: [%d]", CPU_regs->r1);
 				}
 				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
 				{
@@ -559,7 +556,7 @@ int main (int argc, const char *argv[])
 				{
 					printf(" %c", tmp[i]);
 				} 
-				printf("DICKBOOM!");
+				printf("\033[0m");
 				CPU_regs->r11++;	
 				break;
 			/* LD1FA0 - Load R1 from address of R0, Loads a BYTE from address R0, and increments R0 */
@@ -597,52 +594,77 @@ int main (int argc, const char *argv[])
 			case FVM_CMPV:
 				CPU_regs->r11 = CPU_regs->r11;
 				int32_t value = PhysicalMEM[CPU_regs->r11+1+1];
-				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				int32_t EVAL1 = PhysicalMEM[CPU_regs->r11+1];
+				if (value == OPCODE_R0)
 				{
-					if (CPU_regs->r0 == value)
-					{
+					value = CPU_regs->r0;
+				}
+				else if (value == OPCODE_R1)
+				{
+					value = CPU_regs->r1;
+				}
+				else if (value == OPCODE_R2)
+				{
+					value = CPU_regs->r2;	
+				}
+				else if (value == OPCODE_R3)
+				{
+					value = CPU_regs->r3;
+				}
+				else if (value == OPCODE_R4)
+				{
+					value = CPU_regs->r4;	
+				}
+				else if (value == OPCODE_R5)
+				{
+					value = CPU_regs->r5;	
+				}
+				// Check the comparision operand
+				if (EVAL1 == OPCODE_R0)
+				{
+					EVAL1 = CPU_regs->r0;
+				}
+				else if(EVAL1 == OPCODE_R1)
+				{
+					EVAL1 = CPU_regs->r1;
+				}
+				else if(EVAL1 == OPCODE_R2)
+				{
+					EVAL1 = CPU_regs->r2;
+				}
+				else if(EVAL1 == OPCODE_R3)
+				{
+					EVAL1 = CPU_regs->r3;
+				}
+				else if(EVAL1 == OPCODE_R4)
+				{
+					EVAL1 = CPU_regs->r4;
+				}
+				else if(EVAL1 == OPCODE_R5)
+				{
+					EVAL1 = CPU_regs->r5;
+				}
+				// Do the actual comparision
+				if (EVAL1 == value)
+				{
 						CPU_Flags->E = 1;
 						CPU_Flags->G = 0;
 						CPU_Flags->L = 0;
-					}
-					else if (CPU_regs->r0 < value)
-					{
-						CPU_Flags->E = 0;	
-						CPU_Flags->G = 0;			
-						CPU_Flags->L = 1;
-					}		
-					else if (CPU_regs->r0 > value)
-					{
-						CPU_Flags->E = 0;
-						CPU_Flags->G = 1;
-						CPU_Flags->L = 0;		
-					}
-					CPU_regs->r11 += 3;
-					break;
 				}
-				else if (PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				else if (EVAL1 < value)
 				{
-					if (CPU_regs->r1 == value)
-					{
-						CPU_Flags->E = 1;
-						CPU_Flags->G = 0;
-						CPU_Flags->L = 0;
-					}
-					else if (CPU_regs->r1 < value)
-					{
 						CPU_Flags->E = 0;	
 						CPU_Flags->G = 0;			
 						CPU_Flags->L = 1;
-					}		
-					else if (CPU_regs->r1 > value)
-					{
+				}		
+				else if (EVAL1 > value)
+				{
 						CPU_Flags->E = 0;
 						CPU_Flags->G = 1;
 						CPU_Flags->L = 0;		
-					}	
-					CPU_regs->r11 += 3;
-					break;
 				}
+				CPU_regs->r11 += 3;
+				break;
 			/* JEX - Jump if Equal Flag is SET */
 			case FVM_JEX:
 					if(CPU_Flags->E == 1)
@@ -704,9 +726,7 @@ int main (int argc, const char *argv[])
 				break;
 			/* IRETX - Return from interrupt */
 			case FVM_IRETX:
-				printf("FRET()");
 				CPU_regs->r11 = PhysicalMEM[CPU_regs->r12+1];
-				printf("R11:%d", CPU_regs->r11);
 				CPU_regs->r12++;
 				StackCount--;
 				break;

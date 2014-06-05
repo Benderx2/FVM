@@ -20,6 +20,7 @@ typedef int GL_CORD_t;
 extern uint32_t keycode;
 extern GL_SURFACE_t* screen;
 extern GL_SURFACE_t* bmpfont;
+extern GL_SURFACE_t* bmp;
 extern int screen_x;
 extern int screen_y;
 extern GL_EVENT_t event;

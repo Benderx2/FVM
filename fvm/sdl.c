@@ -94,21 +94,28 @@ void FVM_SDL_putchar(GL_SURFACE_t* font, GL_SURFACE_t* dest, unsigned char c)
 	// Are we at the end of the screen?
 	if (screen_y >= GL_MAX_Y)
 	{
+		GL_SURFACE_t* image = FVM_SDL_loadbmp("init.bmp");
 		// Yes. Scroll
 		// This basically involves copying a part of the screen on the screen itself
-		SDL_Rect temp, temp2;
+		SDL_Rect temp, temp2, temp3;
 		temp.x = 0; // X co-ordinate 
 		temp.y = FONT_HEIGHT; // Y-cord First Row (In scrolling, the 0th row is replaced by the 1st row)
 		temp.h = GL_MAX_Y; // ...And copy till the last line
 		temp.w = GL_MAX_X; // Width should be the screen
-		// COPY!
-		SDL_BlitSurface(screen, &temp, screen, NULL);
+		// 
+		temp3.x = 0;	
+		temp3.y = 0;
+		temp3.h = GL_MAX_Y - FONT_HEIGHT;
+		temp3.w = GL_MAX_X;
 		//! Clear last line
 		temp2.x = 0;
 		temp2.y = GL_MAX_Y - FONT_HEIGHT;
-		temp2.h = FONT_HEIGHT;
-		temp2.w = GL_MAX_X;	
-		SDL_FillRect(screen, &temp2, 0x000000);
+		//temp2.h = FONT_HEIGHT;
+		//temp2.w = GL_MAX_X;	
+		//SDL_FillRect(image, &temp2, 0x000000);
+		// COPY!
+		SDL_BlitSurface(screen, &temp, image, &temp3);
+		SDL_BlitSurface(image, NULL, screen, NULL);
 		// Set X to 0
 		screen_x = 0;
 		// Set Y to last row 
