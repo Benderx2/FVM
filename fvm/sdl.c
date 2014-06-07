@@ -82,6 +82,21 @@ void FVM_SDL_putchar(GL_SURFACE_t* font, GL_SURFACE_t* dest, unsigned char c)
 		screen_x = 0;
 		screen_y += 20;
 	}
+	else if (c == '\b')
+	{
+		if(screen_x == 0 && screen_y == 0)
+		{
+			return;
+		}
+		else if(screen_x == 0 && screen_y != 0) {
+			screen_y -= FONT_HEIGHT;
+			screen_x = GL_MAX_X;
+			return;
+		}
+		else {	
+			screen_x -= FONT_WIDTH;
+		}
+	}
 	else {
 		FVM_SDL_putentry(font, dest, screen_x, screen_y, c);
 		screen_x += 10;

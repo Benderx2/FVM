@@ -53,6 +53,7 @@ int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2)
 	else if (callnum == FCALL_PUTPIXEL)
 	{
 		FVM_SDL_putpixel(screen,r0, r1, r2);
+		FVM_SDL_updatedisplay(screen);
 	}
 	return F_ERR;
 }

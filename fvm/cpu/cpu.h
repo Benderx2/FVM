@@ -6,6 +6,7 @@
 #include <fvm/cpu/cpu.h>
 #endif
 #include <stdint.h>
+#include <fvm/cpu/idt.h>
 typedef int32_t FVM_REG_t;
 typedef int32_t FVM_BYTE_t;
 struct FVM_MEM {
@@ -91,4 +92,6 @@ struct FVM_CPU {
 	FVM_CPU_STATE_t* CPU_STATE;
 };
 typedef struct FVM_CPU FVM_CPU_t;
+extern int StackCount;
+void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, int32_t* PhysicalMEM, FFLAGS_t* CPU_Flags, FVM_IDT_HANDLER_t* FVM_IDTR, FVM_CPU_STATE_t* NewCPU_state);
 #endif
