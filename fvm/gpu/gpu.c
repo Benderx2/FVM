@@ -8,6 +8,8 @@ int gpu_emulate_instruction(GPU_REGS_t* GPU_REGS, FVM_MEM_t* Memory, CPU_REGS_t*
 {
 	switch(Memory[CPU_REGS->r11)
 	{
-		
+		// COS? - Calculate Cosine
+		case GPU_COS:
+			
 	}
 }
