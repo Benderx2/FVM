@@ -5,17 +5,15 @@ use32
 org 0
 ;; Align addresses to 4-bytes please
 align 4
-push 0x09
-;; Pop 0x09 into R1
-popr R1
 ;; Load Address of string into R1
 ld0 string
 ld1 'H'
+;; Store 'H'
 st1ta0
-debug
 ld0 string
 ;; Call print
 call print
+;; Sample shit
 ld0 25
 ld1 30
 ld2 0xF
@@ -26,6 +24,7 @@ decr R5
 ld0 0x01 ;; Register ISR 1
 ld1 int1a ;; Load ISR Handler Address
 lith ;; Load Interrupt!
+;; Task 0 Infinite Loop!
 read_key:
 	jtx read_key
 task1:
@@ -58,25 +57,36 @@ print:
 	popr R0
 	ret
 int1a:
-	ld12 800 ;; Load kernel stack
+	ld12 1000 ;; Load kernel stack
+	;; Push R0 and R1
 	push R0
 	push R1
+	;; Load the variable which_task
 	ld0 which_task
+	;; Grab the byte
 	ld1fa0
+	;; Is R0 = 0 (Switch to task 1)
 	cmpv R1, 0
 	jex .task_1
+	;; Or 1 (switch to task 1)
 	cmpv R1, 1
 	jex .task_2
 .task_1:
+	;; Set the which_task to 1 (will make the routine switch to the next task)
 	ld0 which_task
+	;; Load 1
 	ld1 1
+	;; Copy it
 	st1ta0
+	;; Pop off CPU Registers
 	popr R1
 	popr R0
+	;; Push the address / 4 (since it needs to be aligned)
 	push task1 / 4
+	;; Return from interrupt
 	iret
 .task_2:
-	ld0 which_task
+	ld0 which_task 
 	ld1 0
 	st1ta0
 	popr R1
