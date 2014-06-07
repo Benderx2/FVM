@@ -27,21 +27,21 @@ int StackCount = 0;
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
 {
-	printf("Processing Command Line Arguments...");
+	printf("Processing Command Line Arguments...\n");
 	if (argc < FVM_MIN_ARGS)
 	{
 		//! F**K OFF
-		printf("\nF**K OFF., FVM_ERR[%d]", FVM_NO_ARG_ERR);
-		printf("\nFVM - Flouronix Virtual Machine Version [%s]\nUsage: fvm [memory] [ROM File]", FVM_VER);
+		printf("F**K OFF., FVM_ERR[%d]\n", FVM_NO_ARG_ERR);
+		printf("FVM - Flouronix Virtual Machine Version [%s]\nUsage: fvm [memory] [ROM File]\n", FVM_VER);
 		FVM_EXIT(FVM_FATAL_ERR);
 	}
 	if(strcmp(argv[1], "-v") == 0)
 	{
-			printf("\nFVM Version : %s", FVM_VER);
+			printf("FVM Version : %s\n", FVM_VER);
 			FVM_EXIT(FVM_NO_ERR);
 	}
 	else if(strcmp(argv[1], "-h") == 0) {
-		printf("\nFVM - Flouronix Virtual Machine Version [%s]\nUsage: fvm [memory (bytes)] [ROM File]", FVM_VER);
+		printf("FVM - Flouronix Virtual Machine Version [%s]\nUsage: fvm [memory (bytes)] [ROM File]\n", FVM_VER);
 		FVM_EXIT(FVM_NO_ERR);
 	}
 	//! Proccess command line arguments
@@ -53,14 +53,14 @@ int main (int argc, const char *argv[])
 	GL_SURFACE_t* bmp = FVM_SDL_loadbmp("init.bmp");
 	if (bmp == NULL)
 	{
-		printf("\nF**K OFF, 'init.bmp' is missing");
+		printf("F**K OFF, 'init.bmp' is missing\n");
 		FVM_EXIT(FVM_RESOURCE_ERR);
 	}
 	FVM_SDL_updatedisplay(bmp);
 	bmpfont = FVM_SDL_loadbmp("font.bmp");
 	if (bmpfont == NULL)
 	{
-		printf("\nF**K OFF, 'font.bmp' is missing");
+		printf("F**K OFF, 'font.bmp' is missing\n");
 		FVM_EXIT(FVM_RESOURCE_ERR);
 	}
 	FVM_SDL_setwincaption("Flouronix VM (Running)");
@@ -68,15 +68,15 @@ int main (int argc, const char *argv[])
 	screen_x = 0;
 	FVM_SDL_updatedisplay(screen);
 	#endif
-	printf("\nFVM Version : %s, Requested Emulator Memory: %u, Requested ROM File: %s", FVM_VER, total_mem, exec_name);
-	printf("\nCreating New FVM CPU......");
+	printf("FVM Version : %s, Requested Emulator Memory: %u, Requested ROM File: %s\n", FVM_VER, total_mem, exec_name);
+	printf("Creating New FVM CPU......\n");
 	//! Create a new CPU
 	FVM_CPU_t* NewCPU = (FVM_CPU_t*)malloc(sizeof(FVM_CPU_t));
-	printf("\nAllocated Memory for CPU struct, address: %p", (void*)NewCPU);
+	printf("Allocated Memory for CPU struct, address: %p\n", (void*)NewCPU);
 	//! Create a CPU state
-	printf("\nNow Creating New CPU state.....");
+	printf("Now Creating New CPU state.....\n");
 	FVM_CPU_STATE_t* NewCPU_state = (FVM_CPU_STATE_t*)malloc(sizeof(FVM_CPU_STATE_t));
-	printf("\nCPU State Created, address : %p", (void*)NewCPU_state);
+	printf("CPU State Created, address : %p\n", (void*)NewCPU_state);
 	//! Set CPU to Default State
 	NewCPU_state->interrupts_enabled = true; //! Enable Interrupts
 	NewCPU_state->fpu_present = false; //! No FPU present
@@ -112,25 +112,25 @@ int main (int argc, const char *argv[])
 	//! Now initialize the CPU
 	NewCPU->CPU_REGS = CPU_regs;
 	NewCPU->CPU_STATE = NewCPU_state;
-	printf("\nAllocating Memory for FFLAGS");
+	printf("Allocating Memory for FFLAGS\n");
 	FFLAGS_t* CPU_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
-	printf("\nFFLAGS Allocation Complete Address = [%p]", (void*)CPU_Flags);
-	printf("\nFVM Initialization Complete.");
-	printf("\nPreparing to allocate memory for emulator");
+	printf("FFLAGS Allocation Complete Address = [%p]\n", (void*)CPU_Flags);
+	printf("FVM Initialization Complete.\n");
+	printf("Preparing to allocate memory for emulator\n");
 	FVM_MEM_t* CPU_memory = (FVM_MEM_t*)malloc(sizeof(FVM_MEM_t));
 	FVM_BYTE_t* PhysicalMEM = (FVM_BYTE_t*)malloc(total_mem); 
 	CPU_memory->MEM_START = PhysicalMEM;
 	CPU_memory->MEM_SIZE = total_mem;
-	printf("\nEmulator has allocated Memory, Memory Address = [%p], Memory Range = [%d]", (void *)CPU_memory->MEM_START, CPU_memory->MEM_SIZE);
-	printf("\nPreparing to load ROM into memory....");
-	printf("\nROM Image Address to be loaded at: [%d], ROM Name: [%s]", 0x0000, exec_name);
+	printf("Emulator has allocated Memory, Memory Address = [%p], Memory Range = [%d]\n", (void *)CPU_memory->MEM_START, CPU_memory->MEM_SIZE);
+	printf("Preparing to load ROM into memory....\n");
+	printf("ROM Image Address to be loaded at: [%d], ROM Name: [%s]\n", 0x0000, exec_name);
 	loadrom(exec_name, PhysicalMEM, total_mem);
 	CPU_regs->r11 = 0;
 	printf("\nROM Loaded, \n");
 	#ifndef __USE_GRAPHICS
 	printf("Program Output:\n");
 	#else
-	printf("Program Output : In Graphics Mode (Please see SDL Window instead of Console");
+	printf("Program Output : In Graphics Mode (Please see SDL Window instead of Console)\n");
 	#endif
 	printf("\7"); 
 	FVM_TIMER = clock();
@@ -151,7 +151,7 @@ int main (int argc, const char *argv[])
 		emulate_FVM_instruction(CPU_regs, PhysicalMEM, CPU_Flags, FVM_IDTR, NewCPU_state);
 		
 	}
-	printf("\nEXIT(1) Called by program");
+	printf("EXIT(1) Called by program\n");
 	int END = 0;	
 	while (END == 0)
 	{
