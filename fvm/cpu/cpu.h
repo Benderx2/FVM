@@ -3,10 +3,10 @@
 #ifndef __cplusplus
 //! C doesn't have bool support.
 #include <stdbool.h>
-#include <fvm/cpu/cpu.h>
 #endif
 #include <stdint.h>
 #include <fvm/cpu/idt.h>
+#include <fvm/cpu/ports.h>
 typedef int32_t FVM_REG_t;
 typedef int32_t FVM_BYTE_t;
 struct FVM_MEM {
@@ -93,5 +93,5 @@ struct FVM_CPU {
 };
 typedef struct FVM_CPU FVM_CPU_t;
 extern int StackCount;
-void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, int32_t* PhysicalMEM,  FVM_IDT_HANDLER_t* FVM_IDTR);
+void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* PhysicalMEM,  FVM_IDT_HANDLER_t* FVM_IDTR);
 #endif

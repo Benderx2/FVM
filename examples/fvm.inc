@@ -129,4 +129,15 @@ macro incr reg
 	dd 0x1A
 	dd reg
 }
+macro in0 port
+{
+	dd 0x1D
+	dd port
+}
+macro out0 port
+{
+	dd 0x1C
+	dd port
+}
+
 

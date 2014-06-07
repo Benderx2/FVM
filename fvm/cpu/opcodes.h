@@ -56,5 +56,11 @@
 #define FVM_INCR 0x0019
 // DECR - Decrement Register
 #define FVM_DECR 0x001A
+// GPU PREFIX Another 4-byte GPU Instruction is next
+#define FVM_GPU_PREFIX 0x001B
+// OUT0 -- Send a DWORD to port
+#define FVM_OUT0 0x001C
+// IN0 -- Send a DWORD to port
+#define FVM_IN0 0x001D
 #endif
 

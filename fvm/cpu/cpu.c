@@ -4,11 +4,12 @@
 #include <fvm/cpu/opcodes.h>
 #include <fvm/cpu/registers.h>
 #include <fvm/cpu/cpu.h>
+#include <fvm/cpu/ports.h>
 #include <fvm/fcall/fcall.h>
 #include <fvm/cpu/idt.h>
 #include <fvm/error.h>
 #include <fvm/sdl.h>
-void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, int32_t* PhysicalMEM,  FVM_IDT_HANDLER_t* FVM_IDTR)
+void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* PhysicalMEM,  FVM_IDT_HANDLER_t* FVM_IDTR)
 {
 	switch(PhysicalMEM[CPU_regs->r11])
 		{
@@ -641,6 +642,16 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r12--;
 				}
+				CPU_regs->r11 += 2;
+				break;
+			// Grab a DWORD from port
+			case FVM_IN0:
+				CPU_regs->r0 = IOADDRSPACE[CPU_regs->r11+1].in;
+				CPU_regs->r11 += 2;
+				break;
+			/* Send a DWORD to port */
+			case FVM_OUT0:
+				IOADDRSPACE[CPU_regs->r11+1].out = CPU_regs->r0;
 				CPU_regs->r11 += 2;
 				break;
 			default:

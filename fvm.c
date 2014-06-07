@@ -17,11 +17,14 @@
 #include <fvm/rom/rom.h>
 #include <fvm/fcall/fcall.h>
 #include <fvm/cpu/registers.h>
+#include <fvm/cpu/ports.h>
+#include <fvm/gpu/gpu.h>
 #ifdef __USE_GRAPHICS
 #include <fvm/sdl.h>
 #endif
 // FVM IDT
-FVM_IDT_HANDLER_t FVM_IDTR[256];
+FVM_IDT_HANDLER_t FVM_IDTR[0xFF];
+FVM_PORT_t FVM_IOADDR_SPACE[0xFF];
 // FVM Timer
 clock_t FVM_TIMER = 0;
 int StackCount = 0;
@@ -149,7 +152,7 @@ int main (int argc, const char *argv[])
 			FVM_TIMER = clock();
 		}
 		// Emulate instruction then
-		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, PhysicalMEM, FVM_IDTR);
+		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, PhysicalMEM, FVM_IDTR);
 		
 	}
 	printf("EXIT(1) Called by program\n");
