@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <float.h>
 #include <time.h>
 #include <fvm/bitutils.h>
 #include <fvm/error.h>
@@ -148,7 +149,7 @@ int main (int argc, const char *argv[])
 			FVM_TIMER = clock();
 		}
 		// Emulate instruction then
-		emulate_FVM_instruction(CPU_regs, PhysicalMEM, CPU_Flags, FVM_IDTR, NewCPU_state);
+		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, PhysicalMEM, FVM_IDTR);
 		
 	}
 	printf("EXIT(1) Called by program\n");
