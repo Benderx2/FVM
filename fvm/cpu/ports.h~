@@ -1,7 +1,0 @@
-#ifndef __PORTS_H
-#define __PORTS_H
-struct FVM_PORT {
-	uint8_t port_in;
-	uint8_t port_out;
-}
-#endif
