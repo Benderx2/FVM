@@ -31,7 +31,7 @@ DECR - Subtract 1 from register <br>
 MUL - Multiply Register with R0<br>
 DIV - Divide Register with R0<br>
 EXIT - Exit Program <br>
-<h1>Not implement instructions (Planned)</h1>
+<h1>Not implemented instructions (Planned)</h1>
 AND - Bitwise AND <br>
 OR - Bitwise OR <br>
 BTS - Bit set <br>
