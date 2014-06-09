@@ -19,6 +19,9 @@
 #include <fvm/cpu/registers.h>
 #include <fvm/cpu/ports.h>
 #include <fvm/gpu/gpu.h>
+#ifdef _USE_PTHREAD
+#include <pthread.h>
+#endif
 #ifdef __USE_GRAPHICS
 #include <fvm/sdl.h>
 #endif
@@ -57,10 +60,16 @@ int main (int argc, const char *argv[])
 	GL_SURFACE_t* bmp = FVM_SDL_loadbmp("init.bmp");
 	if (bmp == NULL)
 	{
-		printf("F**K OFF, 'init.bmp' is missing\n");
-		FVM_EXIT(FVM_RESOURCE_ERR);
+			printf("F**K OFF, 'init.bmp' is missing\n");
+			FVM_EXIT(FVM_RESOURCE_ERR);
 	}
 	FVM_SDL_updatedisplay(bmp);
+	GL_RECT_t BlueRect;
+	BlueRect.x = 0;
+	BlueRect.y = 0;
+	BlueRect.h = GL_MAX_Y;
+	BlueRect.w = GL_MAX_X;
+	SDL_FillRect(screen, &BlueRect, 0x08088A);
 	bmpfont = FVM_SDL_loadbmp("font.bmp");
 	if (bmpfont == NULL)
 	{
@@ -140,6 +149,13 @@ int main (int argc, const char *argv[])
 	FVM_TIMER = clock();
 	while(CPU_regs->ON == 0x0001)
 	{
+		if(SDL_PollEvent(&event))
+		{
+			if(event.type == SDL_QUIT)
+			{
+				FVM_EXIT(FVM_NO_ERR);
+			}
+		}
 		//! Any pending clocks?
 		if(((clock() - FVM_TIMER) / (CLOCKS_PER_SEC/10000)) >= 1 && FVM_IDTR[1].address != 0)
 		{
@@ -153,10 +169,9 @@ int main (int argc, const char *argv[])
 		}
 		// Emulate instruction then
 		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, PhysicalMEM, FVM_IDTR);
-		
 	}
 	printf("EXIT(1) Called by program\n");
-	int END = 0;	
+	int END = 0;
 	while (END == 0)
 	{
 		if(SDL_PollEvent(&event))
@@ -166,6 +181,7 @@ int main (int argc, const char *argv[])
 				END = 1;
 			}
 			else {
+				//! Do nothing
 			}
 		}
 	}

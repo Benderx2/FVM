@@ -7,6 +7,12 @@ DEFINE R3 -261
 DEFINE R4 -262
 DEFINE R5 -263
 DEFINE R12 -260
+;; 4-byte Header
+;db 0x09, 'FVX'
+;; 4-byte load address
+;dd 0x0
+; 12-byte vendor string
+;db 'FVM0EXECNAME'
 macro slp 
 {	
 	dd 0x00

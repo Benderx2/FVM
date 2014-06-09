@@ -327,12 +327,12 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				}
 				CPU_regs->r12--;
 				StackCount++;
-				if (StackCount >= NewCPU_state->stack_limit)
-				{
-					printf("\nR12 : [%d]", CPU_regs->r12);
-					printf("\n>>>>>>Stack F**K Up. Exitting Emulator\n");
-					FVM_EXIT(FVM_STACK_ERR);
-				}
+				//if (StackCount >= NewCPU_state->stack_limit)
+				//{
+				//	printf("\nR12 : [%d]", CPU_regs->r12);
+				//	printf("\n>>>>>>Stack F**K Up. Exitting Emulator\n");
+				//	FVM_EXIT(FVM_STACK_ERR);
+				//}
 				CPU_regs->r11 += 2;
 				break;
 			/* Pop out something from the stack into Reg */
@@ -369,7 +369,6 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 						StackCount--;
 				if (StackCount < 0)
 				{
-					
 					printf("\n>>>>>F**K UP: STACK COUNT IS UNDER ZERO (0) : [%d] R12 : [%d]\n", StackCount, CPU_regs->r12);
 				}
 				CPU_regs->r11 += 2;
@@ -406,7 +405,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				//	printf(" %c", tmp[i]);
 				//} 
 				printf("\033[0m");
-				CPU_regs->r11++;	
+				CPU_regs->r11++;
 				break;
 			/* LD1FA0 - Load R1 from address of R0, Loads a BYTE from address R0, and increments R0 */
 			case FVM_LD1FA0:
@@ -454,7 +453,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				}
 				else if (value == OPCODE_R2)
 				{
-					value = CPU_regs->r2;	
+					value = CPU_regs->r2;
 				}
 				else if (value == OPCODE_R3)
 				{
@@ -462,11 +461,11 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				}
 				else if (value == OPCODE_R4)
 				{
-					value = CPU_regs->r4;	
+					value = CPU_regs->r4;
 				}
 				else if (value == OPCODE_R5)
 				{
-					value = CPU_regs->r5;	
+					value = CPU_regs->r5;
 				}
 				// Check the comparision operand
 				if (EVAL1 == OPCODE_R0)
@@ -502,15 +501,15 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				}
 				else if (EVAL1 < value)
 				{
-						CPU_Flags->E = 0;	
-						CPU_Flags->G = 0;			
+						CPU_Flags->E = 0;
+						CPU_Flags->G = 0;
 						CPU_Flags->L = 1;
-				}		
+				}
 				else if (EVAL1 > value)
 				{
 						CPU_Flags->E = 0;
 						CPU_Flags->G = 1;
-						CPU_Flags->L = 0;		
+						CPU_Flags->L = 0;
 				}
 				CPU_regs->r11 += 3;
 				break;
@@ -556,14 +555,14 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				CPU_regs->r11++;
 				CPU_regs->r0++;
 				break;
-			/* Interrupt - Interrupt the processor */	
+			/* Interrupt - Interrupt the processor */
 			case FVM_INT:
 				CPU_regs->r11 = CPU_regs->r11;
 				uint32_t returnaddress1 = CPU_regs->r11 + 2;
 				PhysicalMEM[CPU_regs->r12] = returnaddress1;
 				CPU_regs->r12--;
 				StackCount++;
-				uint32_t inum = PhysicalMEM[CPU_regs->r11+1]; 
+				uint32_t inum = PhysicalMEM[CPU_regs->r11+1];
 				CPU_regs->r11 = FVM_IDTR[inum].address;
 				break;
 			/* Register interrupt Handler */
@@ -654,10 +653,74 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				IOADDRSPACE[CPU_regs->r11+1].out = CPU_regs->r0;
 				CPU_regs->r11 += 2;
 				break;
+			case FVM_XOR:
+				CPU_regs->r11 = CPU_regs->r11;
+				int32_t XOR_VAL2;
+				// XOR is done only on registers
+				// Get the second operand first, as the first will be the destination.
+				if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R0)
+				{
+					XOR_VAL2 = CPU_regs->r0;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R1)
+				{
+					XOR_VAL2 = CPU_regs->r1;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R2)
+				{
+					XOR_VAL2 = CPU_regs->r2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R3)
+				{
+					XOR_VAL2 = CPU_regs->r3;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R4)
+				{
+					XOR_VAL2 = CPU_regs->r4;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R5)
+				{
+					XOR_VAL2 = CPU_regs->r5;
+				}
+				else {
+					XOR_VAL2 = PhysicalMEM[CPU_regs->r11+1+1];
+				}
+				// Get the first operand now and XOR() it with the second one.
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r0 = CPU_regs->r0 ^ XOR_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r1 = CPU_regs->r1 ^ XOR_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r2 = CPU_regs->r2 ^ XOR_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r3 = CPU_regs->r3 ^ XOR_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r4 = CPU_regs->r4 ^ XOR_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r5 = CPU_regs->r5 ^ XOR_VAL2;
+				}
+				else {
+					printf("Invalid XOR(), undefined behaviour");
+					CPU_regs->r11 += 3;
+					break;
+				}
+				CPU_regs->r11 += 3;
+				break;
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
 				CPU_regs->ON = 0x0000;
 				FVM_EXIT(FVM_PROGRAM_ERR);
 		}
 			return;
-	}	
+	}

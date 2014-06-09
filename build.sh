@@ -1,6 +1,6 @@
 #!/bin/bash
 # Better change this to your fucking directory ok?
-export FVM_INCLUDE=.
+export FVM_INCLUDE=./include/
 #!/bin/bash
 export SDL_INCLUDE=/usr/include/SDL
 set -o verbose
