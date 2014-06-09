@@ -145,5 +145,19 @@ macro out0 port
 	dd 0x1C
 	dd port
 }
-
-
+macro mul operand
+{
+	dd 0x0020
+	dd operand
+}
+macro div operand
+{
+	dd 0x0021
+	dd operand
+}
+macro xor op1, op2
+{
+	dd 0x1F
+	dd op1
+	dd op2
+}
