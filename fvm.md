@@ -1,5 +1,6 @@
 FVM Instruction Set
 ===
+<h1>Implemented</h1>
 SLP - Processor Sleep<br>
 LD0 - Load R0<br>
 LD1 - Load R1<br>
@@ -22,4 +23,22 @@ JGX, JLX - Jump if Greater Than and Lesser than Flag are set<br>
 DEBUG - Dump CPU Status <br>
 LITH - Load Interrupt. (R0 - Interrupt number (max 255), R1 - Interrupt address (aligned))<br>
 INT - Execute interrupt <br>
+IN0 - Take input from port into R0<br>
+OUT0 - Output to port R0<br>
+XOR - Do a bitwise eXclusive OR <br>
+INCR - Add 1 to register <br>
+DECR - Subtract 1 from register <br>
+MUL - Multiply Register with R0<br>
+DIV - Divide Register with R0<br>
 EXIT - Exit Program <br>
+<h1>Not implement instructions (Planned)</h1>
+AND - Bitwise AND <br>
+OR - Bitwise OR <br>
+BTS - Bit set <br>
+BTU - Bit Unset <br>
+BTL - Bit Toggle <br>
+BTC - Check for Bit <br>
+LD1FA0W - Same as LD1FA0 but gives two bytes. <br>
+LD1FA0D - Same, but gives 4 bytes <br>
+ST1TA0W - Same as ST1TA0 but stores two bytes. <br>
+ST1TA0D - Same, but stores 4 bytes <br>
