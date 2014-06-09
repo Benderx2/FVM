@@ -66,5 +66,9 @@
 #define FVM_XOR 0x001E
 // AND - And with Register
 #define FVM_AND 0x001F
+// MUL - Multiply 
+#define FVM_MUL 0x0020
+// DIV - Divide
+#define FVM_DIV 0x0021
 #endif
 

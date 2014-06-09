@@ -717,6 +717,51 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				}
 				CPU_regs->r11 += 3;
 				break;
+			case FVM_MUL:
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{	
+					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r1;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{	
+					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{	
+					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r3;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{	
+					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r4;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{	
+					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r5;
+				}
+				CPU_regs->r11 += 2;
+				break;	
+			case FVM_DIV:
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r0 = CPU_regs->r0 / CPU_regs->r1;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r0 = CPU_regs->r0 / CPU_regs->r2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r0 = CPU_regs->r0 / CPU_regs->r3;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r0 = CPU_regs->r0 / CPU_regs->r4;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r0 = CPU_regs->r0 / CPU_regs->r5;
+				}
+				
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
 				CPU_regs->ON = 0x0000;
