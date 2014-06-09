@@ -1,2 +1,0 @@
-use64
-out dword dx, rdx
