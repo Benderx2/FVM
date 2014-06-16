@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <float.h>
+#include <assert.h>
 #include <time.h>
 #include <fvm/bitutils.h>
 #include <fvm/error.h>
@@ -13,6 +14,7 @@
 #include <fvm/cpu/fault.h>
 #include <fvm/cpu/idt.h>
 #include <fvm/cpu/mem/memory.h>
+#include <fvm/cpu/mem/vmm.h>
 #include <fvm/cpu/opcodes.h>
 #include <fvm/rom/rom.h>
 #include <fvm/fcall/fcall.h>
@@ -27,10 +29,17 @@
 #endif
 // FVM IDT
 FVM_IDT_HANDLER_t FVM_IDTR[0xFF];
+// FVM IO Address Space
 FVM_PORT_t FVM_IOADDR_SPACE[0xFF];
+// FVM Vtable
+V_TABLE_t vtable;
 // FVM Timer
 clock_t FVM_TIMER = 0;
 int StackCount = 0;
+#ifdef _USE_PTHREAD
+pthread_t* sdl_poll_thread;
+void* SDL_PollThread(void* args);
+#endif
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
 {
@@ -58,11 +67,7 @@ int main (int argc, const char *argv[])
 	SDL_EnableUNICODE(1);
 	FVM_SDL_init(GL_MAX_X, GL_MAX_Y, GL_COLOR);
 	GL_SURFACE_t* bmp = FVM_SDL_loadbmp("init.bmp");
-	if (bmp == NULL)
-	{
-			printf("F**K OFF, 'init.bmp' is missing\n");
-			FVM_EXIT(FVM_RESOURCE_ERR);
-	}
+	assert(bmp != NULL);
 	FVM_SDL_updatedisplay(bmp);
 	GL_RECT_t BlueRect;
 	BlueRect.x = 0;
@@ -71,15 +76,14 @@ int main (int argc, const char *argv[])
 	BlueRect.w = GL_MAX_X;
 	SDL_FillRect(screen, &BlueRect, 0x08088A);
 	bmpfont = FVM_SDL_loadbmp("font.bmp");
-	if (bmpfont == NULL)
-	{
-		printf("F**K OFF, 'font.bmp' is missing\n");
-		FVM_EXIT(FVM_RESOURCE_ERR);
-	}
+	assert(bmpfont!=NULL);
 	FVM_SDL_setwincaption("Flouronix VM (Running)");
 	SDL_printf(bmpfont, screen, "FVM %s Running.......\n", FVM_VER);
 	screen_x = 0;
 	FVM_SDL_updatedisplay(screen);
+	#endif
+	#ifdef _USE_PTHREAD
+	pthread_create(&sdl_poll_thread, NULL, &SDL_PollThread, NULL);
 	#endif
 	printf("FVM Version : %s, Requested Emulator Memory: %u, Requested ROM File: %s\n", FVM_VER, total_mem, exec_name);
 	printf("Creating New FVM CPU......\n");
@@ -149,13 +153,6 @@ int main (int argc, const char *argv[])
 	FVM_TIMER = clock();
 	while(CPU_regs->ON == 0x0001)
 	{
-		if(SDL_PollEvent(&event))
-		{
-			if(event.type == SDL_QUIT)
-			{
-				FVM_EXIT(FVM_NO_ERR);
-			}
-		}
 		//! Any pending clocks?
 		if(((clock() - FVM_TIMER) / (CLOCKS_PER_SEC/10000)) >= 1 && FVM_IDTR[1].address != 0)
 		{
@@ -194,4 +191,20 @@ int main (int argc, const char *argv[])
 	//! Just in case if we haven't rescheduled
 	return FVM_NO_ERR;
 	for(;;);
+}
+// SDL Thread the can be used for polling exits
+void* SDL_PollThread()
+{
+	while(1)
+	{
+		if(SDL_PollEvent(&event))
+		{
+			if(event.type == SDL_QUIT)
+			{
+				FVM_EXIT(FVM_NO_ERR);
+			}
+		}
+		else {
+		}
+	}
 }

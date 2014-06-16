@@ -70,9 +70,13 @@
 #define FVM_MUL 0x0020
 // DIV - Divide
 #define FVM_DIV 0x0021
-// V_ENABLE - Enable Virtual Memory
-#define FVM_V_ENABLE 0x0022
-// V_DISABLE - Disable Virtual Memory
-#define FVM_V_DISABLE 0x0023
+/* Defines OPCODES for several registers */
+#define OPCODE_R0 -257
+#define OPCODE_R1 -258
+#define OPCODE_R2 -259
+#define OPCODE_R3 -261
+#define OPCODE_R4 -262
+#define OPCODE_R5 -263
+#define OPCODE_R12 -260
 #endif
 

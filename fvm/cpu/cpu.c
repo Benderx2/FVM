@@ -47,7 +47,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r0 = CPU_regs->r3;
 					CPU_regs->r11 += 2;
-					break;	
+					break;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
 				{
@@ -89,7 +89,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r1 = CPU_regs->r3;
 					CPU_regs->r11 += 2;
-					break;	
+					break;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
 				{
@@ -241,7 +241,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r5 = CPU_regs->r3;
 					CPU_regs->r11 += 2;
-					break;	
+					break;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
 				{
@@ -276,7 +276,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r12 = CPU_regs->r3 / 4;
 					CPU_regs->r11 += 2;
-					break;	
+					break;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
 				{
@@ -689,6 +689,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
 				{
 					CPU_regs->r0 = CPU_regs->r0 ^ XOR_VAL2;
+					printf("XOR_VAL2: %d", XOR_VAL2);
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
 				{
@@ -719,27 +720,27 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				break;
 			case FVM_MUL:
 				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
-				{	
+				{
 					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r1;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
-				{	
+				{
 					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r2;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
-				{	
+				{
 					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r3;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
-				{	
+				{
 					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r4;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
-				{	
+				{
 					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r5;
 				}
 				CPU_regs->r11 += 2;
-				break;	
+				break;
 			case FVM_DIV:
 				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
 				{
@@ -761,7 +762,63 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r0 = CPU_regs->r0 / CPU_regs->r5;
 				}
-				
+			// Bitwise AND
+			case FVM_AND:
+				CPU_regs->r11 = CPU_regs->r11;
+				int32_t AND_VAL2;
+				if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R0)
+				{
+					AND_VAL2 = CPU_regs->r0;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R1)
+				{
+					AND_VAL2 = CPU_regs->r1;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R2)
+				{
+					AND_VAL2 = CPU_regs->r2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R3)
+				{
+					AND_VAL2 = CPU_regs->r3;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R4)
+				{
+					AND_VAL2 = CPU_regs->r4;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R5)
+				{
+					AND_VAL2 = CPU_regs->r5;
+				}
+				else {
+					AND_VAL2 =  PhysicalMEM[CPU_regs->r11];
+				}
+				// Now set the operands appropriately
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r0 = CPU_regs->r0 & AND_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r1 = CPU_regs->r1 & AND_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r2 = CPU_regs->r2 & AND_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r3 = CPU_regs->r3 & AND_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r4 = CPU_regs->r4 & AND_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r5 = CPU_regs->r5 & AND_VAL2;
+				}
+
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
 				CPU_regs->ON = 0x0000;
