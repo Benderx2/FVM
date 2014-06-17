@@ -27,5 +27,6 @@ struct V_TABLE
 	V_ENTRY_t V_ENT[TOTAL_V_ENTRY];
 };
 typedef struct V_TABLE V_TABLE_t;
+int32_t vmm_virtual_to_physical(V_TABLE_t* vtable, uint32_t virt_addr);
 #endif
 

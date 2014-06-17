@@ -17,6 +17,7 @@
 #include <fvm/cpu/mem/vmm.h>
 #include <fvm/cpu/opcodes.h>
 #include <fvm/rom/rom.h>
+#include <fvm/rom/fv11/fv11.h>
 #include <fvm/fcall/fcall.h>
 #include <fvm/cpu/registers.h>
 #include <fvm/cpu/ports.h>
@@ -32,7 +33,7 @@ FVM_IDT_HANDLER_t FVM_IDTR[0xFF];
 // FVM IO Address Space
 FVM_PORT_t FVM_IOADDR_SPACE[0xFF];
 // FVM Vtable
-V_TABLE_t vtable;
+V_TABLE_t* vtable = 0;
 // FVM Timer
 clock_t FVM_TIMER = 0;
 int StackCount = 0;
@@ -69,12 +70,6 @@ int main (int argc, const char *argv[])
 	GL_SURFACE_t* bmp = FVM_SDL_loadbmp("init.bmp");
 	assert(bmp != NULL);
 	FVM_SDL_updatedisplay(bmp);
-	GL_RECT_t BlueRect;
-	BlueRect.x = 0;
-	BlueRect.y = 0;
-	BlueRect.h = GL_MAX_Y;
-	BlueRect.w = GL_MAX_X;
-	SDL_FillRect(screen, &BlueRect, 0x08088A);
 	bmpfont = FVM_SDL_loadbmp("font.bmp");
 	assert(bmpfont!=NULL);
 	FVM_SDL_setwincaption("Flouronix VM (Running)");
@@ -131,6 +126,7 @@ int main (int argc, const char *argv[])
 	NewCPU->CPU_STATE = NewCPU_state;
 	printf("Allocating Memory for FFLAGS\n");
 	FFLAGS_t* CPU_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
+	CPU_Flags->VMM = false;
 	printf("FFLAGS Allocation Complete Address = [%p]\n", (void*)CPU_Flags);
 	printf("FVM Initialization Complete.\n");
 	printf("Preparing to allocate memory for emulator\n");
@@ -154,7 +150,7 @@ int main (int argc, const char *argv[])
 	while(CPU_regs->ON == 0x0001)
 	{
 		//! Any pending clocks?
-		if(((clock() - FVM_TIMER) / (CLOCKS_PER_SEC/10000)) >= 1 && FVM_IDTR[1].address != 0)
+		if(((clock() - FVM_TIMER) / (CLOCKS_PER_SEC/10000)) >= 1 && FVM_IDTR[1].address != 0 && NewCPU_state->interrupts_enabled == true)
 		{
 			CPU_regs->r11 = CPU_regs->r11;
 			uint32_t returnaddress2 = CPU_regs->r11;
@@ -165,7 +161,7 @@ int main (int argc, const char *argv[])
 			FVM_TIMER = clock();
 		}
 		// Emulate instruction then
-		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, PhysicalMEM, FVM_IDTR);
+		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, PhysicalMEM, FVM_IDTR, vtable);
 	}
 	printf("EXIT(1) Called by program\n");
 	int END = 0;

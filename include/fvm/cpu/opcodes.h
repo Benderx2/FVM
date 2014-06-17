@@ -71,8 +71,12 @@
 // DIV - Divide
 #define FVM_DIV 0x0021
 // V_ENABLE - Enable Virtual Memory
-#define FVM_V_ENABLE 0x0022
+#define FVM_VMMINIT 0x0022
 // V_DISABLE - Disable Virtual Memory
-#define FVM_V_DISABLE 0x0023
+#define FVM_VMMQUIT 0x0023
+// STD - Store Register DWORD
+#define FVM_STD 0x0024
+// LDD - Load Register DWORD
+#define FVM_LDD 0x0025
 #endif
 

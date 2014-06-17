@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <fvm/cpu/opcodes.h>
 #include <fvm/cpu/registers.h>
 #include <fvm/cpu/cpu.h>
 #include <fvm/cpu/ports.h>
+#include <fvm/cpu/mem/vmm.h>
 #include <fvm/fcall/fcall.h>
 #include <fvm/cpu/idt.h>
 #include <fvm/error.h>
 #include <fvm/sdl.h>
-void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* PhysicalMEM,  FVM_IDT_HANDLER_t* FVM_IDTR)
+void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* PhysicalMEM,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
 {
 	switch(PhysicalMEM[CPU_regs->r11])
 		{
@@ -329,7 +331,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				StackCount++;
 				//if (StackCount >= NewCPU_state->stack_limit)
 				//{
-				//	printf("\nR12 : [%d]", CPU_regs->r12);
+				//	printf("\nR12 : [%X]", CPU_regs->r12);
 				//	printf("\n>>>>>>Stack F**K Up. Exitting Emulator\n");
 				//	FVM_EXIT(FVM_STACK_ERR);
 				//}
@@ -369,7 +371,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 						StackCount--;
 				if (StackCount < 0)
 				{
-					printf("\n>>>>>F**K UP: STACK COUNT IS UNDER ZERO (0) : [%d] R12 : [%d]\n", StackCount, CPU_regs->r12);
+					printf("\n>>>>>F**K UP: STACK COUNT IS UNDER ZERO (0) : [%X] R12 : [%X]\n", StackCount, CPU_regs->r12);
 				}
 				CPU_regs->r11 += 2;
 				break;
@@ -396,7 +398,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				break;
 			case FVM_DEBUG:
 				printf("\033[31m");
-				printf("\n>>>>>>DEBUG Instruction OPCODE:{%d} Executed, Will print CPU status: \n>R0 : [%d]\n>R1 : [%d]\n>R2 : [%d]\n>R3 [%d]\n>R4: [%d]\nR5 [%d]\n>R17 : [%d]\n>R12 : [%d]\n>R11 : [%d]\nE : [%d]\nG : [%d]\nL : [%d]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r2, CPU_regs->r3, CPU_regs->r4, CPU_regs->r5, CPU_regs->r17, CPU_regs->r12, CPU_regs->r11, CPU_Flags->E, CPU_Flags->G, CPU_Flags->L);
+				printf("\n>>>>>>DEBUG Instruction OPCODE:{%X} Executed, Will print CPU status: \n>R0 : [%X]\n>R1 : [%X]\n>R2 : [%X]\n>R3 [%X]\n>R4: [%X]\nR5 [%X]\n>R17 : [%X]\n>R12 : [%X]\n>R11 : [%X]\nE : [%X]\nG : [%X]\nL : [%X]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r2, CPU_regs->r3, CPU_regs->r4, CPU_regs->r5, CPU_regs->r17, CPU_regs->r12, CPU_regs->r11, CPU_Flags->E, CPU_Flags->G, CPU_Flags->L);
 				//printf("Memory Contents: \n");
 				//uint8_t* tmp = (uint8_t*)PhysicalMEM;
 				//uint32_t i = 0;
@@ -409,10 +411,22 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				break;
 			/* LD1FA0 - Load R1 from address of R0, Loads a BYTE from address R0, and increments R0 */
 			case FVM_LD1FA0:
-				/* Null out R1 */
-				CPU_regs->r1 = 0x00000000;
 				CPU_regs->r11 = CPU_regs->r11;
 				uint8_t* tmp2 = (uint8_t*)PhysicalMEM;
+				if(CPU_Flags->VMM == true)
+				{
+					int32_t physaddr1 = vmm_virtual_to_physical(vtable, CPU_regs->r0);
+					if(physaddr1 == -1)
+					{
+						printf("V_FAULT Exception triggered when CPU_flags->VMM is true!\n");
+						FVM_EXIT(FVM_PROGRAM_ERR);
+					}
+					else {
+						CPU_regs->r1 = tmp2[physaddr1];
+					}
+				}
+				/* Null out R1 */
+				CPU_regs->r1 = 0x00000000;
 				CPU_regs->r1 = tmp2[CPU_regs->r0];
 				CPU_regs->r11++;
 				CPU_regs->r0++;
@@ -425,7 +439,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
 				CPU_regs->r12--;
 				StackCount++;
-				//printf("\nR12: [%d]", CPU_regs->r12);
+				//printf("\nR12: [%X]", CPU_regs->r12);
 				//CPU_regs->r17 = CPU_regs->r11 + 2;
 				//CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
 				break;
@@ -435,7 +449,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				//CPU_regs->r17 = 0;
 				CPU_regs->r11 = PhysicalMEM[CPU_regs->r12+1];
 				CPU_regs->r12++;
-				///printf("\nR12: [%d]", CPU_regs->r12);
+				///printf("\nR12: [%X]", CPU_regs->r12);
 				StackCount--;
 				break;
 			/* CMPR - Compare Register with value */
@@ -537,10 +551,19 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 					}
 			/* JLX - Jump if lesser than flag is set */
 			case FVM_JLX:
-					if (CPU_Flags->L == 1)
+					if (CPU_Flags->L == 1 && CPU_Flags->VMM == false)
 					{
 						CPU_regs->r11 = PhysicalMEM[CPU_regs->r11+1] / 4;
 						break;
+					}
+					else if(CPU_Flags->L == 1 && CPU_Flags->VMM == true)
+					{
+						CPU_regs->r11 = vmm_virtual_to_physical(vtable, PhysicalMEM[CPU_regs->r11+1]) / 4;
+						if(CPU_regs->r11 == -1)
+						{
+							printf("V_FAULT()\n");
+							FVM_EXIT(FVM_PROGRAM_ERR);
+						}
 					}
 					else {
 						CPU_regs->r11 += 2;
@@ -550,10 +573,26 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 			case FVM_ST1TA0:
 				CPU_regs->r11 = CPU_regs->r11;
 				uint8_t* tmp3 = (uint8_t*)PhysicalMEM;
-				tmp3[CPU_regs->r0] = (uint8_t)CPU_regs->r1;
-				printf("%c", tmp3[CPU_regs->r0]);
-				CPU_regs->r11++;
-				CPU_regs->r0++;
+				if(CPU_Flags->VMM == true)
+				{
+					// Is Virtual Memory Enabled?
+					// Then treat R0 as Virtual
+					int32_t physaddr = vmm_virtual_to_physical(vtable, CPU_regs->r0);
+					if(physaddr == -1)
+					{
+						printf("V_FAULT Exception triggered when CPU_flags->VMM is true!\n");
+						FVM_EXIT(FVM_PROGRAM_ERR);
+					}
+					else {
+						tmp3[physaddr] = (uint8_t)CPU_regs->r1;
+					}
+				}
+				else {
+					tmp3[CPU_regs->r0] = (uint8_t)CPU_regs->r1;
+					printf("%c", tmp3[CPU_regs->r0]);
+				}
+					CPU_regs->r11++;
+					CPU_regs->r0++;
 				break;
 			/* Interrupt - Interrupt the processor */
 			case FVM_INT:
@@ -567,8 +606,13 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				break;
 			/* Register interrupt Handler */
 			/* R0 : Interrupt number */
-			/* R1 : Interrupt Handler Address */
+			/* R1 : Interrupt Handler Address (Physical, Can be executed under VMM mode) */
 			case FVM_LITH:
+				if(CPU_Flags->VMM == true)
+				{
+					printf("V_FAULT Exception triggered when CPU_flags->VMM is true!\n");
+					FVM_EXIT(FVM_PROGRAM_ERR);
+				}
 				FVM_IDTR[CPU_regs->r0].address = CPU_regs->r1 / 4;
 				CPU_regs->r11++;
 				break;
@@ -576,7 +620,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 			case FVM_IRETX:
 				CPU_regs->r11 = PhysicalMEM[CPU_regs->r12+1];
 				CPU_regs->r12++;
-				printf("R12 [%d]\n", CPU_regs->r12);
+				printf("R12 [%X]\n", CPU_regs->r12);
 				StackCount--;
 				break;
 			/* INCR - Increment Reigster */
@@ -689,7 +733,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
 				{
 					CPU_regs->r0 = CPU_regs->r0 ^ XOR_VAL2;
-					printf("XOR_VAL2: %d", XOR_VAL2);
+					printf("XOR_VAL2: %X", XOR_VAL2);
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
 				{
@@ -818,7 +862,88 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r5 = CPU_regs->r5 & AND_VAL2;
 				}
-
+			// VMMINIT - Intialize Virtual Memory
+			case FVM_VMMINIT:
+				CPU_Flags->VMM = true;
+				CPU_regs->r11++;
+			// VMMQUIT - Deinitialize Virtual memory
+			case FVM_VMMQUIT:
+				CPU_Flags->VMM = false;
+				CPU_regs->r11++;
+			// STD - Store Register (DWORD) in addressof(R0)
+			case FVM_STD:
+				CPU_regs->r11 = CPU_regs->r11;
+				uint8_t* tmp4 = (uint8_t*)PhysicalMEM;
+				int32_t saver0 = CPU_regs->r0;
+				if(CPU_Flags->VMM == true)
+				{
+					CPU_regs->r0 = vmm_virtual_to_physical(vtable, CPU_regs->r0);
+				}
+				uint32_t* dummy1 = (uint32_t*)&tmp4[CPU_regs->r0];
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					*dummy1 = CPU_regs->r0;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					*dummy1 = CPU_regs->r2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					*dummy1 = CPU_regs->r3;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					*dummy1 = CPU_regs->r4; 
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					*dummy1 = CPU_regs->r5;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					*dummy1 = CPU_regs->r12;
+				}
+				CPU_regs->r0 = saver0;
+				CPU_regs->r11 += 2;
+				break;
+			// LDD - Load Register DWORD
+			case FVM_LDD:
+				CPU_regs->r11 = CPU_regs->r11;
+				uint8_t* tmp5 = (uint8_t*)PhysicalMEM;
+				int32_t saver0_1 = CPU_regs->r0;
+				if(CPU_Flags->VMM == true)
+				{	
+					CPU_regs->r0 = vmm_virtual_to_physical(vtable, CPU_regs->r0);
+				}
+				uint32_t* dummy2 = (uint32_t*)&tmp5[CPU_regs->r0];
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					  CPU_regs->r0=*dummy2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					  CPU_regs->r2=*dummy2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					 CPU_regs->r3=*dummy2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					  CPU_regs->r4=*dummy2; 
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					 CPU_regs->r5= *dummy2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R12)
+				{
+					 CPU_regs->r12=*dummy2;
+				}
+				CPU_regs->r0 = saver0_1;
+				CPU_regs->r11 += 2;
+				break;
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
 				CPU_regs->ON = 0x0000;

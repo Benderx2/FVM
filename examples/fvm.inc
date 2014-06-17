@@ -7,12 +7,6 @@ DEFINE R3 -261
 DEFINE R4 -262
 DEFINE R5 -263
 DEFINE R12 -260
-;; 4-byte Header
-;db 0x09, 'FVX'
-;; 4-byte load address
-;dd 0x0
-; 12-byte vendor string
-;db 'FVM0EXECNAME'
 macro slp 
 {	
 	dd 0x00
@@ -157,7 +151,26 @@ macro div operand
 }
 macro xor op1, op2
 {
-	dd 0x1F
+	dd 0x1E
 	dd op1
 	dd op2
 }
+macro V_ENABLE 
+{
+	dd 0x22
+}
+macro V_DISABLE
+{
+	dd 0x23
+}
+macro std reg
+{
+	dd 0x24
+	dd reg
+}
+macro ldd reg
+{
+	dd 0x25
+	dd reg
+}
+

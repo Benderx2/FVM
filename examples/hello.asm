@@ -3,6 +3,9 @@ align 4
 include 'fvm.inc'
 ld0 string
 call print
+ld1 5
+xor R1, R1
+debug
 ld0 R1
 cmpv R0, R1
 jex .equal

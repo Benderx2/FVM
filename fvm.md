@@ -30,6 +30,8 @@ INCR - Add 1 to register <br>
 DECR - Subtract 1 from register <br>
 MUL - Multiply Register with R0<br>
 DIV - Divide Register with R0<br>
+LDD - Load Register (DWORD) from address at R0 (can be UA)<br>
+STD - Store Register (DWORD) to address at R0 (can be UA).<br>
 EXIT - Exit Program <br>
 <h1>Not implemented instructions (Planned)</h1>
 AND - Bitwise AND <br>
@@ -39,6 +41,4 @@ BTU - Bit Unset <br>
 BTL - Bit Toggle <br>
 BTC - Check for Bit <br>
 LD1FA0W - Same as LD1FA0 but gives two bytes. <br>
-LD1FA0D - Same, but gives 4 bytes <br>
 ST1TA0W - Same as ST1TA0 but stores two bytes. <br>
-ST1TA0D - Same, but stores 4 bytes <br>

@@ -20,6 +20,10 @@ ld2 0xF
 fcall 2
 incr R1
 decr R5
+cool:
+	ld0 song
+	call print
+	jtx cool
 ;; Register Interrupt Handler
 ld0 0x01 ;; Register ISR 1
 ld1 int1a ;; Load ISR Handler Address
@@ -28,12 +32,9 @@ lith ;; Load Interrupt!
 read_key:
 	jtx read_key
 task1:
-	ld1 'A'
-	fcall 0
+	;fcall 0
 	jtx task1
 task2:
-	ld1 'B'
-	fcall 0
 	jtx task2
 .quit:
 exit
@@ -97,4 +98,5 @@ int1a:
 string: db 'Fello FVM World! 1234567890+-*=()', 0x0A, 'Please Type in something: ', 0x0A, 0
 int_string: db 0x0A, 'This is called from INT 1!', 0
 which_task: db 0
+song: db "Tonight I'm bringing Dunwall to life!", 0x0a, "As I walk on water through walls of light", 0x0A, "You heard the king as the urchins sing", 0x0A, "Revenge Solves everything.", 0x0a, 0
 END
