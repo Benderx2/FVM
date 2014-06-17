@@ -13,6 +13,8 @@ gcc -c fvm/sdl.c -o sdl.o -I$FVM_INCLUDE -I$SDL_INCLUDE -Wall -Wextra -pedantic 
 gcc -c fvm/bitutils.c -o bitutils.o -Wall -Wextra -pedantic -std=gnu99
 gcc -c fvm/cpu/cpu.c -I$FVM_INCLUDE -I$SDL_INCLUDE -Wall -Wextra -pedantic -std=gnu99
 gcc -c fvm/cpu/mem/vmm.c -o vmm.o -I$FVM_INCLUDE -Wall -Wextra -pedantic -std=gnu99
+fasm examples/mtask.asm 
+mv examples/mtask.bin .
 gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o  cpu.o -lSDL -lSDL_ttf -pthread
 # Remove all object files
 rm *.o
