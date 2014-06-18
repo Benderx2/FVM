@@ -78,5 +78,7 @@
 #define FVM_STD 0x0024
 // LDD - Load Register DWORD
 #define FVM_LDD 0x0025
+// FVM_V_LOAD - Load Virtual Table
+#define FVM_V_LOAD 0x0026
 #endif
 

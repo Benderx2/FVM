@@ -1,31 +1,31 @@
 org 0
 align 4
-include 'fvm.inc'
-ld0 string
-call print
-ld1 5
-xor R1, R1
-debug
-ld0 R1
-cmpv R0, R1
-jex .equal
+include 'a32.inc'
+LOAD_R0 string
+CALLF print
+LOAD_R1 5
+XOR r1, r1
+VM_DEBUG
+LOAD_R0 r1
+CMPR r0, r1
+JMPF_E .equal
 ;; this line wont be printed
-ld0 not_equal_string
-call print
+LOAD_R0 not_equal_string
+CALLF print
 .equal:
-exit
+VM_EXIT
 print:
-	push R0
-	push R1
+	PUSH r0
+	PUSH r1
 .ploop:
-	ld1fa0
-	cmpv R1, 0
-	jex .done
-	fcall 0
-	jtx .ploop
+	LOAD_BYTE
+	CMPR r1, 0
+	JMPF_E .done
+	VM_CALL 0
+	JMPF .ploop
 .done:
-	popr R0
-	popr R1
-	ret
+	POP r1
+	POP r0
+	RETF
 string: db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 0
 not_equal_string: db 'R0 and R1 aren"t equal FAIL', 0

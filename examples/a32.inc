@@ -201,5 +201,9 @@ macro AND OP1, OP2
 	dd OP1
 	 dd OP2
 }
+macro VM_EXIT
+{
+	dd 0xFF
+}
 
 
