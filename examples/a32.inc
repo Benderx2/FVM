@@ -1,12 +1,13 @@
 ; A32 - Include file for FVM A32 VM.
+; For HLL Compilers.....
 ; Register marker definitions
-define r0 -257
-define r1 -258
-define r2 -259
-define r3 -261
-define r4 -262
-define r5 -262
-define sp -260
+define R0 -257
+define R1 -258
+define R2 -259
+define R3 -261
+define R4 -262
+define R5 -262
+define SP -260
 ; V_SLEEP - Processor Sleep
 macro V_SLEEP {
 	dd 0x0
