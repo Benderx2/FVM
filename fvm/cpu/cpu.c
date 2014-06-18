@@ -783,6 +783,9 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r5;
 				}
+				else {
+					CPU_regs->r0 = CPU_regs->r0 * PhysicalMEM[CPU_regs->r11+1];
+				}
 				CPU_regs->r11 += 2;
 				break;
 			case FVM_DIV:
@@ -806,6 +809,11 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r0 = CPU_regs->r0 / CPU_regs->r5;
 				}
+				else {
+					CPU_regs->r0 = CPU_regs->r0 * PhysicalMEM[CPU_regs->r11+1];
+				}
+				CPU_regs->r11 += 2;
+				break;
 			// Bitwise AND
 			case FVM_AND:
 				CPU_regs->r11 = CPU_regs->r11;
@@ -944,6 +952,19 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				CPU_regs->r0 = saver0_1;
 				CPU_regs->r11 += 2;
 				break;
+			// V_LOAD - Load Virtual Address Table, pointer to address table MUST be 4-bytes aligned...
+			case FVM_V_LOAD:
+					printf("WARNING! SYSTEM CONFIGURED V_TABLE WILL BE CHANGED. EXPECT UNDEFINED BEHAVIOUR!\n");
+					printf("Checking if  System is in VMM Mode....\n");
+					if(CPU_Flags->VMM == true)
+					{
+							printf("V_FAULT() triggered.");
+							FVM_EXIT(FVM_PROGRAM_ERR);
+					}
+					else {
+						printf("System is not under VMM Mode, going to set V_TABLE!");
+						// TODO: Implement V_LOAD
+					}
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
 				CPU_regs->ON = 0x0000;
