@@ -26,6 +26,7 @@ INT - Execute interrupt <br>
 IN0 - Take input from port into R0<br>
 OUT0 - Output to port R0<br>
 XOR - Do a bitwise eXclusive OR <br>
+AND - Bitwise AND <br>
 INCR - Add 1 to register <br>
 DECR - Subtract 1 from register <br>
 ADDR - Add register to register or operand <br>
@@ -36,7 +37,6 @@ LDD - Load Register (DWORD) from address at R0 (can be UA)<br>
 STD - Store Register (DWORD) to address at R0 (can be UA).<br>
 EXIT - Exit Program <br>
 <h1>Not implemented instructions (Planned)</h1>
-AND - Bitwise AND <br>
 OR - Bitwise OR <br>
 BTS - Bit set <br>
 BTU - Bit Unset <br>
