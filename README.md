@@ -1,27 +1,30 @@
 FVM
 ===
 
-Flouronix Virtual Machine. A 32-bit Machine written in C<br>
-<h1>Compiling and Running</h1>
-Please use the GNU C Compiler, (from gcc.gnu.org), and the GNU Binutils. You'll need a <br>
-system linker which produces binaries for your system. Along with all this you'll also need <br>
-a standard C library for your system. Mainly cstdio, cstdlib, cstdint, cstring, cstdbool.<br>
-Then you must compile all the *.c files into object files, and link them to create an executable that<br>
-runs on your system. Note that the sources use angle brackets, so you must tell the compiler the source directory through the<br>
--I flag<br>
-It's recommended that you compile with these options '-Wall -Wextra -pedantic -std=gnu99 -I$FVM_INCLUDE (where FVM_INCLUDE is your directory where you downloaded the sources)'. <br>
-There is a readymade build script for bash users. 
-<h1>Using the emulator</h1>
-The emulator isn't usbale for running at least "okayish" programs (YET.), but there is a hello world program that can be compiled using fasm.<br>
-But anyways the syntax is: <br>
-<pre>fvm [memory] [ROM Image Name]</pre>
-<h1>Points of Interest</h1>
-Well, I was always interested in computers, and my interest grew more as I approached<br>
-the OSDev.org people. As I got closer and closer to bare metal, it made me think: "Why not write your own bare metal if you've come this far?" :D<br>
-<h1>Contributing</h1>
-Please DON'T! I will not accept any changes, because this project isn't something like "FVM FTW!", it's a personal learning project<br>
-If you think this crap toy is good for you (the code isn't what I personally call "good", neither the emulator is close to "functional"), better fork() it. If you badly want to contribute something (until you burst out), better it be a bug or a suggesstion, no code. At least it runs a multitasker though :).
-This readme and the emulator aren't complete btw.
-<h1>TODO</h1>
-Add new GPU Instructions <h1>
-Add new CPU instructions (XOR, BTS, SHL, SHR, AND, NAND (:D))	
+<h1>The Flouronix Virtual Machine Architecture (or FVM)</h1>
+<h2>INTRODUCTION</h2>
+The Flouronix Virtual Machine was written to provide a secure and architecture-independant userspace to the Flouronix operating system.<br>
+The virtual machine features a 32-bit address space, a stack, 6 general purpose registers, <br>
+various arithmetic instructions and <i>is</i> turing complete. For now the machine is incapable for doing most of the things <br>
+today's virtual architectures (.NET, Java...) can achieve. There are future plans to develop a programming language for FVM, but <br>
+that is not the current focus. <br>
+The architecure is a RISC-like architecture, and <i>most</i> of the operations are only performed on CPU registers. There are a special<br>
+set of instructions that can modify or act on the memory. <br>
+<h2>INSTRUCTION SET</h2>
+Please see fvm.md.
+<h2>COMPILATION AND TESTING</h2>
+Please use the GNU C Compiler, the code has not been tested with any other compiler like clang, Visual C, ... So I don't <br>
+know if it's possible to use them. I'd be happy if anyone could do this for me. <br> 
+Along with the GNU toolchain for your system, you'll also need the Simple-Direct-Media Layer (SDL for short), https://www.libsdl.org/.
+The build has been tested with libSDL 1.2, It's recommended to compile it with that version. It should work with the newer versions though<br>
+untested!<br>
+For those who're using bash (or similar), there is a readymade "build.sh" script. It does everything that's required and even builds a test multitasking<br>
+ROM! Non-bash users could modify the script given.<br>
+There is a readymade binary called "fvm.out" for Linux, but please don't use it. It is advisable to build the VM with toolchain that is configured <br>
+for your system.<br>
+Notes: The build system has not been tested with Windows or Mac, however it doesn't use anything that's Linux specific so it should not<br>
+require much effort to get it up and running.
+<h2>TODO</h2>
+....
+
+
