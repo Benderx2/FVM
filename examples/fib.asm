@@ -1,5 +1,3 @@
-org 0
-align 4
 include 'a32.inc'
 LOAD_R0 string
 CALLF print
@@ -37,9 +35,21 @@ print:
 do_fib_test:
 	LOAD_R0 1	
 	LOAD_R2 12
+	LOAD_R3 1
 	LOAD_R1 ' '
 .ploop:
-	ADDR R0, R0
+	; R3 = 1
+	; R0 = 1
+	; R0 + R3 = R0 = 2
+	; R3 = 1
+	; R0 = 2
+	; R3 = 1
+	; R0 + R3 = R0 =  3
+	; R3 = 2
+	; ???
+	LOAD_R3 R4
+	LOAD_R4 R0
+	ADDR R0, R3
 	VM_CALL 3
 	VM_CALL 0
 	DECR R2

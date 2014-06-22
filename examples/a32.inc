@@ -8,6 +8,9 @@ define R3 -261
 define R4 -262
 define R5 -262
 define SP -260
+org 0
+align 4
+use32
 ; Header
 dd 0xC00C1E5
 ; V_SLEEP - Processor Sleep

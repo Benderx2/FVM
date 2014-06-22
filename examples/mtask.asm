@@ -1,102 +1,56 @@
 ;; Simple test. Compile with FASM.
 ;; macros for fasm
-include 'fvm.inc'
-use32
-org 0
-;; Align addresses to 4-bytes please
-align 4
-dd 0xC00C1E5
-;; Load Address of string into R1
-ld0 string
-ld1 'H'
-;; Store 'H'
-st1ta0
-ld0 string
-;; Call print
-call print
-;; Sample shit
-ld0 25
-ld1 30
-ld2 0xF
-fcall 2
-incr R1
-decr R5
-cool:
-	ld0 song
-	call print
-	jtx cool
+include 'a32.inc'
 ;; Register Interrupt Handler
-ld0 0x01 ;; Register ISR 1
-ld1 int1a ;; Load ISR Handler Address
-lith ;; Load Interrupt!
+LOAD_R0 0x01 ;; Register ISR 1
+LOAD_R1 int1a ;; Load ISR Handler Address
+LOAD_INTERRUPT ;; Load Interrupt!
 ;; Task 0 Infinite Loop!
-read_key:
-	jtx read_key
+dead_end:
+	JMPF dead_end
 task1:
-	;fcall 0
-	jtx task1
+	LOAD_R1 'A'
+	VM_CALL 0
+	JMPF task1
 task2:
-	jtx task2
-.quit:
-print:
-	push R0
-	push R1
-.p1:
-	;; Push (Save Register States)
-	;; Load BYTE from R0 into R1 (LODSB)
-	ld1fa0
-	;; Call VM Specific Function
-	fcall 0
-	;; CMPV - Compare Value, Is R1 == NULL?
-	cmpv R1, 0
-	;; Yes. We're done
-	jex .done	
-	;; ...Or print again
-	jtx .p1
-.done:
-	popr R1
-	popr R0
-	ret
+	LOAD_R1 'B'
+	VM_CALL 0
+	JMPF task2
 int1a:
-	ld12 1000 ;; Load kernel stack
+	LOAD_SP 1000 ;; Load kernel stack
 	;; Push R0 and R1
-	push R0
-	push R1
+	PUSH R0
+	PUSH R1
 	;; Load the variable which_task
-	ld0 which_task
+	LOAD_R0 which_task
 	;; Grab the byte
-	ld1fa0
+	LOAD_BYTE
 	;; Is R0 = 0 (Switch to task 1)
-	cmpv R1, 0
-	jex .task_1
+	CMPR R1, 0
+	JMPF_E .task_1
 	;; Or 1 (switch to task 1)
-	cmpv R1, 1
-	jex .task_2
+	CMPR R1, 1
+	JMPF_E .task_2
 .task_1:
 	;; Set the which_task to 1 (will make the routine switch to the next task)
-	ld0 which_task
+	LOAD_R0 which_task
 	;; Load 1
-	ld1 1
+	LOAD_R1 1
 	;; Copy it
-	st1ta0
+	STORE_BYTE
 	;; Pop off CPU Registers
-	popr R1
-	popr R0
+	POP R1
+	POP R0
 	;; Push the address / 4 (since it needs to be aligned)
-	push task1 / 4
+	PUSH task1 / 4
 	;; Return from interrupt
-	iret
+	IRETF
 .task_2:
-	ld0 which_task 
-	ld1 0
-	st1ta0
-	popr R1
-	popr R0
-	push task2 / 4
-	iret
-
-string: db 'Fello FVM World! 1234567890+-*=()', 0x0A, 'Please Type in something: ', 0x0A, 0
-int_string: db 0x0A, 'This is called from INT 1!', 0
+	LOAD_R0 which_task 
+	LOAD_R1 0
+	STORE_BYTE
+	POP R1
+	POP R0
+	PUSH task2 / 4
+	IRETF
 which_task: db 0
-song: db "Tonight I'm bringing Dunwall to life!", 0x0a, "As I walk on water through walls of light", 0x0A, "You heard the king as the urchins sing", 0x0A, "Revenge Solves everything.", 0x0a, 0
-END

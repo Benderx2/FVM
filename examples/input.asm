@@ -1,37 +1,37 @@
 org 0
 align 4
-include 'fvm.inc'
-ld0 hello_string
-call print
+include 'a32.inc'
+LOAD_R0 hello_string
+CALLF print
 read_key:
-	fcall 1
-	cmpv R1, 0
-	jex read_key
-	fcall 0
-	cmpv R1, 13
-	jex .done
-	cmpv R1, 10
-	jex .done
-	jtx read_key
+	VM_CALL 1
+	CMPV R1, 0
+	JMPF_E read_key
+	VM_CALL 0
+	CMPV R1, 13
+	JMPF_E .done
+	CMPV R1, 10
+	JMPF_E .done
+	JMPF read_key
 .done:
-	exit
+	VM_EXIT
 print:
-	push R0
-	push R1
+	PUSH R0
+	PUSH R1
 .p1:
 	;; Push (Save Register States)
 	;; Load BYTE from R0 into R1 (LODSB)
-	ld1fa0
+	LOAD_BYTE
 	;; Call VM Specific Function
-	fcall 0
+	VM_CALL 0
 	;; CMPV - Compare Value, Is R1 == NULL?
-	cmpv R1, 0
+	CMPV R1, 0
 	;; Yes. We're done
-	jex .done	
+	JMPF_E .done	
 	;; ...Or print again
-	jtx .p1
+	JMPF .p1
 .done:
-	popr R1
-	popr R0
-	ret
+	POP R1
+	POP R0
+	RETF
 hello_string: db 'Hello, Welcome to my Application', 0x0A, 'This is for testing keyboard input', 0
