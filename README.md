@@ -6,8 +6,7 @@ FVM
 The Flouronix Virtual Machine was written to provide a secure and architecture-independant userspace to the Flouronix operating system.<br>
 The virtual machine features a 32-bit address space, a stack, 6 general purpose registers, <br>
 various arithmetic instructions and <i>is</i> turing complete. For now the machine is incapable for doing most of the things <br>
-today's virtual architectures (.NET, Java...) can achieve. There are future plans to develop a programming language for FVM, but <br>
-that is not the current focus. <br>
+today's virtual architectures (.NET, Java...) can achieve. <br>There are future plans to develop a programming language for FVM, but sthat is not the current focus. <br>
 The architecure is a RISC-like architecture, and <i>most</i> of the operations are only performed on CPU registers. There are a special<br>
 set of instructions that can modify or act on the memory. <br>
 <h2>INSTRUCTION SET</h2>
