@@ -1,7 +1,7 @@
 FVM
 ===
 
-<h1>The Flouronix Virtual Machine Architecture (or FVM)</h1>
+<h2>The Flouronix Virtual Machine Architecture (or FVM)</h2>
 <h2>INTRODUCTION</h2>
 The Flouronix Virtual Machine was written to provide a secure and architecture-independant userspace to the Flouronix operating system.<br>
 The virtual machine features a 32-bit address space, a stack, 6 general purpose registers, <br>
@@ -17,12 +17,14 @@ know if it's possible to use them. I'd be happy if anyone could do this for me. 
 Along with the GNU toolchain for your system, you'll also need the Simple-Direct-Media Layer (SDL for short), https://www.libsdl.org/.
 The build has been tested with libSDL 1.2, It's recommended to compile it with<br> that version. It should work with the newer versions though
 untested!<br>
-For those who're using bash (or similar), there is a readymade "build.sh" script. It does everything that's required and even builds a test multitasking<br>
+For those who're using bash (or similar), there is a readymade "build.sh" script.<br> It does everything that's required and even builds a test multitasking
 ROM! Non-bash users could modify the script given.<br>
-There is a readymade binary called "fvm.out" for Linux, but please don't use it. It is advisable to build the VM with toolchain that is configured <br>
+There is a readymade binary called "fvm.out" for Linux, but please don't use it.<br> It is advisable to build the VM with toolchain that is configured 
 for your system.<br>
-Notes: The build system has not been tested with Windows or Mac, however it doesn't use anything that's Linux specific so it should not<br>
+Notes: The build system has not been tested with Windows or Mac, however it doesn't use anything<br> that's Linux specific so it should not
 require much effort to get it up and running.
+<h2>LICENSE<h2>
+Please see LICENSE.
 <h2>TODO</h2>
 ....
 
