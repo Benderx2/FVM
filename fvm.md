@@ -28,6 +28,8 @@ OUT0 - Output to port R0<br>
 XOR - Do a bitwise eXclusive OR <br>
 INCR - Add 1 to register <br>
 DECR - Subtract 1 from register <br>
+ADDR - Add register to register or operand <br>
+SUBR - Subtract Register from register or operand <br>
 MUL - Multiply Register with R0<br>
 DIV - Divide Register with R0<br>
 LDD - Load Register (DWORD) from address at R0 (can be UA)<br>
