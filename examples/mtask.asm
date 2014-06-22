@@ -5,6 +5,7 @@ use32
 org 0
 ;; Align addresses to 4-bytes please
 align 4
+dd 0xC00C1E5
 ;; Load Address of string into R1
 ld0 string
 ld1 'H'
@@ -37,7 +38,6 @@ task1:
 task2:
 	jtx task2
 .quit:
-exit
 print:
 	push R0
 	push R1

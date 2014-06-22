@@ -8,6 +8,8 @@ define R3 -261
 define R4 -262
 define R5 -262
 define SP -260
+; Header
+dd 0xC00C1E5
 ; V_SLEEP - Processor Sleep
 macro V_SLEEP {
 	dd 0x0
@@ -205,6 +207,16 @@ macro AND OP1, OP2
 macro VM_EXIT
 {
 	dd 0xFF
+}
+macro ADDR op1, op2 {
+	dd 0x27
+	dd op1
+	dd op2
+}
+macro SUBR op1, op2 {
+	dd 0x28
+	dd op1
+	dd op2
 }
 
 

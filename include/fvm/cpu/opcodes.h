@@ -80,5 +80,9 @@
 #define FVM_LDD 0x0025
 // FVM_V_LOAD - Load Virtual Table
 #define FVM_V_LOAD 0x0026
+// ADD - Add register and operand
+#define FVM_ADD 0x0027
+// SUB - Subtract Register and operand or vice versa
+#define FVM_SUB 0x0028
 #endif
 

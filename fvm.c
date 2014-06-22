@@ -147,6 +147,15 @@ int main (int argc, const char *argv[])
 	#endif
 	printf("\7"); 
 	FVM_TIMER = clock();
+	if(PhysicalMEM[0] != FVM_PROCESSOR_MODEL)
+	{
+		printf("ERR: [FATAL] ROM doesn't match processor version.\n");
+		FVM_EXIT(FVM_PROGRAM_ERR);
+	}
+	else {
+		/** Blank out the header **/
+		PhysicalMEM[0] = FVM_SLP;
+	}
 	while(CPU_regs->ON == 0x0001)
 	{
 		//! Any pending clocks?
@@ -163,7 +172,8 @@ int main (int argc, const char *argv[])
 		// Emulate instruction then
 		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, PhysicalMEM, FVM_IDTR, vtable);
 	}
-	printf("EXIT(1) Called by program\n");
+	printf("EXIT(1)\n");
+	FVM_SDL_setwincaption("Flouronix VM (Dormant)");
 	int END = 0;
 	while (END == 0)
 	{

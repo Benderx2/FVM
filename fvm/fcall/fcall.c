@@ -55,6 +55,10 @@ int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2)
 		FVM_SDL_putpixel(screen,r0, r1, r2);
 		FVM_SDL_updatedisplay(screen);
 	}
+	else if (callnum == FCALL_PRINTINT)
+	{
+		SDL_printf(bmpfont, screen,  "%d", r0);
+	}
 	return F_ERR;
 }
 

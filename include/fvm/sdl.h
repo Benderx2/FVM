@@ -36,4 +36,5 @@ void FVM_SDL_putchar(GL_SURFACE_t* font, GL_SURFACE_t* dest, unsigned char c);
 void FVM_SDL_putstring(GL_SURFACE_t* font, GL_SURFACE_t* dest, const char* string);
 void SDL_printf(GL_SURFACE_t* font, GL_SURFACE_t*  dest, const char *fmt, ...);
 void FVM_SDL_putpixel(GL_SURFACE_t *surface, int x, int y, uint32_t pixel);
+void SDL_printf(GL_SURFACE_t* font, GL_SURFACE_t*  dest, const char *fmt, ...);
 #endif

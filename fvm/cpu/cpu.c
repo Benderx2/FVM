@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <fvm/version.h>
 #include <fvm/cpu/opcodes.h>
 #include <fvm/cpu/registers.h>
 #include <fvm/cpu/cpu.h>
@@ -23,6 +24,14 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				break;
 			//! Exit
 			case FVM_EXT:
+				/** Change CPU Registers to exit state **/
+				CPU_regs->r0 = FVM_PROCESSOR_MODEL;
+				CPU_regs->r1 = FVM_VERSION_MAJOR;
+				CPU_regs->r2 = FVM_VERSION_MINOR;
+				printf("R0 - Processor Model: %X\n", CPU_regs->r0);
+				printf("R1 - FVM Version MAJOR: %X\n", CPU_regs->r1);
+				printf("R2 - FVM Version Minor: %X\n", CPU_regs->r2);
+				printf("R3, R4, R5, SP are zeroed, VM_EXIT()\n");
 				CPU_regs->ON = 0x0000;
 				break;
 			//! LD0 - Load R0
@@ -398,7 +407,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				break;
 			case FVM_DEBUG:
 				printf("\033[31m");
-				printf("\n>>>>>>DEBUG Instruction OPCODE:{%X} Executed, Will print CPU status: \n>R0 : [%X]\n>R1 : [%X]\n>R2 : [%X]\n>R3 [%X]\n>R4: [%X]\nR5 [%X]\n>R17 : [%X]\n>R12 : [%X]\n>R11 : [%X]\nE : [%X]\nG : [%X]\nL : [%X]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r2, CPU_regs->r3, CPU_regs->r4, CPU_regs->r5, CPU_regs->r17, CPU_regs->r12, CPU_regs->r11, CPU_Flags->E, CPU_Flags->G, CPU_Flags->L);
+				printf("\n>>>>>>DEBUG Instruction OPCODE:{%X} Executed, Will print CPU status: \n>R0 : [%X]\n>R1 : [%X]\n>R2 : [%X]\n>R3 : [%X]\n>R4 : [%X]\n>R5 : [%X]\n>RX : [%X]\n>SP : [%X]\n>IP : [%X]\nEF : [%X]\nGF : [%X]\nLF : [%X]\n", FVM_DEBUG, CPU_regs->r0, CPU_regs->r1, CPU_regs->r2, CPU_regs->r3, CPU_regs->r4, CPU_regs->r5, CPU_regs->r17, CPU_regs->r12, CPU_regs->r11, CPU_Flags->E, CPU_Flags->G, CPU_Flags->L);
 				//printf("Memory Contents: \n");
 				//uint8_t* tmp = (uint8_t*)PhysicalMEM;
 				//uint32_t i = 0;
@@ -843,7 +852,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 					AND_VAL2 = CPU_regs->r5;
 				}
 				else {
-					AND_VAL2 =  PhysicalMEM[CPU_regs->r11];
+					AND_VAL2 =  PhysicalMEM[CPU_regs->r11+1+1];
 				}
 				// Now set the operands appropriately
 				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
@@ -870,6 +879,8 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				{
 					CPU_regs->r5 = CPU_regs->r5 & AND_VAL2;
 				}
+				CPU_regs->r11 += 3;		
+				break;
 			// VMMINIT - Intialize Virtual Memory
 			case FVM_VMMINIT:
 				CPU_Flags->VMM = true;
@@ -952,7 +963,124 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				CPU_regs->r0 = saver0_1;
 				CPU_regs->r11 += 2;
 				break;
-			// V_LOAD - Load Virtual Address Table, pointer to address table MUST be 4-bytes aligned...
+			// ADD - Add two registers, or a constant with a register
+			case FVM_ADD:
+				CPU_regs->r11 = CPU_regs->r11;
+				int32_t ADD_VAL2;
+				if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R0)
+				{
+					 ADD_VAL2 = CPU_regs->r0;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R1)
+				{
+					 ADD_VAL2 = CPU_regs->r1;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R2)
+				{
+					 ADD_VAL2 = CPU_regs->r2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R3)
+				{
+					 ADD_VAL2 = CPU_regs->r3;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R4)
+				{
+					 ADD_VAL2 = CPU_regs->r4;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R5)
+				{
+					 ADD_VAL2 = CPU_regs->r5;
+				}
+				else {
+					 ADD_VAL2 =  PhysicalMEM[CPU_regs->r11+1+1];
+				}
+				// Now set the operands appropriately
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r0 = CPU_regs->r0 +  ADD_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r1 = CPU_regs->r1 +  ADD_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r2 = CPU_regs->r2 +  ADD_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r3 = CPU_regs->r3 +  ADD_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r4 = CPU_regs->r4 +  ADD_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r5 = CPU_regs->r5 +  ADD_VAL2;
+				}
+				printf(">>>>>>>LOG AND VAL 2 %d\n", ADD_VAL2);
+				CPU_regs->r11 += 3;
+				break;
+			// Subtract 2 registers
+			case FVM_SUB:
+				CPU_regs->r11 = CPU_regs->r11;
+				int32_t SUB_VAL2;
+				if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R0)
+				{
+					 SUB_VAL2 = CPU_regs->r0;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R1)
+				{
+					 SUB_VAL2 = CPU_regs->r1;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R2)
+				{
+					 SUB_VAL2 = CPU_regs->r2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R3)
+				{
+					 SUB_VAL2 = CPU_regs->r3;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R4)
+				{
+					 SUB_VAL2 = CPU_regs->r4;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1+1] == OPCODE_R5)
+				{
+					 SUB_VAL2 = CPU_regs->r5;
+				}
+				else {
+					 SUB_VAL2 =  PhysicalMEM[CPU_regs->r11+1+1];
+				}
+				// Now set the operands appropriately
+				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
+				{
+					CPU_regs->r0 = CPU_regs->r0 -  SUB_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R1)
+				{
+					CPU_regs->r1 = CPU_regs->r1 - SUB_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
+				{
+					CPU_regs->r2 = CPU_regs->r2 - SUB_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R3)
+				{
+					CPU_regs->r3 = CPU_regs->r3 - SUB_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R4)
+				{
+					CPU_regs->r4 = CPU_regs->r4 - SUB_VAL2;
+				}
+				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R5)
+				{
+					CPU_regs->r5 = CPU_regs->r5 - SUB_VAL2;
+				}
+				CPU_regs->r11 += 3;
+				break;
+			// V_LOAD - Load Virtual Address Table, pointer to address table MUST be 4-bytes aligned and must be physical...
 			case FVM_V_LOAD:
 					printf("WARNING! SYSTEM CONFIGURED V_TABLE WILL BE CHANGED. EXPECT UNDEFINED BEHAVIOUR!\n");
 					printf("Checking if  System is in VMM Mode....\n");
@@ -963,8 +1091,11 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 					}
 					else {
 						printf("System is not under VMM Mode, going to set V_TABLE!");
-						// TODO: Implement V_LOAD
+						vtable = (V_TABLE_t*)(PhysicalMEM + PhysicalMEM[CPU_regs->r11+1]);
 					}
+					CPU_regs->r12 += 2;
+					break;
+			
 			// LDSP - Load R1 from Stack Pointer Offset (i.e. LDSP 1 will load R1 from the first 4-bytes down the stack, LDSP 2 will load it from 8-bytes down the stack
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
