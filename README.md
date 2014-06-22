@@ -23,7 +23,7 @@ There is a readymade binary called "fvm.out" for Linux, but please don't use it.
 for your system.<br>
 Notes: The build system has not been tested with Windows or Mac, however it doesn't use anything<br> that's Linux specific so it should not
 require much effort to get it up and running.
-<h2>LICENSE<h2>
+<h2>LICENSE</h2>
 Please see LICENSE.
 <h2>TODO</h2>
 ....
