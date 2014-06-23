@@ -13,6 +13,13 @@ align 4
 use32
 ; Header
 dd 0xC00C1E5
+; Load address is 0
+dd _start
+; This executable's text section' is loaded at start. No need of anything else unless you want to RE-ORG.
+dd _start
+dd _end_start - _start
+; Vendor String
+db 'FVVENDOR'
 ; V_SLEEP - Processor Sleep
 macro V_SLEEP {
 	dd 0x0
@@ -226,5 +233,3 @@ macro LOAD_FROM_SP off
 	dd 0x29
 	dd off
 }
-
-

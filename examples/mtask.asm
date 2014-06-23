@@ -1,6 +1,7 @@
 ;; Simple test. Compile with FASM.
 ;; macros for fasm
 include 'a32.inc'
+_start:
 ;; Register Interrupt Handler
 LOAD_R0 0x01 ;; Register ISR 1
 LOAD_R1 int1a ;; Load ISR Handler Address
@@ -53,4 +54,5 @@ int1a:
 	POP R0
 	PUSH task2 / 4
 	IRETF
+_end_start:
 which_task: db 0

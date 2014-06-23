@@ -1,6 +1,6 @@
 ; C Default Calling convention
 include 'a32.inc'
-start:
+_start:
 	PUSH string_address
 	CALLF print
 	VM_EXIT
@@ -21,5 +21,6 @@ print:
 	POP R1
 	POP R0
 	RETF
+_end_start:
 string_address:
 	db 'Hello, World from cdecl', 0x0A, 0

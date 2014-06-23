@@ -1,6 +1,5 @@
-org 0
-align 4
 include 'a32.inc'
+_start:
 LOAD_R0 string
 CALLF print
 LOAD_R1 5
@@ -48,6 +47,7 @@ do_fib_test:
 	JMPF .ploop
 .done:
 	RETF
+_end_start:
 string: db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 0
 not_equal_string: db 'R0 and R1 aren"t equal FAIL', 0
 fib_test: db 'Fibonacci Test....', 0x0A, 0
