@@ -6,9 +6,9 @@ export FVM_INCLUDE=./include/
 export SDL_INCLUDE=/usr/include/SDL
 if [ $use_awesome_optimization=1 ]
 then 
-export CFLAGS='-O3 -Werror -Wstrict-prototypes -Wmissing-prototypes' # Werror - Because I want to.
+export CFLAGS='-O3 -Werror -Wstrict-prototypes -Wmissing-prototypes -fstack-protector-all' # Werror - Because I want to.
 else 
-export CFLAGS='-O0 -Werror -Wstrict-prototypes -Wmissing-prototypes'
+export CFLAGS='-O0 -Werror -Wstrict-prototypes -Wmissing-prototypes -fstack-protector-all'
 fi
 set -o verbose
 echo 'CFLAGS: ' $CFLAGS
