@@ -27,5 +27,5 @@ int loadrom(const char* ROMFILE, void* addr, uint32_t total_mem)
 	//! read the file
 	fread(addr, sizeof(uint8_t), rom_file_size, p);
 	printf("\nROM Reading Done.");
-	return 9;
+	return 0;
 }

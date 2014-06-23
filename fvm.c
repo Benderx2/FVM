@@ -17,11 +17,11 @@
 #include <fvm/cpu/mem/vmm.h>
 #include <fvm/cpu/opcodes.h>
 #include <fvm/rom/rom.h>
-#include <fvm/rom/fv11/fv11.h>
 #include <fvm/fcall/fcall.h>
 #include <fvm/cpu/registers.h>
 #include <fvm/cpu/ports.h>
 #include <fvm/gpu/gpu.h>
+#include <fvm/fv11/fv11.h>
 #ifdef _USE_PTHREAD
 #include <pthread.h>
 #endif
@@ -147,15 +147,21 @@ int main (int argc, const char *argv[])
 	#endif
 	printf("\7"); 
 	FVM_TIMER = clock();
-	if(PhysicalMEM[0] != FVM_PROCESSOR_MODEL)
+	/** Parse the headers**/
+	 FV11_HEADER_t* ROM_HEADER = ( FV11_HEADER_t*)&PhysicalMEM[0];
+	if(ROM_HEADER->magic != FV11_MAGIC)
 	{
 		printf("ERR: [FATAL] ROM doesn't match processor version.\n");
 		FVM_EXIT(FVM_PROGRAM_ERR);
 	}
-	else {
-		/** Blank out the header **/
-		PhysicalMEM[0] = FVM_SLP;
-	}
+	int32_t _start_address = ROM_HEADER->start_addr;
+	int32_t _where_to_load = ROM_HEADER->where_to_load;
+	int32_t _length_of_text_section = ROM_HEADER->length_of_text;
+	// Do a memcpy!
+	memcpy(PhysicalMEM + _where_to_load, PhysicalMEM + _start_address, _length_of_text_section);
+	/** Blank out the header **/
+	// PhysicalMEM[0] = FVM_SLP;
+	CPU_regs->r11 = _where_to_load / 4;
 	while(CPU_regs->ON == 0x0001)
 	{
 		//! Any pending clocks?
