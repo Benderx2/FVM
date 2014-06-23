@@ -221,5 +221,10 @@ macro SUBR op1, op2 {
 	dd op1
 	dd op2
 }
+macro LOAD_FROM_SP off
+{
+	dd 0x29
+	dd off
+}
 
 

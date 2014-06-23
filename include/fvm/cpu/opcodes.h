@@ -84,5 +84,7 @@
 #define FVM_ADD 0x0027
 // SUB - Subtract Register and operand or vice versa
 #define FVM_SUB 0x0028
+// Load from stack
+#define FVM_LDSP 0x0029
 #endif
 

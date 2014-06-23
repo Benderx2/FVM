@@ -938,7 +938,11 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				uint32_t* dummy2 = (uint32_t*)&tmp5[CPU_regs->r0];
 				if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R0)
 				{
-					  CPU_regs->r0=*dummy2;
+					CPU_regs->r0=*dummy2;
+					printf("R0 = %d ", CPU_regs->r0);	
+					printf("dummy2 = %d", *dummy2);
+					CPU_regs->r11 += 2;
+					break;
 				}
 				else if(PhysicalMEM[CPU_regs->r11+1] == OPCODE_R2)
 				{
@@ -1096,7 +1100,11 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 					CPU_regs->r12 += 2;
 					break;
 			
-			// LDSP - Load R1 from Stack Pointer Offset (i.e. LDSP 1 will load R1 from the first 4-bytes down the stack, LDSP 2 will load it from 8-bytes down the stack
+			// LDSP - Load R1 from Stack Pointer Offset (i.e. LDSP 1 will load R1 from the first 4-bytes down the stack, LDSP 2 will load it from 8-bytes down the stack)
+			case FVM_LDSP:
+					CPU_regs->r1 = PhysicalMEM[CPU_regs->r12 + PhysicalMEM[CPU_regs->r11+1]];
+					CPU_regs->r11 += 2;
+					break;
 			default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] R11: [0x%X]. Shutting Down....",PhysicalMEM[CPU_regs->r11], CPU_regs->r11);
 				CPU_regs->ON = 0x0000;
