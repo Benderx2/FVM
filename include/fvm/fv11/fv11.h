@@ -1,6 +1,7 @@
 #ifndef __FV11_H
 #define __FV11_H
 #include <stdint.h>
+#include <fvm/cpu/cpu.h>
 struct FV11_HEADER {
 	int32_t magic;
 	int32_t start_addr;
@@ -10,5 +11,6 @@ struct FV11_HEADER {
 };
 typedef struct FV11_HEADER FV11_HEADER_t;
 static const int FV11_MAGIC = 0xC00C1E5;
+int32_t fv11_load(FVM_BYTE_t* memory);
 #endif
 	

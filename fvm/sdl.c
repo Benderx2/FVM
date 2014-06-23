@@ -158,7 +158,7 @@ void SDL_printf(GL_SURFACE_t* font, GL_SURFACE_t*  dest, const char *fmt, ...) {
 		return;
 	}
        	char buf[512];
-	buf[512] = '\0'; // Null terminate
+	buf[511] = '\0'; // Null terminate
         va_list pvar;
         va_start(pvar, fmt);
 

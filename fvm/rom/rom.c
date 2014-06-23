@@ -25,7 +25,11 @@ int loadrom(const char* ROMFILE, void* addr, uint32_t total_mem)
 	printf("\nROM Address to be loaded at : [%p]", (void*) addr);
 	printf("\nReading ROM Image......");
 	//! read the file
-	fread(addr, sizeof(uint8_t), rom_file_size, p);
+	unsigned int read = fread(addr, sizeof(uint8_t), rom_file_size, p);
+	if (read < rom_file_size)
+	{
+		printf("WARNING: fread() returns: [%d], when expected [%d]", read, rom_file_size);
+	}
 	printf("\nROM Reading Done.");
 	return 0;
 }

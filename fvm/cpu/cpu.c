@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <fvm/tweaks.h>
 #include <fvm/version.h>
 #include <fvm/cpu/opcodes.h>
 #include <fvm/cpu/registers.h>
@@ -14,6 +15,7 @@
 #include <fvm/sdl.h>
 void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* PhysicalMEM,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
 {
+	UNUSED(NewCPU_state);
 	switch(PhysicalMEM[CPU_regs->r11])
 		{
 			//! Sleep
