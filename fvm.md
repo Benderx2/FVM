@@ -35,6 +35,7 @@ MUL - Multiply Register with R0<br>
 DIV - Divide Register with R0<br>
 LDD - Load Register (DWORD) from address at R0 (can be UA)<br>
 STD - Store Register (DWORD) to address at R0 (can be UA).<br>
+LOAD_FROM_SP - Load Value into R1 from offset in stack. (Each offset is 4 bytes) <br>
 EXIT - Exit Program <br>
 <h1>Not implemented instructions (Planned)</h1>
 OR - Bitwise OR <br>
