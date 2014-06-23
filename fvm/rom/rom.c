@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fvm/error.h>
+#include <fvm/rom/rom.h>
 //! Load a ROM into memory
 int loadrom(const char* ROMFILE, void* addr, uint32_t total_mem)
 {

@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <fvm/bitutils.h>
 // Some bit shit
 uint32_t setbit32(uint32_t integer, int num)
 {

@@ -29,6 +29,7 @@
 #ifdef __USE_GRAPHICS
 #include <fvm/sdl.h>
 #endif
+void* SDL_PollThread(void);
 // FVM IDT
 FVM_IDT_HANDLER_t FVM_IDTR[0xFF];
 // FVM IO Address Space
@@ -40,7 +41,6 @@ clock_t FVM_TIMER = 0;
 int StackCount = 0;
 #ifdef _USE_PTHREAD
 pthread_t* sdl_poll_thread;
-void* SDL_PollThread(void* args);
 #endif
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
@@ -194,7 +194,7 @@ int main (int argc, const char *argv[])
 	for(;;);
 }
 // SDL Thread the can be used for polling exits
-void* SDL_PollThread()
+void* SDL_PollThread(void)
 {
 	while(1)
 	{

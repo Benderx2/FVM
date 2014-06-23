@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <fvm/error.h>
 #ifdef __USE_GRAPHICS
 #include <SDL.h>
 #endif

@@ -8,12 +8,6 @@
 #define E_INVALIDOPCODE 0x13
 #define E_NOMEM 0x14
 #define E_GPF 0x15
-void E_DIVZERO_ERR();
-void E_STACKEND_ERR();
-void E_NOFPU_ERR();
-void E_INVALIDOPCODE_ERR();
-void E_NOMEM_ERR();
-void E_GPF_ERR();
 #endif
 
 
