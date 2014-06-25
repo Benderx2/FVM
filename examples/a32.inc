@@ -18,6 +18,12 @@ dd _start
 ; This executable's text section' is loaded at start. No need of anything else unless you want to RE-ORG.
 dd _start
 dd _end_start - _start
+dd _data
+dd _data
+dd _end_data - _data
+dd _bss
+dd _end_bss - _bss
+dd _end_bss + 200 
 ; Vendor String
 db 'FVVENDOR'
 ; V_SLEEP - Processor Sleep

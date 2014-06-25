@@ -631,7 +631,6 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 			case FVM_IRETX:
 				CPU_regs->r11 = PhysicalMEM[CPU_regs->r12+1];
 				CPU_regs->r12++;
-				printf("R12 [%X]\n", CPU_regs->r12);
 				StackCount--;
 				break;
 			/* INCR - Increment Reigster */

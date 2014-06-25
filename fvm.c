@@ -132,7 +132,9 @@ int main (int argc, const char *argv[])
 	printf("FVM Initialization Complete.\n");
 	printf("Preparing to allocate memory for emulator\n");
 	FVM_MEM_t* CPU_memory = (FVM_MEM_t*)malloc(sizeof(FVM_MEM_t));
-	FVM_BYTE_t* PhysicalMEM = (FVM_BYTE_t*)malloc(total_mem); 
+	uint8_t* MemoryAllocate = (uint8_t*)malloc(total_mem);
+	//FVM_BYTE_t* PhysicalMEM = (FVM_BYTE_t*)malloc(total_mem); 
+	FVM_BYTE_t* PhysicalMEM = (FVM_BYTE_t*)&MemoryAllocate[0];
 	CPU_memory->MEM_START = PhysicalMEM;
 	CPU_memory->MEM_SIZE = total_mem;
 	printf("Emulator has allocated Memory, Memory Address = [%p], Memory Range = [%d]\n", (void *)CPU_memory->MEM_START, CPU_memory->MEM_SIZE);
@@ -150,7 +152,10 @@ int main (int argc, const char *argv[])
 	FVM_TIMER = clock();
 	/** Blank out the header **/
 	// PhysicalMEM[0] = FVM_SLP;
-	CPU_regs->r11 = fv11_load(PhysicalMEM);
+	FV11_RETURN_t* retval = fv11_load(PhysicalMEM, total_mem);
+	CPU_regs->r11 = retval->r11;
+	CPU_regs->r12 = retval->sp;
+	printf("R11: [%d] and SP: [%d]\n", CPU_regs->r11, CPU_regs->r12);
 	while(CPU_regs->ON == 0x0001)
 	{
 		//! Any pending clocks?

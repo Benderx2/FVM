@@ -34,4 +34,8 @@ print:
 	POP R1
 	POP R0
 	RETF
+_data:
 hello_string: db 'Hello, Welcome to my Application', 0x0A, 'This is for testing keyboard input', 0
+_end_data:
+_bss:
+_end_bss:

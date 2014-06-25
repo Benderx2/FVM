@@ -60,6 +60,10 @@ do_fib_test:
 .done:
 	RETF
 _end_start:
+_data:
 string: db 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 0
 not_equal_string: db 'R0 and R1 aren"t equal FAIL', 0
 fib_test: db 'Fibonacci Test....', 0x0A, 0
+_end_data:
+_bss:
+_end_bss:

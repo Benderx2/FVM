@@ -55,4 +55,8 @@ int1a:
 	PUSH task2 / 4
 	IRETF
 _end_start:
+_data:
 which_task: db 0
+_end_data:
+_bss:
+_end_bss:

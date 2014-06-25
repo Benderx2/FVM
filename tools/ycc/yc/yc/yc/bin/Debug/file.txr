@@ -1,0 +1,11 @@
+class MainClass {
+	int volume = 500
+	int damage = 300
+	string string1 = " Hello, World "
+	proc Main {
+		LOAD_R0 MainClass->string1
+		CALLF print
+		VM_EXIT
+	}
+	
+}

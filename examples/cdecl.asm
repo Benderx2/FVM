@@ -23,4 +23,8 @@ print:
 	RETF
 _end_start:
 string_address:
+_data:
 	db 'Hello, World from cdecl', 0x0A, 0
+_end_data:
+_bss:
+_end_bss:

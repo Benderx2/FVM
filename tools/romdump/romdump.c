@@ -28,7 +28,7 @@ int main(int argc, const char* argv[])
 			exit(-1); 
 		}
 		else {
-			printf("MAGIC Header: [0x%X]\nStart Address (Relative to 0): [0x%X]\nExpected Load Address: [0x%X]\nLength of .text section : [0x%X]\nVendor String : %s\n", rom_header->magic, rom_header->start_addr, rom_header->where_to_load, rom_header->length_of_text, rom_header->vendorstring);
+			printf("MAGIC Header: [0x%X]\nStart Address (Relative to 0): [0x%X]\nExpected Load Address: [0x%X]\nLength of .text section : [0x%X]\nData Start: [0x%X]\nLength of .data section: [0x%X]\nExpected Data Load Address: [0x%X]\nBSS Address: [0x%X]\nBSS Length: [0x%X]\nStack Buffer Address: [0x%X]\nVendor String : %s\n", rom_header->magic, rom_header->start_addr, rom_header->where_to_load, rom_header->length_of_text, rom_header->start_of_data, rom_header->length_of_data, rom_header->where_to_load_data, rom_header->bss_start, rom_header->bss_length, rom_header->stack_buf,  rom_header->vendorstring);
 		}
 	}
 	return 0;		
