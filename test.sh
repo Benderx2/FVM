@@ -1,0 +1,1 @@
+./fvm.out 800 initrd.img mtask.bin

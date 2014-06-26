@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 struct initrd_header
 {
    unsigned char magic; // The magic number is there to check for consistency.
