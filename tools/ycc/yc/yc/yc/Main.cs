@@ -29,9 +29,9 @@ namespace yc
 		private static int NumberofInts = 0;
 		private static int NumberofStrings = 0;
 		private static int temp;
-		private static List<Proc> ProcList;
-		private static List<IntType> IntList;
-		private static List<StringType> StringList;
+		public static List<Proc> ProcList;
+		public static List<IntType> IntList;
+		public static List<StringType> StringList;
 		public static Proc TempProc;
 		public static IntType TempInt;
 		public static StringType TempString;
@@ -55,6 +55,7 @@ namespace yc
 				SourceText = SourceReader.ReadToEnd();
 				Console.WriteLine(SourceText);
 				/** Add the required stuff **/
+				SourceWriter.Write("align 4");
 				SourceWriter.Write("include 'a321.inc'" + Environment.NewLine );
 				SourceWriter.Write("dd 0xC001E5" + Environment.NewLine);
 				SourceWriter.Write("dd _start" + Environment.NewLine);
@@ -232,9 +233,84 @@ namespace yc
 					j++;
 				}
 				// Time for CodeGen! :)
+				// First we'll parse the MainClass->Main code.
+				string[] maincode = ProcList[mainoff].Code.Split(new char[]{});
+				// Alright time for parsing..
+				int index = 0;
+				while(index < maincode.Length)
+				{
+					switch(maincode[index])
+					{
+					case "LOAD_R0":
+						// Load register R0 with value
+						// Let's see if it belongs to a class
+						string[] parts = maincode[index+1].Split(new string[] { "->" }, StringSplitOptions.None);
+						// LOAD_R0 is done in the form of class->value or proc
+						int q, classstore = 0;
+						for(q = 0; q < yc.MainClass.NumberofClasses; q++)
+						{
+							if(parts[0] == ClassList[q])
+							{
+								Console.WriteLine("Class Found: " + ClassList[q]);
+								classstore = q;
+								q = -1;
+								// TODO: You know what I mean
+								goto done;
+							}
+						}
+					done:
+						if(q != -1)
+						{
+							Console.WriteLine("#error: Class not found");
+						}
+						int encounteredproc = 0, encounteredstring = 0, encounteredint = 0;
+						// Now let's find that proc or value.
+						// First scan the proc list
+						for(q = 0; q < yc.MainClass.NumberofProcs; q++)
+						{
+							if(parts[1] == ProcList[q].ProcName && ProcList[q].Parent == ClassList[classstore])
+							{
+								Console.WriteLine("#found: proc: " + ProcList[q].ProcName + "<-" + ClassList[classstore]);
+								encounteredproc = 1;
+								break;
+							}
+							else if(parts[1] == StringList[q].stringname && StringList[q].ClassParent == ClassList[classstore])
+							{ 
+								Console.WriteLine("#found string reference: " + StringList[q].stringname + "<-" + ClassList[classstore]);
+								encounteredstring = 1;
+								break;
+							}
+							else if(parts[1] == IntList[q].IntName && IntList[q].ClassParent == ClassList[classstore])
+							{
+								Console.WriteLine("#found int reference: " + IntList[q].IntName + "<-" + ClassList[classstore]);
+								encounteredint = 1;
+								break;
+							}
+						}
+						if(encounteredproc == 1)
+						{
+							SourceWriter.Write("LOAD_R0 " + ClassList[classstore]  + "." + ProcList[q].ProcName);
+							SourceWriter.Flush();
+						}
+						else if(encounteredint == 1)
+						{
+							SourceWriter.Write("LOAD_R0 " + IntList[q]);
+							SourceWriter.Flush();
+						}
+						else if(encounteredstring == 1)
+						{
+							SourceWriter.WriteLine("LOAD_R0 " + ClassList[classstore] + "." + StringList[q].stringname);
+							SourceWriter.WriteLine("JMPF $+" + ClassList[classstore] + "."  + StringList[q].stringname + ".strlen");
+							SourceWriter.WriteLine(ClassList[classstore] + "." + StringList[q].stringname + ": db '" + StringList[q].Value + "'");
+							SourceWriter.WriteLine(".strlen: dd $-" + ClassList[classstore] + "." + StringList[q].stringname);
+							SourceWriter.Flush();
 
-				SourceWriter.Write((string)ProcList[mainoff].Code);
-				SourceWriter.Flush();
+						}
+						index += 2;
+						break;
+					}
+					index++;
+				}
 			}
 		}
 	}
