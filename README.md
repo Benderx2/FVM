@@ -23,6 +23,13 @@ There is a readymade binary called "fvm.out" for Linux, but please don't use it.
 for your system.<br>
 Notes: The build system has not been tested with Windows or Mac, however it doesn't use anything<br> that's Linux specific so it should not
 require much effort to get it up and running.
+TESTING: <br>
+To test FVM, first you must compile your ROM using FASM. <br>
+<p>fasm romfile.asm</p><br>
+Next, you should compile tools/diskgen/diskgen.c and use it to create a ROM Image like this <br>
+<p>./diskgen rom1.bin rom1toinitrd.bin rom2.bin rom2toinitrd.bin .......</p><br>
+After this you must specifiy the inital ROM when you're about to run the VM.<br>
+./fvm.out memory romdisk.img initrom.bin
 <h2>LICENSE</h2>
 Please see LICENSE.
 <h2>TODO</h2>
