@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <fvm/error.h>
 #include <fvm/rom/rom.h>
-//! Load a ROM into memory
-int loadrom(const char* ROMFILE, void* addr, uint32_t total_mem)
+//! Load a  ROM disk image into memory
+int load_disk_image(const char* ROMFILE, void* addr, uint32_t total_mem)
 {
 	uint32_t rom_file_size;
 	//! open the file in Read + Binary mode

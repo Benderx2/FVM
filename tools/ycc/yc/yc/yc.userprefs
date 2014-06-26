@@ -2,8 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="yc/Main.cs">
     <Files>
-      <File FileName="yc/Main.cs" Line="149" Column="7" />
-      <File FileName="../../ycc/B32Assembler/Form1.cs" Line="1" Column="1" />
+      <File FileName="yc/Main.cs" Line="73" Column="6" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
