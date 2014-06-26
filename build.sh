@@ -12,6 +12,11 @@ export CFLAGS='-O0 -Werror -Wstrict-prototypes -Wmissing-prototypes -fstack-prot
 fi
 set -o verbose
 echo 'CFLAGS: ' $CFLAGS
+# Build the disk generator
+gcc ./tools/diskgen/diskgen.c -o diskgen.out
+# Build the romdump tool
+gcc ./tools/romdump/romdump.c -o romdump.out
+# Build the VM now.
 gcc $CFLAGS -c fvm.c -o fvm.o -I$FVM_INCLUDE -I$SDL_INCLUDE  
 gcc $CFLAGS -c fvm/error.c -o error.o -I$FVM_INCLUDE 
 gcc $CFLAGS -c fvm/cpu/mem/memory.c -o mem.o -I$FVM_INCLUDE
