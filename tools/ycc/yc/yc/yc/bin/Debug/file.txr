@@ -1,25 +1,24 @@
 class MainClass {
-	int volume = 500
-	int damage = 300
 	string string1 = " Hello, World "
 	proc Main {
 		LOAD_R0 MainClass->string1
-		CALLF MainClass->print
+		CALLF Console->print
 		VM_EXIT
 	}
+}
+class Console {
 	proc print {
+		PUSH R0	
 		PUSH R1
-		PUSH R0
 		.loop:
 		LOAD_BYTE
 		CMPR R1, 0
 		JMPF_E .done
-		VM_CALL 0
+		VM_CALL 0	
 		JMPF .loop
 		.done:
-		POP R0
 		POP R1
+		POP R0
 		RETF
 	}
-	
 }

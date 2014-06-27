@@ -60,6 +60,7 @@ namespace yc
 		public static string regstring = "";
 		public static int q, classstore;
 		public static string codegendata = "";
+		public static string[] parts;
 		public static System.IO.StreamWriter SourceWriter;
 		public static System.IO.TextReader SourceReader;
 		public static void Main (string[] args)
@@ -85,7 +86,7 @@ namespace yc
 				SourceWriter.Write("_start:" + Environment.NewLine + "PUSH R0" + Environment.NewLine + "JMPF MainClass.Main" + Environment.NewLine);
 				SourceWriter.Write("MainClass.Main:" + Environment.NewLine);
 				SourceWriter.Flush();
-				string[] tokens = SourceText.Split(new Char [] { ' ', '\n', '\t'});
+				string[] tokens = SourceText.Split(new Char [] { });
 				Console.WriteLine(tokens.Length.ToString());
 				int i = 0;
 				bool error = false;
@@ -94,7 +95,12 @@ namespace yc
 				{
 					switch (tokens[i].ToString())
 					{
+					case "\n":
+					case "\t":
+					case "\r":
+						break;
 					case "class":
+						Console.WriteLine("class found()");
 						if(tokens[i+2] != "{")
 						{
 							Console.WriteLine("#error: expected \"{\"");
@@ -104,23 +110,26 @@ namespace yc
 						whileinclass = true;
 						ClassList.Add(tokens[i+1]);
 						NumberofClasses += 1;
-						i += 2;
+						i += 1;
 						break;
 					case "proc":
+						Console.WriteLine("proc found()");
 						if(tokens[i+2] != "{")
 						{
 							Console.WriteLine("#error expected \"{\" while declaring proc");
 							error = true;
 						}
 						whileinproc = true;
-						TempProc.Parent = ClassList[NumberofClasses-1];
+						TempProc.Parent = ClassList[NumberofClasses - 1];
 						TempProc.ProcName = tokens[i+1];
 						i += 3;
+						TempProc.Code = "";
 						while(tokens[i] != "}")
 						{
 							TempProc.Code = TempProc.Code + tokens[i] + "\n";
 							i++;
 						}
+						i++;
 						whileinproc = false;
 						ProcList.Add(TempProc);
 						NumberofProcs += 1;
@@ -204,9 +213,7 @@ namespace yc
 							Console.WriteLine("#error: Unexpected Symbol \"{\"");
 							error = true;
 						}
-						i++;
 						break;
-
 					}
 
 					i++;
@@ -261,6 +268,7 @@ namespace yc
 				string[] procused;
 				while(r <= NumberOfUsedProcs-1)
 				{
+					Console.WriteLine(UsedProcs[r].Parent + "." + UsedProcs[r].ProcName + ":");
 					SourceWriter.WriteLine(UsedProcs[r].Parent + "." + UsedProcs[r].ProcName + ":");
 					procused = UsedProcs[r].Code.Split(new char[]{});
 					CodeGen(procused);
@@ -345,7 +353,7 @@ namespace yc
 						// Load register R0 with value
 						// Let's see if it belongs to a class
 						Console.WriteLine(index);
-						string[] parts = maincode[index+1].Split(new string[] { "->" }, StringSplitOptions.None);
+						 parts = maincode[index+1].Split(new string[] { "->" }, StringSplitOptions.None);
 						// LOAD_R0 is done in the form of class->value or proc
 						q = 0; classstore = 0;
 						for(q = 0; q < yc.MainClass.NumberofClasses; q++)
@@ -364,6 +372,7 @@ namespace yc
 						{
 							Console.WriteLine("#error: Class not found");
 						}
+						int x = 0;
 						int encounteredproc = 0, encounteredstring = 0, encounteredint = 0;
 						// Now let's find that proc or value.
 						// First scan the proc list
@@ -375,9 +384,11 @@ namespace yc
 								encounteredproc = 1;
 								encounteredint = 0;
 								encounteredstring = 0;
+								x = q;
 								break;
 							}
 						}
+
 						for(q = 0; q < yc.MainClass.NumberofStrings; q += 0)
 						{
 							if(parts[1] == StringList[q].stringname && StringList[q].ClassParent == ClassList[classstore])
@@ -386,7 +397,7 @@ namespace yc
 								encounteredstring = 1;
 								encounteredproc = 0;
 								encounteredint = 0;
-								q--;
+								x = q;
 								break;
 							}
 							q++;
@@ -399,36 +410,37 @@ namespace yc
 								encounteredint = 1;
 								encounteredproc = 0;
 								encounteredstring = 0;
+							x = q;
 								break;
 							}
 						}
-
 						if(encounteredproc == 1)
 						{
-						q--;
-							if(ProcList[q].used == 0)
+						//q--;
+							if(ProcList[x].used == 0)
 							{
-								UsedProcs.Add(ProcList[q]);
+								UsedProcs.Add(ProcList[x]);
 								NumberOfUsedProcs++;
-								ProcList[q] = new Proc(ProcList[q].ProcName, ProcList[q].Parent, ProcList[q].Code, /** Used Parameter **/ 1);
+								ProcList[x] = new Proc(ProcList[x].ProcName, ProcList[x].Parent, ProcList[x].Code, /** Used Parameter **/ 1);
 							}
-							SourceWriter.Write(regstring + " " + ClassList[classstore]  + "." + ProcList[q].ProcName);
+						Console.WriteLine("FICKING " + ProcList[x].ProcName + " NUM:" + x);
+							SourceWriter.Write(regstring + " " + ClassList[classstore]  + "." + ProcList[x].ProcName);
 							SourceWriter.Flush();
 						}
 						else if(encounteredint == 1)
 						{
-							SourceWriter.Write(regstring + " " + IntList[q].Value.ToString());
+							SourceWriter.Write(regstring + " " + IntList[x].Value.ToString());
 							SourceWriter.Flush();
 						}
 						else if(encounteredstring == 1)
 						{
-							q -= 2;
-							SourceWriter.WriteLine(regstring + " " + ClassList[classstore] + "." + StringList[q].stringname);
+							
+							SourceWriter.WriteLine(regstring + " " + ClassList[classstore] + "." + StringList[x].stringname);
 							//SourceWriter.WriteLine("JMPF " + ClassList[classstore] + "."  + StringList[q].stringname + ".next");
-							if(StringList[q].used == 0)
+							if(StringList[x].used == 0)
 							{
-								codegendata = codegendata + Environment.NewLine + ClassList[classstore] + "." + StringList[q].stringname + ": db '" + StringList[q].Value + "'" + ", 0";
-								StringList[q] = new StringType(StringList[q].ClassParent, StringList[q].stringname, StringList[q].Value, 1);
+								codegendata = codegendata + Environment.NewLine + ClassList[classstore] + "." + StringList[x].stringname + ": db '" + StringList[x].Value + "'" + ", 0";
+								StringList[x] = new StringType(StringList[x].ClassParent, StringList[x].stringname, StringList[x].Value, 1);
 							}
 							
 							SourceWriter.Flush();
