@@ -9,17 +9,34 @@ namespace yc
 			public string ProcName;
 			public string Parent;
 			public string Code;
+			public int used;
+			public Proc (string _procname, string _parent, string _code, int _used)
+			{
+				ProcName = _procname;
+				Parent = _parent;
+				Code = _code;
+				used = _used;
+			}
 		};
 		public struct IntType
 		{
 			public string ClassParent;
 			public string IntName;
 			public Int32 Value;
+			public int used;
 		}
 		public struct StringType {
 			public string ClassParent;
 			public string stringname;
 			public string Value;
+			public int used;
+			public StringType( string _classpar, string _name, string _value, int _used)
+			{
+				ClassParent = _classpar;
+				stringname = _name;
+				Value = _value;
+				used = _used;
+			}
 		}
 		private static string SourceText;
 		public static int CurrentIndex;
@@ -28,40 +45,43 @@ namespace yc
 		private static int NumberofProcs = 0;
 		private static int NumberofInts = 0;
 		private static int NumberofStrings = 0;
-		private static int temp;
+		private static int NumberOfUsedProcs;
 		public static List<Proc> ProcList;
 		public static List<IntType> IntList;
 		public static List<StringType> StringList;
+		public static List<Proc> UsedProcs;
 		public static Proc TempProc;
 		public static IntType TempInt;
 		public static StringType TempString;
 		public static bool whileinclass = false;
 		public static bool whileinproc = false;
+		public static int index = 0;
+		public static int isok = 0;
+		public static string regstring = "";
+		public static int q, classstore;
+		public static string codegendata = "";
+		public static System.IO.StreamWriter SourceWriter;
+		public static System.IO.TextReader SourceReader;
 		public static void Main (string[] args)
 		{
 			SourceText = "";
 			CurrentIndex = 0;
-			temp = 0;
+			NumberOfUsedProcs = 0;
 			ClassList = new System.Collections.Generic.List<string> (1024);
 			ProcList = new List<Proc>(1024);
 			IntList = new List<IntType>(1024);
+			UsedProcs = new List<Proc>(1024);
 			StringList = new List<StringType>(1024);
 			TempProc = new Proc();
 			TempInt = new IntType();
 			TempString = new StringType();
 			if (args.Length == 2) {
-				System.IO.StreamWriter SourceWriter = new System.IO.StreamWriter (args [1], true);
-				System.IO.TextReader SourceReader = System.IO.File.OpenText(args[0]);
+				SourceWriter = new System.IO.StreamWriter (args [1], true);
+				SourceReader = System.IO.File.OpenText(args[0]);
 				SourceText = SourceReader.ReadToEnd();
 				Console.WriteLine(SourceText);
 				/** Add the required stuff **/
-				SourceWriter.Write("align 4");
-				SourceWriter.Write("include 'a321.inc'" + Environment.NewLine );
-				SourceWriter.Write("dd 0xC001E5" + Environment.NewLine);
-				SourceWriter.Write("dd _start" + Environment.NewLine);
-				SourceWriter.Write("dd _start" + Environment.NewLine);
-				SourceWriter.Write("dd _end_start - _start" + Environment.NewLine);
-				SourceWriter.Write("db 'YCOMPILR'" + Environment.NewLine);
+				SourceWriter.Write("include 'a32.inc'"+ Environment.NewLine);
 				SourceWriter.Write("_start:" + Environment.NewLine + "PUSH R0" + Environment.NewLine + "JMPF MainClass.Main" + Environment.NewLine);
 				SourceWriter.Write("MainClass.Main:" + Environment.NewLine);
 				SourceWriter.Flush();
@@ -232,21 +252,102 @@ namespace yc
 					Console.WriteLine(StringList[j].ClassParent + "->" + StringList[j].stringname + " = " + StringList[j].Value);
 					j++;
 				}
-				// Time for CodeGen! :)
+					// Time for CodeGen! :)
 				// First we'll parse the MainClass->Main code.
 				string[] maincode = ProcList[mainoff].Code.Split(new char[]{});
+				CodeGen(maincode);
+				// Fill in the used procs
+				int r = 0;
+				string[] procused;
+				while(r <= NumberOfUsedProcs-1)
+				{
+					SourceWriter.WriteLine(UsedProcs[r].Parent + "." + UsedProcs[r].ProcName + ":");
+					procused = UsedProcs[r].Code.Split(new char[]{});
+					CodeGen(procused);
+					r++;
+				}
+				SourceWriter.Write("_end_start:" + Environment.NewLine + "_data:" + Environment.NewLine + codegendata + Environment.NewLine + "_end_data:" + Environment.NewLine + "_bss:" + Environment.NewLine + "_end_bss:");
+				SourceWriter.Flush();
+		}
+	}
+	public static void CodeGen(string[] maincode)
+		{
+
 				// Alright time for parsing..
-				int index = 0;
 				while(index < maincode.Length)
 				{
 					switch(maincode[index])
 					{
+					case "\n":
+					case "\t":
+					case "\r":
+					case " ":
+						break;
 					case "LOAD_R0":
+						isok = 1;
+						regstring = "LOAD_R0";
+						goto case "2609304962490762227902622226";
+					case "LOAD_R1":
+						isok = 1;
+						regstring = "LOAD_R1";
+						goto case "2609304962490762227902622226";
+					case "LOAD_R2":
+						isok = 1;
+						regstring = "LOAD_R2";
+						goto case "2609304962490762227902622226";
+					case "LOAD_R3":
+						isok = 1;
+						regstring = "LOAD_R3";
+						goto case "2609304962490762227902622226";
+					case "LOAD_R4":
+						isok = 1;
+						regstring = "LOAD_R4";
+						goto case "2609304962490762227902622226";
+					case "LOAD_R5":
+						isok = 1;
+						regstring = "LOAD_R5";
+						goto case "2609304962490762227902622226";
+				case "CALLF":
+					isok = 1;
+					regstring = "CALLF";
+					goto case "2609304962490762227902622226";
+					case "CMPR":
+						SourceWriter.WriteLine("CMPR " + maincode[index+1] + maincode[index+2]);
+						SourceWriter.Flush();
+						index += 2;
+						break;
+					case "ADDR":
+						SourceWriter.WriteLine("ADDR " + maincode[index+1] + maincode[index+2]);
+						SourceWriter.Flush();
+						index += 2;
+						break;
+					case "SUBR":
+						SourceWriter.WriteLine("SUBR " + maincode[index+1] + maincode[index+2]);
+						SourceWriter.Flush();
+						index += 2;
+						break;
+					case "PUSH":
+					case "POP":
+					case "MUL":
+					case "DIV":
+					case "JMPF":
+					case "VM_CALL":
+					case "JMPF_E":
+						SourceWriter.WriteLine(maincode[index]+ " " + maincode[index+1]);
+						index++;
+						break;
+					default:
+						// Console.WriteLine("WARNING: UD2");
+						SourceWriter.WriteLine(maincode[index]);
+						SourceWriter.Flush();
+						break;
+					case "2609304962490762227902622226":
 						// Load register R0 with value
 						// Let's see if it belongs to a class
+						Console.WriteLine(index);
 						string[] parts = maincode[index+1].Split(new string[] { "->" }, StringSplitOptions.None);
 						// LOAD_R0 is done in the form of class->value or proc
-						int q, classstore = 0;
+						q = 0; classstore = 0;
 						for(q = 0; q < yc.MainClass.NumberofClasses; q++)
 						{
 							if(parts[0] == ClassList[q])
@@ -272,46 +373,71 @@ namespace yc
 							{
 								Console.WriteLine("#found: proc: " + ProcList[q].ProcName + "<-" + ClassList[classstore]);
 								encounteredproc = 1;
-								break;
-							}
-							else if(parts[1] == StringList[q].stringname && StringList[q].ClassParent == ClassList[classstore])
-							{ 
-								Console.WriteLine("#found string reference: " + StringList[q].stringname + "<-" + ClassList[classstore]);
-								encounteredstring = 1;
-								break;
-							}
-							else if(parts[1] == IntList[q].IntName && IntList[q].ClassParent == ClassList[classstore])
-							{
-								Console.WriteLine("#found int reference: " + IntList[q].IntName + "<-" + ClassList[classstore]);
-								encounteredint = 1;
+								encounteredint = 0;
+								encounteredstring = 0;
 								break;
 							}
 						}
+						for(q = 0; q < yc.MainClass.NumberofStrings; q += 0)
+						{
+							if(parts[1] == StringList[q].stringname && StringList[q].ClassParent == ClassList[classstore])
+							{ 
+								Console.WriteLine("#found string reference: " + StringList[q].stringname + "<-" + ClassList[classstore]);
+								encounteredstring = 1;
+								encounteredproc = 0;
+								encounteredint = 0;
+								q--;
+								break;
+							}
+							q++;
+						}
+						for(q = 0; q < yc.MainClass.NumberofInts; q++)
+						{
+							if(parts[1] == IntList[q].IntName && IntList[q].ClassParent == ClassList[classstore])
+							{
+								Console.WriteLine("#found int reference: " + IntList[q].IntName + "<-" + ClassList[classstore]);
+								encounteredint = 1;
+								encounteredproc = 0;
+								encounteredstring = 0;
+								break;
+							}
+						}
+
 						if(encounteredproc == 1)
 						{
-							SourceWriter.Write("LOAD_R0 " + ClassList[classstore]  + "." + ProcList[q].ProcName);
+						q--;
+							if(ProcList[q].used == 0)
+							{
+								UsedProcs.Add(ProcList[q]);
+								NumberOfUsedProcs++;
+								ProcList[q] = new Proc(ProcList[q].ProcName, ProcList[q].Parent, ProcList[q].Code, /** Used Parameter **/ 1);
+							}
+							SourceWriter.Write(regstring + " " + ClassList[classstore]  + "." + ProcList[q].ProcName);
 							SourceWriter.Flush();
 						}
 						else if(encounteredint == 1)
 						{
-							SourceWriter.Write("LOAD_R0 " + IntList[q]);
+							SourceWriter.Write(regstring + " " + IntList[q].Value.ToString());
 							SourceWriter.Flush();
 						}
 						else if(encounteredstring == 1)
 						{
-							SourceWriter.WriteLine("LOAD_R0 " + ClassList[classstore] + "." + StringList[q].stringname);
-							SourceWriter.WriteLine("JMPF $+" + ClassList[classstore] + "."  + StringList[q].stringname + ".strlen");
-							SourceWriter.WriteLine(ClassList[classstore] + "." + StringList[q].stringname + ": db '" + StringList[q].Value + "'");
-							SourceWriter.WriteLine(".strlen: dd $-" + ClassList[classstore] + "." + StringList[q].stringname);
+							q -= 2;
+							SourceWriter.WriteLine(regstring + " " + ClassList[classstore] + "." + StringList[q].stringname);
+							//SourceWriter.WriteLine("JMPF " + ClassList[classstore] + "."  + StringList[q].stringname + ".next");
+							if(StringList[q].used == 0)
+							{
+								codegendata = codegendata + Environment.NewLine + ClassList[classstore] + "." + StringList[q].stringname + ": db '" + StringList[q].Value + "'" + ", 0";
+								StringList[q] = new StringType(StringList[q].ClassParent, StringList[q].stringname, StringList[q].Value, 1);
+							}
+							
 							SourceWriter.Flush();
-
 						}
-						index += 2;
+						index++;
 						break;
 					}
 					index++;
 				}
 			}
 		}
-	}
 }

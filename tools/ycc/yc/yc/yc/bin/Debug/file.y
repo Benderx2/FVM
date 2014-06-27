@@ -4,22 +4,14 @@ class MainClass {
 	string string1 = " Hello, World "
 	proc Main {
 		LOAD_R0 MainClass->string1
-		CALLF MainClass->print
-		VM_EXIT
-	}
-	proc print {
-		PUSH R1
-		PUSH R0
 		.loop:
 		LOAD_BYTE
 		CMPR R1, 0
 		JMPF_E .done
-		VMCALL 0
+		VM_CALL 0
 		JMPF .loop
 		.done:
-		POP R0
-		POP R1
-		RETF
+		VM_EXIT
 	}
 	
 }
