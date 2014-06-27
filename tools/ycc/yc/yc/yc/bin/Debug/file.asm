@@ -33,8 +33,7 @@ CMPR R1,0
 JMPF_E .done
 
 
-VMCALL
-0
+VM_CALL 0
 
 
 JMPF .loop
