@@ -41,7 +41,7 @@ struct FVM_REGISTERS {
 	FVM_REG_t r9;
 	FVM_REG_t r10;
 	/* Instruction Pointer */
-	FVM_REG_t r11;
+	FVM_REG_t IP;
 	/* Stack Pointer */	
 	FVM_REG_t r12;
 	/* Base Pointer */
@@ -96,5 +96,5 @@ struct FVM_CPU {
 };
 typedef struct FVM_CPU FVM_CPU_t;
 extern int StackCount;
-void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* PhysicalMEM,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable);
+void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable);
 #endif

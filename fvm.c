@@ -136,9 +136,9 @@ int main (int argc, const char *argv[])
 	printf("Preparing to allocate memory for emulator\n");
 	FVM_MEM_t* CPU_memory = (FVM_MEM_t*)malloc(sizeof(FVM_MEM_t));
 	uint8_t* MemoryAllocate = (uint8_t*)malloc(total_mem);
-	//FVM_BYTE_t* PhysicalMEM = (FVM_BYTE_t*)malloc(total_mem); 
-	FVM_BYTE_t* PhysicalMEM = (FVM_BYTE_t*)&MemoryAllocate[0];
-	CPU_memory->MEM_START = PhysicalMEM;
+	//FVM_BYTE_t* Memory32 = (FVM_BYTE_t*)malloc(total_mem); 
+	FVM_BYTE_t* Memory32 = (FVM_BYTE_t*)&MemoryAllocate[0];
+	CPU_memory->MEM_START = Memory32;
 	CPU_memory->MEM_SIZE = total_mem;
 	printf("Emulator has allocated Memory, Memory Address = [%p], Memory Range = [%d]\n", (void *)CPU_memory->MEM_START, CPU_memory->MEM_SIZE);
 	printf("Preparing to load ROM into memory....\n");
@@ -164,11 +164,11 @@ int main (int argc, const char *argv[])
 	printf("\7"); 
 	FVM_TIMER = clock();
 	/** Blank out the header **/
-	// PhysicalMEM[0] = FVM_SLP;
-	FV11_RETURN_t* retval = fv11_load(PhysicalMEM, total_mem);
-	CPU_regs->r11 = retval->r11;
+	// Memory32[0] = FVM_SLP;
+	FV11_RETURN_t* retval = fv11_load(Memory32, total_mem);
+	CPU_regs->IP = retval->r11;
 	CPU_regs->r12 = retval->sp;
-	printf("R11: [%d] and SP: [%d]\n", CPU_regs->r11, CPU_regs->r12);
+	printf("IP: [%d] and SP: [%d]\n", CPU_regs->IP, CPU_regs->r12);
 	printf("\nROM Loaded, \n");
 	#ifndef __USE_GRAPHICS
 	printf("Program Output:\n");
@@ -180,16 +180,16 @@ int main (int argc, const char *argv[])
 		//! Any pending clocks?
 		if(((clock() - FVM_TIMER) / (CLOCKS_PER_SEC/10000)) >= 1 && FVM_IDTR[1].address != 0 && NewCPU_state->interrupts_enabled == true)
 		{
-			CPU_regs->r11 = CPU_regs->r11;
-			uint32_t returnaddress2 = CPU_regs->r11;
-			PhysicalMEM[CPU_regs->r12] = returnaddress2;
+			CPU_regs->IP = CPU_regs->IP;
+			uint32_t returnaddress2 = CPU_regs->IP;
+			Memory32[CPU_regs->r12] = returnaddress2;
 			CPU_regs->r12--;
 			StackCount++;
-			CPU_regs->r11 = FVM_IDTR[1].address;
+			CPU_regs->IP = FVM_IDTR[1].address;
 			FVM_TIMER = clock();
 		}
 		// Emulate instruction then
-		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, PhysicalMEM, FVM_IDTR, vtable);
+		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, Memory32, FVM_IDTR, vtable);
 	}
 	printf("EXIT(1)\n");
 	FVM_SDL_setwincaption("Flouronix VM (Dormant)");
@@ -211,7 +211,7 @@ int main (int argc, const char *argv[])
 	free(NewCPU_state);
 	free(CPU_regs);
 	free(CPU_memory);
-	free(PhysicalMEM);
+	free(Memory32);
 	FVM_EXIT(FVM_NO_ERR);
 	//! Just in case if we haven't rescheduled
 	return FVM_NO_ERR;
