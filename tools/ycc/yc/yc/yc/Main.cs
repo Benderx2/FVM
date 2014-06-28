@@ -223,8 +223,10 @@ namespace yc
 								i++;
 							}
 						}
+						TempString.used = 1;
 						StringList.Add(TempString);
 						NumberofStrings++;
+						codegendata = codegendata + Environment.NewLine + TempString.ClassParent + "." + TempString.stringname + ": db '" + TempString.Value + "', 0";
 						break;
 					case "}":
 						if(whileinproc == true)
@@ -307,6 +309,7 @@ namespace yc
 	}
 	public static void CodeGen(string[] maincode)
 		{
+			int callproc = 0;
 			index = 0;
 				// Alright time for parsing..
 				while(index < maincode.Length)
@@ -320,7 +323,6 @@ namespace yc
 					Console.Write("__");
 					index++;
 						break;
-					break;
 					case "LOAD_R0":
 						isok = 1;
 						regstring = "LOAD_R0";
@@ -376,6 +378,7 @@ namespace yc
 						index++;
 						break;
 				case "CALLPROC":
+					callproc = 1;
 					regstring = "CALLF";
 					goto case "2609304962490762227902622226";
 					default:
@@ -464,6 +467,57 @@ namespace yc
 								ProcList[x] = new Proc(ProcList[x].ProcName, ProcList[x].Parent, ProcList[x].Code, /** Used Parameter **/ 1, ProcList[x].isextern);
 							}
 						Console.WriteLine("FICKING " + ProcList[x].ProcName + " NUM:" + x);
+							if(callproc == 1)
+							{
+							string[] args = maincode[index+2].Split(new char[] { ',' });
+							int e3 = 0;
+							callproc = 0;
+							string[] classandproc;
+							if(args.Length == 0)
+							{
+								Console.WriteLine("#ERROR: CALLPROC with not arguments, use CALLF instead");
+							}
+							while(e3 <= args.Length - 1)
+							{
+								classandproc = args[e3].Split(new string[] { "->" }, StringSplitOptions.None);
+								if(classandproc.Length != 2)
+								{
+									Console.WriteLine("#ERROR: CALLPROC isn't in class->int/string, class->proc format");
+									Console.WriteLine(classandproc.Length);
+								}
+									int isint = 0;
+									isint = 0;
+									// Let's see if it's an int
+									int xt = 0;
+									if(classandproc[0][0] == '$')
+									{
+										classandproc[0] = classandproc[0].Substring(1);
+										Console.WriteLine("Found $");
+									Console.WriteLine(classandproc[0]);
+										// Yup
+										while(xt < NumberofInts)
+										{
+										if(IntList[xt].ClassParent == classandproc[0] && IntList[xt].IntName == classandproc[1])
+											{
+											//Console.WriteLine(IntList[xt].ClassParent + "fuck");
+												isint = 1;
+												break;
+											}
+											xt++;
+										}
+									}
+									if(isint == 0)
+									{
+										SourceWriter.WriteLine("PUSH " + classandproc[0] + "." + classandproc[1]);
+									}
+									else {
+										SourceWriter.WriteLine("PUSH " + IntList[xt].Value.ToString());
+									}
+
+								e3++;
+							}
+							index++;
+							}
 							SourceWriter.Write(regstring + " " + ClassList[classstore]  + "." + ProcList[x].ProcName);
 							SourceWriter.Flush();
 						}

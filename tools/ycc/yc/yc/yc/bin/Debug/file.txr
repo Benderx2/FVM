@@ -7,9 +7,7 @@ class MainClass {
 	int damage = 300
 	string string1 = " Hello, World "
 	proc Main {
-		LOAD_R0 MainClass->string1
-		CALLF Console->WriteLine
-		CALLF Console->NewLine
+		CALLPROC Console->WriteLine MainClass->string1,$MainClass->damage
 		LOAD_R1 MainClass->damage
 		CALLF Console->WriteInt
 		VM_EXIT
