@@ -10,7 +10,7 @@ void load_file_from_disk(uint8_t* mem, const char* file_name, uint8_t* buffer)
 	initrd_header_t* header = (initrd_header_t*)&buffer[0];
 	initrd_file_header_t* file_headers = (initrd_file_header_t*)&buffer[sizeof(initrd_header_t)];
 	unsigned int i = 0;
-	for(i = 0; i <= header->files; i++)
+	for(i = 0; i < header->files; i++)
 	{
 		if(strcmp(file_headers[i].name, file_name) == 0)
 		{

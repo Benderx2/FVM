@@ -120,7 +120,6 @@ int main (int argc, const char *argv[])
 	CPU_regs->r8 = 0x0000;
 	CPU_regs->r9 = 0x0000;
 	CPU_regs->r10 = 0x0000;
-	CPU_regs->r11 = 0x0000;
 	/* Configure r12 to be the end of memory */
 	CPU_regs->r12 = (FVM_REG_t)total_mem;
 	CPU_regs->ON = 0x0001;
@@ -161,8 +160,7 @@ int main (int argc, const char *argv[])
 	load_file_from_disk(MemoryAllocate, argv[3], buffer);
 	fclose(fp);
 	//char* disk_file_name = (char*)argv[2];
-	//char* rom_file_name = (char*)argv[3];
-	CPU_regs->r11 = 0;
+	//char* rom_file_name = (char*)argv[3];./
 	printf("\7"); 
 	FVM_TIMER = clock();
 	/** Blank out the header **/

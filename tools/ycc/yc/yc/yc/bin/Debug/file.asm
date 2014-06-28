@@ -3,7 +3,9 @@ _start:
 PUSH R0
 JMPF MainClass.Main
 MainClass.Main:
+JMPF @f
 include "console.inc"
+@@:
 
 PUSH MainClass.string1
 PUSH 300

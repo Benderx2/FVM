@@ -79,6 +79,9 @@ namespace yc
 			TempInt = new IntType();
 			TempString = new StringType();
 			if (args.Length == 2) {
+				if(System.IO.File.Exists(args[1])){
+					System.IO.File.Delete(args[1]);
+				}
 				SourceWriter = new System.IO.StreamWriter (args [1], true);
 				SourceReader = System.IO.File.OpenText(args[0]);
 				SourceText = SourceReader.ReadToEnd();
@@ -102,7 +105,7 @@ namespace yc
 					case "\r":
 						break;
 					case "require":
-					SourceWriter.Write("include " + tokens[i+1]);
+					SourceWriter.Write("JMPF @f" + Environment.NewLine + "include " + tokens[i+1] + Environment.NewLine + "@@:");
 					SourceWriter.Flush();
 					i++;
 						break;
@@ -314,6 +317,7 @@ namespace yc
 				// Alright time for parsing..
 				while(index < maincode.Length)
 				{
+				bool isnumber = false;
 					switch(maincode[index])
 					{
 					case "\n":
@@ -324,26 +328,62 @@ namespace yc
 					index++;
 						break;
 					case "LOAD_R0":
+					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+					{
+						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+						index++;
+						break;
+					}
 						isok = 1;
 						regstring = "LOAD_R0";
 						goto case "2609304962490762227902622226";
 					case "LOAD_R1":
+					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+					{
+						SourceWriter.WriteLine(maincode[index] + " " +   maincode[index+1]);
+						index++;
+						break;
+					}						
 						isok = 1;
 						regstring = "LOAD_R1";
 						goto case "2609304962490762227902622226";
 					case "LOAD_R2":
+					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+					{
+						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+						index++;
+						break;
+					}
 						isok = 1;
 						regstring = "LOAD_R2";
 						goto case "2609304962490762227902622226";
 					case "LOAD_R3":
+					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+					{
+						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+						index++;
+						break;
+					}
 						isok = 1;
 						regstring = "LOAD_R3";
 						goto case "2609304962490762227902622226";
 					case "LOAD_R4":
+					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+					{
+						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+						index++;
+						break;
+					}
 						isok = 1;
 						regstring = "LOAD_R4";
 						goto case "2609304962490762227902622226";
-					case "LOAD_R5":
+				case "LOAD_R5":
+					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+					{
+						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+						index++;
+						break;
+					}
 						isok = 1;
 						regstring = "LOAD_R5";
 						goto case "2609304962490762227902622226";
@@ -366,6 +406,8 @@ namespace yc
 						SourceWriter.Flush();
 						index += 2;
 						break;
+					case "JMPF_L":
+					case "LOAD_FROM_SP":
 					case "PUSH":
 					case "POP":
 					case "MUL":
@@ -373,6 +415,8 @@ namespace yc
 					case "JMPF":
 					case "VM_CALL":
 					case "JMPF_E":
+					case "JMPF_G":
+			
 						SourceWriter.Write(maincode[index]+ " " + maincode[index+1]);
 					SourceWriter.Flush();
 						index++;

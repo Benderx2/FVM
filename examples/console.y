@@ -9,7 +9,9 @@ class Console {
 	int newline = 10
 	proc WriteLine {
 		PUSH R0
-		PUSH R1	
+		PUSH R1
+		LOAD_FROM_SP 4
+		LOAD_R0 R1	
 		.loop:
 		LOAD_BYTE
 		CMPR R1, 0
@@ -17,6 +19,8 @@ class Console {
 		VM_CALL 0
 		JMPF .loop
 		.done:
+		POP R1
+		POP R0
 		RETF
 	}
 	proc WriteInt {	
