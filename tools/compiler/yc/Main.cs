@@ -63,6 +63,7 @@ namespace yc
 		public static int q, classstore;
 		public static string codegendata = "";
 		public static string[] parts;
+		public static int libcompile = 0;
 		public static System.IO.StreamWriter SourceWriter;
 		public static System.IO.TextReader SourceReader;
 		public static void Main (string[] args)
@@ -78,23 +79,63 @@ namespace yc
 			TempProc = new Proc();
 			TempInt = new IntType();
 			TempString = new StringType();
-			if (args.Length == 2) {
+			if (args.Length >= 2) {
 				if(System.IO.File.Exists(args[1])){
 					System.IO.File.Delete(args[1]);
+				}
+				if(args.Length == 3)
+				{
+					if(args[2] == "-lib")
+					{
+						libcompile = 1;
+					}
 				}
 				SourceWriter = new System.IO.StreamWriter (args [1], true);
 				SourceReader = System.IO.File.OpenText(args[0]);
 				SourceText = SourceReader.ReadToEnd();
 				Console.WriteLine(SourceText);
 				/** Add the required stuff **/
+				if(libcompile != 1)
+				{
 				SourceWriter.Write("include 'a32.inc'"+ Environment.NewLine);
 				SourceWriter.Write("_start:" + Environment.NewLine + "PUSH R0" + Environment.NewLine + "JMPF MainClass.Main" + Environment.NewLine);
 				SourceWriter.Write("MainClass.Main:" + Environment.NewLine);
 				SourceWriter.Flush();
+				}
 				string[] tokens = SourceText.Split(new Char [] { });
 				Console.WriteLine(tokens.Length.ToString());
 				int i = 0;
 				bool error = false;
+				/** Preprocessor **/
+				i = 0;
+				while(i != tokens.Length && error == false)
+				{
+					switch(tokens[i])
+					{
+					case "$include":
+						Console.WriteLine("#include!");
+						try {
+						SourceReader = System.IO.File.OpenText(tokens[i+1]);
+						SourceText = SourceReader.ReadToEnd() + SourceText;
+						}
+						catch (System.IO.FileNotFoundException)
+						{
+							Console.WriteLine("#error: $include file not found");
+							error = true;
+						}
+						i++;
+						break;
+					}
+					i++;
+				}
+				if(error == true)
+				{
+					while(true){}
+				}
+				// Reset vars
+				i = 0;
+				error = false;
+				tokens = SourceText.Split(new char[] { });
 				/** Piece of shit Lexer. **/
 				while(i != tokens.Length && error == false)
 				{
@@ -155,6 +196,14 @@ namespace yc
 						TempProc.Code = "";
 						while(tokens[i] != "}")
 						{
+							if(tokens[i] == "/**")
+							{
+								while(tokens[i] != "**/")
+								{
+									i++;
+								}
+								i++;
+							}
 							TempProc.Code = TempProc.Code + tokens[i] + "\n";
 							i++;
 						}
@@ -306,7 +355,15 @@ namespace yc
 					CodeGen(procused);
 					r++;
 				}
-				SourceWriter.Write("_end_start:" + Environment.NewLine + "_data:" + Environment.NewLine + codegendata + Environment.NewLine + "_end_data:" + Environment.NewLine + "_bss:" + Environment.NewLine + "_end_bss:");
+				if(libcompile != 1)
+				{
+					SourceWriter.Write("_end_start:" + Environment.NewLine + "_data:" + Environment.NewLine + codegendata + Environment.NewLine + "_end_data:" + Environment.NewLine + "_bss:" + Environment.NewLine + "_end_bss:");
+					SourceWriter.Flush();
+					System.Diagnostics.Process.Start("fasm", args[1]);
+				}
+				else {
+					SourceWriter.Write(Environment.NewLine + codegendata);
+				}
 				SourceWriter.Flush();
 		}
 	}

@@ -4,8 +4,10 @@ PUSH R0
 JMPF MainClass.Main
 MainClass.Main:
 JMPF @f
-include "console.inc"
+include "console.lib"
 @@:
+
+
 
 PUSH MainClass.string1
 CALLF Console.WriteLine
