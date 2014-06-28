@@ -157,8 +157,8 @@ int main (int argc, const char *argv[])
 	uint8_t* buffer = malloc(sz);
 	fseek(fp, 0L, SEEK_SET);
 	load_disk_image(argv[2], buffer, sz);
+	// Load file from the Ram disk
 	load_file_from_disk(MemoryAllocate, argv[3], buffer);
-	// Close the disk image 
 	fclose(fp);
 	//char* disk_file_name = (char*)argv[2];
 	//char* rom_file_name = (char*)argv[3];

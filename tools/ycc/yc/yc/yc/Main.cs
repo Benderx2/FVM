@@ -10,12 +10,14 @@ namespace yc
 			public string Parent;
 			public string Code;
 			public int used;
-			public Proc (string _procname, string _parent, string _code, int _used)
+			public int isextern;
+			public Proc (string _procname, string _parent, string _code, int _used, int _isextern)
 			{
 				ProcName = _procname;
 				Parent = _parent;
 				Code = _code;
 				used = _used;
+				isextern = _isextern;
 			}
 		};
 		public struct IntType
@@ -98,6 +100,30 @@ namespace yc
 					case "\n":
 					case "\t":
 					case "\r":
+						break;
+					case "require":
+					SourceWriter.Write("include " + tokens[i+1]);
+					SourceWriter.Flush();
+					i++;
+						break;
+					case "externproc":
+						string[] eprocs = tokens[i+1].Split(new string[] { "->" }, StringSplitOptions.None);
+						if (eprocs.Length != 2)
+						{
+							error = true;
+							Console.WriteLine("error: Invalid external procedure declaration");
+							break;
+						}
+						// add teh class
+						ClassList.Add(eprocs[0]);
+						NumberofClasses++;
+						// class->proc form
+						TempProc.Parent = eprocs[0];
+						TempProc.ProcName = eprocs[1];
+						TempProc.isextern = 1;
+						ProcList.Add(TempProc);
+						NumberofProcs++;
+						index++;
 						break;
 					case "class":
 						Console.WriteLine("class found()");
@@ -268,9 +294,10 @@ namespace yc
 				string[] procused;
 				while(r <= NumberOfUsedProcs-1)
 				{
-					Console.WriteLine(UsedProcs[r].Parent + "." + UsedProcs[r].ProcName + ":");
+					Console.WriteLine(UsedProcs[r].Parent + "." + UsedProcs[r].ProcName + ":"+ UsedProcs[r].Code);
 					SourceWriter.WriteLine(UsedProcs[r].Parent + "." + UsedProcs[r].ProcName + ":");
 					procused = UsedProcs[r].Code.Split(new char[]{});
+					Console.WriteLine("L"  + index + " " + procused.Length);
 					CodeGen(procused);
 					r++;
 				}
@@ -280,7 +307,7 @@ namespace yc
 	}
 	public static void CodeGen(string[] maincode)
 		{
-
+			index = 0;
 				// Alright time for parsing..
 				while(index < maincode.Length)
 				{
@@ -290,7 +317,10 @@ namespace yc
 					case "\t":
 					case "\r":
 					case " ":
+					Console.Write("__");
+					index++;
 						break;
+					break;
 					case "LOAD_R0":
 						isok = 1;
 						regstring = "LOAD_R0";
@@ -320,17 +350,17 @@ namespace yc
 					regstring = "CALLF";
 					goto case "2609304962490762227902622226";
 					case "CMPR":
-						SourceWriter.WriteLine("CMPR " + maincode[index+1] + maincode[index+2]);
+						SourceWriter.Write("CMPR " + maincode[index+1] + maincode[index+2]);
 						SourceWriter.Flush();
 						index += 2;
 						break;
 					case "ADDR":
-						SourceWriter.WriteLine("ADDR " + maincode[index+1] + maincode[index+2]);
+						SourceWriter.Write("ADDR " + maincode[index+1] + maincode[index+2]);
 						SourceWriter.Flush();
 						index += 2;
 						break;
 					case "SUBR":
-						SourceWriter.WriteLine("SUBR " + maincode[index+1] + maincode[index+2]);
+						SourceWriter.Write("SUBR " + maincode[index+1] + maincode[index+2]);
 						SourceWriter.Flush();
 						index += 2;
 						break;
@@ -341,23 +371,33 @@ namespace yc
 					case "JMPF":
 					case "VM_CALL":
 					case "JMPF_E":
-						SourceWriter.WriteLine(maincode[index]+ " " + maincode[index+1]);
+						SourceWriter.Write(maincode[index]+ " " + maincode[index+1]);
+					SourceWriter.Flush();
 						index++;
 						break;
+				case "CALLPROC":
+					regstring = "CALLF";
+					goto case "2609304962490762227902622226";
 					default:
 						// Console.WriteLine("WARNING: UD2");
 						SourceWriter.WriteLine(maincode[index]);
 						SourceWriter.Flush();
 						break;
 					case "2609304962490762227902622226":
-						// Load register R0 with value
-						// Let's see if it belongs to a class
 						Console.WriteLine(index);
 						 parts = maincode[index+1].Split(new string[] { "->" }, StringSplitOptions.None);
 						// LOAD_R0 is done in the form of class->value or proc
 						q = 0; classstore = 0;
-						for(q = 0; q < yc.MainClass.NumberofClasses; q++)
+						for(q = 0; q <= yc.MainClass.NumberofClasses; q++)
 						{
+							if(parts.Length != 2)
+							{
+							Console.WriteLine("F>>K OFF");
+							Console.WriteLine("Expected parts.length is 2 but: " + parts.Length  + " Unwanted puke: "+ parts[parts.Length-1]);
+							while(true)
+							{
+							}
+							}
 							if(parts[0] == ClassList[q])
 							{
 								Console.WriteLine("Class Found: " + ClassList[q]);
@@ -417,11 +457,11 @@ namespace yc
 						if(encounteredproc == 1)
 						{
 						//q--;
-							if(ProcList[x].used == 0)
+							if(ProcList[x].used == 0 && ProcList[x].isextern != 1)
 							{
-								UsedProcs.Add(ProcList[x]);
+								UsedProcs.Add(ProcList[x] );
 								NumberOfUsedProcs++;
-								ProcList[x] = new Proc(ProcList[x].ProcName, ProcList[x].Parent, ProcList[x].Code, /** Used Parameter **/ 1);
+								ProcList[x] = new Proc(ProcList[x].ProcName, ProcList[x].Parent, ProcList[x].Code, /** Used Parameter **/ 1, ProcList[x].isextern);
 							}
 						Console.WriteLine("FICKING " + ProcList[x].ProcName + " NUM:" + x);
 							SourceWriter.Write(regstring + " " + ClassList[classstore]  + "." + ProcList[x].ProcName);
