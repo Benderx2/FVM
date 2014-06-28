@@ -92,47 +92,46 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 			//! ld1 value
 			/* PUSH -- Push to the stack pointer */
 			case FVM_PUSH:
-				if (Memory[CPU_regs->IP+1] == OPCODE_R0)
+				switch(Memory[CPU_regs->IP+1])
 				{
-					Memory[CPU_regs->r12] = CPU_regs->r0;
+					int32_t pushval;
+					case OPCODE_R0:	
+							pushval = CPU_regs->r0;
+							goto _push_instruction;
+					case OPCODE_R1:
+							pushval = CPU_regs->r1;
+							goto _push_instruction;
+					case OPCODE_R2:
+							pushval = CPU_regs->r2;
+							goto _push_instruction;
+					case OPCODE_R3:
+							pushval = CPU_regs->r3;
+							goto _push_instruction;
+					case OPCODE_R4:
+							pushval = CPU_regs->r4;
+							goto _push_instruction;
+					case OPCODE_R5:
+							pushval = CPU_regs->r5;
+							goto _push_instruction;
+					case OPCODE_R12:	
+							pushval = CPU_regs->r12;
+							goto _push_instruction;
+					default:
+							pushval = Memory[CPU_regs->IP+1];
+					_push_instruction:
+							Memory[CPU_regs->r12] = pushval;
+							CPU_regs->r12--;
+							StackCount++;
+							break;
 				}
-				else if (Memory[CPU_regs->IP+1] == OPCODE_R1) {
-					Memory[CPU_regs->r12] = CPU_regs->r1;
-				}
-				else if (Memory[CPU_regs->IP+1] == OPCODE_R2)
-				{
-					Memory[CPU_regs->r12] = CPU_regs->r2;
-				}
-				else if (Memory[CPU_regs->IP+1] == OPCODE_R3)
-				{
-					Memory[CPU_regs->r12] = CPU_regs->r3;
-				}
-				else if (Memory[CPU_regs->IP+1] == OPCODE_R4)
-				{
-					Memory[CPU_regs->r12] = CPU_regs->r4;
-				}
-				else if (Memory[CPU_regs->IP+1] == OPCODE_R5)
-				{
-					Memory[CPU_regs->r12] = CPU_regs->r5;
-				}
-				else if (Memory[CPU_regs->IP+1] == OPCODE_R12)
-				{
-					Memory[CPU_regs->r12] = CPU_regs->r12;
-				}
-				else {
-					Memory[CPU_regs->r12] = Memory[CPU_regs->IP+1];
-				}
-				CPU_regs->r12--;
-				StackCount++;
-				//if (StackCount >= NewCPU_state->stack_limit)
+				CPU_regs->IP += 2;
+				break;					//if (StackCount >= NewCPU_state->stack_limit)
 				//{
 				//	printf("\nR12 : [%X]", CPU_regs->r12);
 				//	printf("\n>>>>>>Stack F**K Up. Exitting Emulator\n");
 				//	FVM_EXIT(FVM_STACK_ERR);
 				//}
-				CPU_regs->IP += 2;
-				break;
-			/* Pop out something from the stack into Reg */
+				/* Pop out something from the stack into Reg */
 			case FVM_POPR:
 				if (Memory[CPU_regs->IP+1] == OPCODE_R0)	
 				{
