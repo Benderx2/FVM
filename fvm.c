@@ -4,12 +4,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+#include <signal.h>
 #include <float.h>
 #include <assert.h>
 #include <time.h>
 #include <errno.h>
 #include <fvm/bitutils.h>
 #include <fvm/error.h>
+#include <fvm/sighandle.h>
 #include <fvm/version.h>
 #include <fvm/cpu/cpu.h>
 #include <fvm/cpu/fault.h>
@@ -67,6 +69,11 @@ int main (int argc, const char *argv[])
 		printf("FVM - Flouronix Virtual Machine Version [%s]\nUsage: fvm [memory] [ROM Disk Image] [ROM File]\n", FVM_VER);
 		FVM_EXIT(FVM_FATAL_ERR);
 	}
+	/** Install the SIGSEGV handler **/
+	signal(SIGSEGV, SIGSEGV_handler);
+	/** SIGILL **/
+	signal(SIGILL, SIGILL_handler);
+	__asm__("ud2");
 	//! Proccess command line arguments
 	uint32_t total_mem = atoi(argv[1]);
 	#ifdef __USE_GRAPHICS
