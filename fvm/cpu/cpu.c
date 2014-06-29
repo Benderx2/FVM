@@ -418,66 +418,60 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				break;
 			/* INCR - Increment Reigster */
 			case FVM_INCR:
-				if(Memory[CPU_regs->IP+1] == OPCODE_R0)
+				switch(Memory[CPU_regs->IP+1])
 				{
-					CPU_regs->r0++;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R1)
-				{
-					CPU_regs->r1++;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R2)
-				{
-					CPU_regs->r2++;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R3)
-				{
-					CPU_regs->r3++;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R4)
-				{
-					CPU_regs->r4++;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R5)
-				{
-					CPU_regs->r5++;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R12)
-				{
-					CPU_regs->r12++;
+					case OPCODE_R0:
+						CPU_regs->r0++;
+						break;
+					case OPCODE_R1:
+						CPU_regs->r1++;
+						break;		
+					case OPCODE_R2:
+						CPU_regs->r2++;
+						break;	
+					case OPCODE_R3:
+						CPU_regs->r3++;
+						break;
+					case OPCODE_R4:
+						CPU_regs->r4++;
+						break;	
+					case OPCODE_R5:
+						CPU_regs->r5++;
+						break;	
+					case OPCODE_R12:
+						CPU_regs->r12++;
+						break;
 				}
 				CPU_regs->IP += 2;
 				break;
 			/* DECR - Decrement Register */
 			case FVM_DECR:
-				if(Memory[CPU_regs->IP+1] == OPCODE_R0)
+				switch(Memory[CPU_regs->IP+1])
 				{
-					CPU_regs->r0--;
+					case OPCODE_R0:
+						CPU_regs->r0--;
+						break;
+					case OPCODE_R1:
+						CPU_regs->r1--;
+						break;		
+					case OPCODE_R2:
+						CPU_regs->r2--;
+						break;	
+					case OPCODE_R3:
+						CPU_regs->r3--;
+						break;
+					case OPCODE_R4:
+						CPU_regs->r4--;
+						break;	
+					case OPCODE_R5:
+						CPU_regs->r5--;
+						break;	
+					case OPCODE_R12:
+						CPU_regs->r12--;
+						break;
 				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R1)
-				{
-					CPU_regs->r1--;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R2)
-				{
-					CPU_regs->r2--;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R3)
-				{
-					CPU_regs->r3--;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R4)
-				{
-					CPU_regs->r4--;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R5)
-				{
-					CPU_regs->r5--;
-				}
-				else if(Memory[CPU_regs->IP+1] == OPCODE_R12)
-				{
-					CPU_regs->r12--;
-				}
+				CPU_regs->IP += 2;
+				break;
 				CPU_regs->IP += 2;
 				break;
 			// Grab a DWORD from port

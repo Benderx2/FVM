@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <fvm/error.h>
+#include <fvm/tweaks.h>
+#include <fvm/classloader.h>
 #include <fvm/cpu/cpu.h>
 #include <fvm/fv11/fv11.h>
 FV11_RETURN_t returnval;
@@ -27,6 +29,16 @@ FV11_RETURN_t* fv11_load(FVM_BYTE_t* Memory, int32_t memsize)
 	// Do a memcpy!
 	memcpy(Memory + _where_to_load, Memory + _start_address, _length_of_text_section);
 	memcpy(Memory + _where_to_load_data, Memory + _start_of_data, _length_of_data);
+	// Next set the pointer properly (currently it's relative to 0, we want it relative to memory)
+	if(ROM_HEADER->isclassreq > 0) // Are classes required for this program?
+	{
+		// Yup! Load them!
+		class_header_t* classes_required = (class_header_t*)&(Memory[ROM_HEADER->pointer_to_class_set]);
+		for(int i = 0; i < ROM_HEADER->isclassreq; i++)
+		{
+			UNUSED(classes_required[0]);
+		}	
+	}
 	// Zero out BSS
 	memset(Memory + ROM_HEADER->bss_start, '\0', ROM_HEADER->bss_length);
 	returnval.r11 = _where_to_load / 4;

@@ -73,7 +73,7 @@ int main (int argc, const char *argv[])
 	signal(SIGSEGV, SIGSEGV_handler);
 	/** SIGILL **/
 	signal(SIGILL, SIGILL_handler);
-	__asm__("ud2");
+	
 	//! Proccess command line arguments
 	uint32_t total_mem = atoi(argv[1]);
 	#ifdef __USE_GRAPHICS

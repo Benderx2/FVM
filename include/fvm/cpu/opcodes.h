@@ -86,5 +86,7 @@
 #define FVM_SUB 0x0028
 // Load from stack
 #define FVM_LDSP 0x0029
+// LDBP - Load Base ptr
+#define FVM_LDBP 0x0030
 #endif
 

@@ -14,7 +14,12 @@ struct FV11_HEADER {
 	int32_t bss_length;
 	int32_t stack_buf;
 	char vendorstring[8];
+	int32_t isclassreq;
+	int32_t pointer_to_class_set;
 };
+typedef struct {
+	char classname[64];
+} class_header_t;
 struct FV11_RETURN {
 	int32_t r11;
 	int32_t sp;
