@@ -8,7 +8,7 @@ Note: '/' stands for the FVM source directory.<br>
 /fvm/cpu/cpu.c:493:25 - Incorporate AND, XOR, OR in one switch(){} statement<br>
 /fvm/devices/video.c:0:0 - Complete FGX video card emulation<br>
 /fvm/initrd/initrd.c:13:9 - Add better error handling<br>
-/fvm/rom/fv11.c:16:9 - Remove int32_t's a use direct references.<br>
+/fvm/rom/fv11.c:16:9 - Remove int32_t's and use direct references.<br>
 /fvm/sdl.c:155:1 - Add checks for buffer overflows<br>
 /fvm.c:86:9 - Use pthread to actually do something useful.<br>
 /include/fvm/cpu/cpu.h:32:9 - Use arrays instead of registers <br>
