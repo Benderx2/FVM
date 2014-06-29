@@ -5,6 +5,10 @@ namespace yc
 {
 	class MainClass
 	{
+		public struct PolyMorphClass {
+			public string classptr;
+			public string classname;
+		}
 		public struct Proc {
 			public string ProcName;
 			public string Parent;
@@ -59,6 +63,7 @@ namespace yc
 		public static bool whileinproc = false;
 		public static int index = 0;
 		public static int isok = 0;
+		public static int MinusOne = -1;
 		public static string regstring = "";
 		public static int q, classstore;
 		public static string codegendata = "";
@@ -176,6 +181,7 @@ namespace yc
 							Console.WriteLine("#error: expected \"{\"");
 							error = true;
 						}
+
 						/** Yes we have a class that didn't end **/
 						whileinclass = true;
 						ClassList.Add(tokens[i+1]);
@@ -386,68 +392,68 @@ namespace yc
 						break;
 					case "LOAD_R0":
 					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
-					{
-						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
-						index++;
-						break;
-					}
+						{
+							SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+							index++;
+							break;
+						}
 						isok = 1;
 						regstring = "LOAD_R0";
-						goto case "2609304962490762227902622226";
+						goto case "\0";
 					case "LOAD_R1":
-					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
-					{
-						SourceWriter.WriteLine(maincode[index] + " " +   maincode[index+1]);
-						index++;
-						break;
-					}						
+						if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+						{
+							SourceWriter.WriteLine(maincode[index] + " " +   maincode[index+1]);
+							index++;
+							break;
+						}						
 						isok = 1;
 						regstring = "LOAD_R1";
-						goto case "2609304962490762227902622226";
+						goto case "\0";
 					case "LOAD_R2":
-					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
-					{
-						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
-						index++;
-						break;
-					}
+						if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+						{
+							SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+							index++;
+							break;
+						}
 						isok = 1;
 						regstring = "LOAD_R2";
-						goto case "2609304962490762227902622226";
+						goto case "\0";
 					case "LOAD_R3":
-					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
-					{
-						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
-						index++;
-						break;
-					}
+						if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+						{
+							SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+							index++;
+							break;
+						}
 						isok = 1;
 						regstring = "LOAD_R3";
-						goto case "2609304962490762227902622226";
+						goto case "\0";
 					case "LOAD_R4":
-					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
-					{
-						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
-						index++;
-						break;
-					}
+						if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+						{
+							SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+							index++;
+							break;
+						}
 						isok = 1;
 						regstring = "LOAD_R4";
-						goto case "2609304962490762227902622226";
+						goto case "\0";
 				case "LOAD_R5":
-					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
-					{
-						SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
-						index++;
-						break;
-					}
+						if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
+						{
+							SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
+							index++;
+							break;
+						}
 						isok = 1;
 						regstring = "LOAD_R5";
-						goto case "2609304962490762227902622226";
+					goto case "\0";
 				case "CALLF":
 					isok = 1;
 					regstring = "CALLF";
-					goto case "2609304962490762227902622226";
+					goto case "\0";
 					case "CMPR":
 						SourceWriter.Write("CMPR " + maincode[index+1] + maincode[index+2]);
 						SourceWriter.Flush();
@@ -473,21 +479,20 @@ namespace yc
 					case "VM_CALL":
 					case "JMPF_E":
 					case "JMPF_G":
-			
 						SourceWriter.Write(maincode[index]+ " " + maincode[index+1]);
-					SourceWriter.Flush();
+						SourceWriter.Flush();
 						index++;
 						break;
 				case "CALLPROC":
 					callproc = 1;
 					regstring = "CALLF";
-					goto case "2609304962490762227902622226";
+					goto case "\0";
 					default:
 						// Console.WriteLine("WARNING: UD2");
 						SourceWriter.WriteLine(maincode[index]);
 						SourceWriter.Flush();
 						break;
-					case "2609304962490762227902622226":
+				case "\0":
 						Console.WriteLine(index);
 						 parts = maincode[index+1].Split(new string[] { "->" }, StringSplitOptions.None);
 						// LOAD_R0 is done in the form of class->value or proc
