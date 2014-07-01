@@ -10,6 +10,11 @@
 #endif
 uint32_t retval;
 uint32_t returnval;
+union floatint {
+	int32_t i;
+	float f;
+};
+union floatint temp;
 int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2)
 {
 	if (callnum == FCALL_WRITE)
@@ -57,7 +62,15 @@ int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2)
 	}
 	else if (callnum == FCALL_PRINTINT)
 	{
-		SDL_printf(bmpfont, screen,  "%d", r0);
+		SDL_printf(bmpfont, screen,  "%d", r1);
+		FVM_SDL_updatedisplay(screen);
+	}
+	else if(callnum == FCALL_PRINTFLOAT)
+	{
+		temp.f = 0.0f;
+		temp.i = r1;
+		SDL_printf(bmpfont, screen, "%f", temp.f);
+		FVM_SDL_updatedisplay(screen);
 	}
 	return F_ERR;
 }

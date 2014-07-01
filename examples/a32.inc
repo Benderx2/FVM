@@ -247,3 +247,27 @@ macro LOAD_BP shit
 	dd 0x30	
 	dd shit
 }
+macro F_SINX {
+	dd 0x031
+}
+macro F_COSX {
+	dd 0x032
+}
+macro F_ABS {
+	dd 0x34
+}
+macro F_POW {
+	dd 0x033
+}
+macro F_SUB {
+	dd 0x36
+}
+macro F_MUL {
+	dd 0x37
+}
+macro F_DIV {
+	dd 0x38
+}
+macro F_ADD {
+	dd 0x35
+}

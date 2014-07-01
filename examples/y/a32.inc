@@ -27,7 +27,7 @@ dd _end_bss - _bss
 dd _end_bss + 200 
 ; Vendor String
 db 'FVVENDOR'
-; No classes req
+; No classes required!
 dd 0
 ; V_SLEEP - Processor Sleep
 macro V_SLEEP {
@@ -242,8 +242,14 @@ macro LOAD_FROM_SP off
 	dd 0x29
 	dd off
 }
-macro LOAD_BP off 
+macro LOAD_BP shit
 {
-	dd 0x30
-	dd off
+	dd 0x30	
+	dd shit
+}
+macro F_SINX {
+	dd 0x031
+}
+macro F_COSX {
+	dd 0x032
 }

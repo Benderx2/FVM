@@ -440,7 +440,7 @@ namespace yc
 						isok = 1;
 						regstring = "LOAD_R4";
 						goto case "\0";
-				case "LOAD_R5":
+					case "LOAD_R5":
 						if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
 						{
 							SourceWriter.WriteLine(maincode[index] + " " + maincode[index+1]);
@@ -449,11 +449,11 @@ namespace yc
 						}
 						isok = 1;
 						regstring = "LOAD_R5";
-					goto case "\0";
-				case "CALLF":
-					isok = 1;
-					regstring = "CALLF";
-					goto case "\0";
+						goto case "\0";
+					case "CALLF":
+						isok = 1;
+						regstring = "CALLF";
+						goto case "\0";
 					case "CMPR":
 						SourceWriter.Write("CMPR " + maincode[index+1] + maincode[index+2]);
 						SourceWriter.Flush();
@@ -479,14 +479,15 @@ namespace yc
 					case "VM_CALL":
 					case "JMPF_E":
 					case "JMPF_G":
+					case "LOAD_SP":
 						SourceWriter.Write(maincode[index]+ " " + maincode[index+1]);
 						SourceWriter.Flush();
 						index++;
 						break;
-				case "CALLPROC":
-					callproc = 1;
-					regstring = "CALLF";
-					goto case "\0";
+					case "CALLPROC":
+						callproc = 1;
+						regstring = "CALLF";
+						goto case "\0";
 					default:
 						// Console.WriteLine("WARNING: UD2");
 						SourceWriter.WriteLine(maincode[index]);

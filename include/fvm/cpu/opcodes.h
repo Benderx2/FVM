@@ -88,5 +88,21 @@
 #define FVM_LDSP 0x0029
 // LDBP - Load Base ptr
 #define FVM_LDBP 0x0030
+// FPU_SIN - Calculate sine of 32-bit float on stack
+#define FPU_SIN 0x0031
+// FPU_COS Calculate Cosine of 32-bit float on stack
+#define FPU_COS 0x0032
+// FPU_POW - Raise powers
+#define FPU_POW 0x0033
+// FPU ABS - Absolute Value
+#define FPU_ABS 0x0034
+// FPU_ADD - Add two floats
+#define FPU_ADD 0x0035
+// FPU SUB - Subtract floats
+#define FPU_SUB 0x0036
+// FPU MUL - Multiply floats
+#define FPU_MUL 0x0037
+// FPU DIV - Divide floats
+#define FPU_DIV 0x0038
 #endif
 

@@ -27,6 +27,7 @@
 #include <fvm/fv11/fv11.h>
 #include <fvm/tweaks.h>
 #include <fvm/initrd/initrd.h>
+#include <fvm/fpu/fpu.h>
 #ifdef _USE_PTHREAD
 #include <pthread.h>
 #endif

@@ -53,7 +53,7 @@ void FVM_SDL_setwincaption(const char* caption)
 }
 void FVM_SDL_putentry(GL_SURFACE_t* font, GL_SURFACE_t* dest, int x, int y, unsigned char c)
 {
-        static SDL_Rect font_rect, dest_rect;
+        SDL_Rect font_rect, dest_rect;
        	int indice = c - 32;
 	if (c >= 'a' && c <= 'z')
 	{
@@ -61,9 +61,9 @@ void FVM_SDL_putentry(GL_SURFACE_t* font, GL_SURFACE_t* dest, int x, int y, unsi
 		c = n;
 		indice = c - 32;
 	}
-	else if(c < 32 || c > 109) {
-		return;
-	}
+	//else if(c < 32 || c > 109) {
+	//	return;
+	//}
         font_rect.x = indice *  (font->w / 77);
         font_rect.y = 0;
         font_rect.w = font->w / 77;
@@ -153,16 +153,13 @@ void FVM_SDL_putstringat(GL_SURFACE_t* font, GL_SURFACE_t* dest, int x, int y, c
 	}
 }
 void SDL_printf(GL_SURFACE_t* font, GL_SURFACE_t*  dest, const char *fmt, ...) {
-	if (strlen(fmt) > 512)
-	{
-		return;
-	}
        	char buf[512];
 	buf[511] = '\0'; // Null terminate
         va_list pvar;
         va_start(pvar, fmt);
 
         vsnprintf(buf, 511, fmt, pvar);
+	printf("dump: %s", buf);
         FVM_SDL_putstring(font, dest, buf);
 }
 void FVM_SDL_putpixel(GL_SURFACE_t *surface, int x, int y, uint32_t pixel)

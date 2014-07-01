@@ -8,11 +8,16 @@
 #include <fvm/cpu/registers.h>
 #include <fvm/cpu/cpu.h>
 #include <fvm/cpu/ports.h>
+#include <fvm/fpu/fpu.h>
 #include <fvm/cpu/mem/vmm.h>
 #include <fvm/fcall/fcall.h>
 #include <fvm/cpu/idt.h>
 #include <fvm/error.h>
 #include <fvm/sdl.h>
+union tempuni {
+	int32_t a;
+	float b;
+};
 void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
 {
 	UNUSED(NewCPU_state);
@@ -472,8 +477,6 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				}
 				CPU_regs->IP += 2;
 				break;
-				CPU_regs->IP += 2;
-				break;
 			// Grab a DWORD from port
 			case FVM_IN0:
 				CPU_regs->r0 = IOADDRSPACE[CPU_regs->IP+1].in;
@@ -877,13 +880,56 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 					}
 					CPU_regs->r12 += 2;
 					break;
-			
 			// LDSP - Load R1 from Stack Pointer Offset (i.e. LDSP 1 will load R1 from the first 4-bytes down the stack, LDSP 2 will load it from 8-bytes down the stack)
 			case FVM_LDSP:
 					CPU_regs->r1 = Memory[CPU_regs->r12 + Memory[CPU_regs->IP+1]];
 					CPU_regs->IP += 2;
 					break;
-			default:
+			/** FPU Functions **/
+			case FPU_SIN:	
+				CPU_regs->IP++;
+				float result = do_sin_x(Memory[CPU_regs->r12+1]); /** Grab shit from stack **/
+				printf("LOG>> FPU SIN() = %f of %u\n", result, Memory[CPU_regs->r12+1]);
+				/** Push it! **/
+				pushfloat(Memory, CPU_regs->r12, result);	
+				CPU_regs->r12--;  /** Decrement the stack **/
+				break;	
+			case FPU_COS:
+				CPU_regs->IP++;	
+				float cosresult = do_cos_x(Memory[CPU_regs->r12+1]);
+				printf("LOG>> FPU COS() = %f of %u\n", cosresult, Memory[CPU_regs->r12+1]);
+				pushfloat(Memory, CPU_regs->r12, cosresult);
+				CPU_regs->r12--;
+				break;	
+			case FPU_POW:
+				CPU_regs->IP++;
+				/** PUSH 3.0f PUSH 2.0f  F_POW == 3^2 = 9 **/
+				float resultpow = do_pow_x(Memory[CPU_regs->r12+2], Memory[CPU_regs->r12+1]);
+				pushfloat(Memory, CPU_regs->r12, resultpow);
+				CPU_regs->r12--;
+				break;
+			case FPU_ABS:
+				CPU_regs->IP++;
+				pushfloat(Memory, CPU_regs->r12, do_abs_x(Memory[CPU_regs->r12+1]));
+				CPU_regs->r12--;		
+				break;
+			case FPU_ADD:
+				pushfloat(Memory, CPU_regs->r12, do_arithmetic_operation(Memory[CPU_regs->r12+2], Memory[CPU_regs->r12+1], FPU_ADD));
+				goto _fpu_arith_common_done;
+			case FPU_SUB:
+				pushfloat(Memory, CPU_regs->r12, do_arithmetic_operation(Memory[CPU_regs->r12+2], Memory[CPU_regs->r12+1], FPU_SUB));
+				goto _fpu_arith_common_done;
+			case FPU_MUL:
+				pushfloat(Memory, CPU_regs->r12, do_arithmetic_operation(Memory[CPU_regs->r12+2], Memory[CPU_regs->r12+1], FPU_MUL));
+				goto _fpu_arith_common_done;
+			case FPU_DIV:
+				pushfloat(Memory, CPU_regs->r12, do_arithmetic_operation(Memory[CPU_regs->r12+2], Memory[CPU_regs->r12+1], FPU_DIV));
+				goto _fpu_arith_common_done;
+			_fpu_arith_common_done:
+				CPU_regs->r12--;
+				CPU_regs->IP++;
+				break;			
+		default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] IP: [0x%X]. Shutting Down....",Memory[CPU_regs->IP], CPU_regs->IP);
 				CPU_regs->ON = 0x0000;
 				FVM_EXIT(FVM_PROGRAM_ERR);
