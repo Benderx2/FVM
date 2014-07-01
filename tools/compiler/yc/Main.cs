@@ -269,13 +269,14 @@ namespace yc
 						}
 						TempString.ClassParent = ClassList[NumberofClasses - 1];
 						i += 3;
-						if(tokens[i] != "\"")
+						TempString.Value = "";
+						if(tokens[i][0] != '"')
 						{
 							Console.WriteLine("#error: string assignment doesn't contain \"");
 						}
 						else {
 							i++;
-							while(tokens[i] != "\"")
+							while(tokens[i][0] != '"')
 							{
 								TempString.Value = TempString.Value + tokens[i] + " ";
 								i++;
@@ -484,7 +485,7 @@ namespace yc
 						SourceWriter.Flush();
 						index++;
 						break;
-					case "CALLPROC":
+					case "INVOKE":
 						callproc = 1;
 						regstring = "CALLF";
 						goto case "\0";
