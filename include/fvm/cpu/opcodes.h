@@ -104,5 +104,11 @@
 #define FPU_MUL 0x0037
 // FPU DIV - Divide floats
 #define FPU_DIV 0x0038
+// F_ACOS - Calculate Arccosine
+#define FPU_ACOS 0x0040
+// F_ASIN - Calculate Arcsin
+#define FPU_ASIN 0x0039
+// ATAN - Arctan
+#define FPU_ATAN 0x0041
 #endif
 

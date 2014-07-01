@@ -271,3 +271,12 @@ macro F_DIV {
 macro F_ADD {
 	dd 0x35
 }
+macro F_ASIN {
+	dd 0x39
+}
+macro F_ACOS {
+	dd 0x40
+}
+macro F_ATAN {
+	dd 0x41
+}

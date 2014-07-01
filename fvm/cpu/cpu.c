@@ -911,8 +911,19 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 			case FPU_ABS:
 				CPU_regs->IP++;
 				pushfloat(Memory, CPU_regs->r12, do_abs_x(Memory[CPU_regs->r12+1]));
-				CPU_regs->r12--;		
+				CPU_regs->r12--;
 				break;
+			case FPU_ASIN:
+				pushfloat(Memory, CPU_regs->r12, do_asin_x(Memory[CPU_regs->r12+1]));
+				printf("asin of shit: %f\n", *(float*)&Memory[CPU_regs->r12]);
+				goto arc_common_done;
+			case FPU_ACOS:
+				pushfloat(Memory, CPU_regs->r12, do_acos_x(Memory[CPU_regs->r12+1]));
+				printf("acos of shit: %f\n", *(float*)&Memory[CPU_regs->r12]);
+				goto arc_common_done;
+			case FPU_ATAN:
+				pushfloat(Memory, CPU_regs->r12, do_atan_x(Memory[CPU_regs->r12+1]));
+				goto arc_common_done;
 			case FPU_ADD:
 				pushfloat(Memory, CPU_regs->r12, do_arithmetic_operation(Memory[CPU_regs->r12+2], Memory[CPU_regs->r12+1], FPU_ADD));
 				goto _fpu_arith_common_done;
@@ -929,6 +940,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				CPU_regs->r12--;
 				CPU_regs->IP++;
 				break;			
+			arc_common_done:
+				CPU_regs->IP++;
+				CPU_regs->r12--;
+				break;
 		default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] IP: [0x%X]. Shutting Down....",Memory[CPU_regs->IP], CPU_regs->IP);
 				CPU_regs->ON = 0x0000;

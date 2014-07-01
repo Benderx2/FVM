@@ -53,6 +53,21 @@ float do_abs_x(int32_t numIEEE754)
 	union FloatAndInt* temp = returnfloatunion(numIEEE754);
 	return fabs(temp->f);
 }
+float do_asin_x(int32_t numIEEE754)
+{
+	union FloatAndInt* temp = returnfloatunion(numIEEE754);
+	return asin(temp->f);
+}
+float do_acos_x(int32_t numIEEE754)
+{
+	union FloatAndInt* temp = returnfloatunion(numIEEE754);
+	return acos(temp->f);
+}
+float do_atan_x(int32_t numIEEE754)
+{
+	union FloatAndInt* temp = returnfloatunion(numIEEE754);
+	return atan(temp->f);
+}
 float do_arithmetic_operation(int32_t IEEE7541, int32_t IEEE7542, int operation)
 {
 	union FloatAndInt* temp = returnfloatunion(IEEE7541);
