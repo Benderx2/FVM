@@ -6,7 +6,7 @@ export FVM_INCLUDE=./include/
 export SDL_INCLUDE=/usr/include/SDL
 if [ $use_awesome_optimization=1 ]
 then 
-export CFLAGS='-O3 -Werror -Wstrict-prototypes -Wmissing-prototypes -fstack-protector-all -Wall -Wextra -pedantic -std=gnu99' # Werror - Because I want to.
+export CFLAGS='-O3 -Werror -Wstrict-prototypes -Wmissing-prototypes -fstack-protector-all -Wall -Wextra -pedantic -Wno-strict-aliasing -std=gnu99' # Werror - Because I want to.
 else 
 export CFLAGS='-O0 -Werror -Wstrict-prototypes -Wmissing-prototypes -fstack-protector-all -Wall -Wextra -pedantic -std=gnu99'
 fi
@@ -28,10 +28,12 @@ gcc $CFLAGS -c fvm/cpu/cpu.c -I$FVM_INCLUDE -I$SDL_INCLUDE
 gcc $CFLAGS -c fvm/cpu/mem/vmm.c -o vmm.o -I$FVM_INCLUDE 
 gcc $CFLAGS -c fvm/rom/fv11.c -o fv11.o -I$FVM_INCLUDE 
 gcc $CFLAGS -c fvm/initrd/initrd.c -o initrd.o -I$FVM_INCLUDE
+gcc $CFLAGS -c fvm/sighandle.c -o sighandle.o -I$FVM_INCLUDE
+gcc $CFLAGS -c fvm/fpu/fpu.c -o fpu.o -I$FVM_INCLUDE
 fasm examples/mtask.asm 
 mv examples/mtask.bin .
 ./diskgen.out mtask.bin mtask.bin
-gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o fv11.o  cpu.o initrd.o -lSDL -lSDL_ttf -pthread
+gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o fv11.o  cpu.o initrd.o sighandle.o fpu.o -lm -lSDL -lSDL_ttf -pthread
 # Remove all object files
 rm *.o
 echo 'FVM Compilation Complete.'
