@@ -708,6 +708,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				CPU_regs->IP += 2;
 				break;
 			// LDD - Load Register DWORD
+				
 			case FVM_LDD:
 				CPU_regs->IP = CPU_regs->IP;
 				uint8_t* tmp5 = (uint8_t*)Memory;

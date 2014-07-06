@@ -87,3 +87,4 @@ float do_arithmetic_operation(int32_t IEEE7541, int32_t IEEE7542, int operation)
 	}
 	return 0;
 }
+

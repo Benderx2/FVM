@@ -1,4 +1,4 @@
-/** FVM - Flouronix Virtual Machine **/
+/** FVM - Fluoronix Virtual Machine **/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
