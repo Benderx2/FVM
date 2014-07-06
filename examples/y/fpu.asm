@@ -90,7 +90,7 @@ _data:
 
 MainClass.sin30: db 'sin(30r): ', 0
 MainClass.cos30: db '----cos(30r): ', 0
-MainClass.tan30: db '-----tan(30r): ', 0
+MainClass.tan30: db '-----tan(30r):*+/,./?';:"!@#$%^&*() ', 0
 MainClass.PI: db '= ', 0
 _end_data:
 _bss:

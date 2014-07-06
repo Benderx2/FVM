@@ -16,10 +16,16 @@ struct FV11_HEADER {
 	char vendorstring[8];
 	int32_t isclassreq;
 	int32_t pointer_to_class_set;
+	int32_t isreloc;
+	int32_t pointer_to_reloc_function_table;
 };
 typedef struct {
 	char classname[64];
 } class_header_t;
+typedef struct {
+	uint32_t jmpfopcode;
+	uint32_t address;
+} reloc_label_t;
 struct FV11_RETURN {
 	int32_t r11;
 	int32_t sp;
