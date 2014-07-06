@@ -104,7 +104,6 @@ namespace yc
 				{
 				SourceWriter.Write("include 'a32.inc'"+ Environment.NewLine);
 				SourceWriter.Write("_start:" + Environment.NewLine + "PUSH R0" + Environment.NewLine + "JMPF MainClass.Main" + Environment.NewLine);
-				SourceWriter.Write("MainClass.Main:" + Environment.NewLine);
 				SourceWriter.Flush();
 				}
 				string[] tokens = SourceText.Split(new Char [] { });
@@ -151,7 +150,7 @@ namespace yc
 					case "\r":
 						break;
 					case "require":
-					SourceWriter.Write("JMPF @f" + Environment.NewLine + "include " + tokens[i+1] + Environment.NewLine + "@@:");
+					SourceWriter.Write("JMPF @f" + Environment.NewLine + "include " + tokens[i+1] + Environment.NewLine + "@@:" + Environment.NewLine);
 					SourceWriter.Flush();
 					i++;
 						break;
@@ -169,6 +168,7 @@ namespace yc
 						// class->proc form
 						TempProc.Parent = eprocs[0];
 						TempProc.ProcName = eprocs[1];
+						TempProc.Code = "";
 						TempProc.isextern = 1;
 						ProcList.Add(TempProc);
 						NumberofProcs++;
@@ -196,6 +196,7 @@ namespace yc
 							error = true;
 						}
 						whileinproc = true;
+						TempProc.isextern = 0;
 						TempProc.Parent = ClassList[NumberofClasses - 1];
 						TempProc.ProcName = tokens[i+1];
 						i += 3;
@@ -251,6 +252,7 @@ namespace yc
 							TempInt.ClassParent = ClassList[NumberofClasses - 1];
 							IntList.Add(TempInt);
 							NumberofInts++;
+							codegendata = codegendata + Environment.NewLine + TempInt.ClassParent + "." + TempInt.IntName + ": dd " + TempInt.Value.ToString();
 							i += 3;
 							break;
 						}
@@ -278,8 +280,17 @@ namespace yc
 							i++;
 							while(tokens[i][0] != '"')
 							{
-								TempString.Value = TempString.Value + tokens[i] + " ";
-								i++;
+								switch(tokens[i])
+								{
+								case "%n":
+									TempString.Value = TempString.Value + "'" + ", 0x0A, " + "'";
+									i++;
+									break;
+								default:
+									TempString.Value = TempString.Value + tokens[i] + " ";
+									i++;
+									break;
+								}
 							}
 						}
 						TempString.used = 1;
@@ -348,18 +359,27 @@ namespace yc
 				}
 					// Time for CodeGen! :)
 				// First we'll parse the MainClass->Main code.
-				string[] maincode = ProcList[mainoff].Code.Split(new char[]{});
-				CodeGen(maincode);
+				//string[] maincode = ProcList[mainoff].Code.Split(new char[]{});
+				//CodeGen(maincode);
 				// Fill in the used procs
 				int r = 0;
-				string[] procused;
-				while(r <= NumberOfUsedProcs-1)
+				//string[] procused;
+				if(NumberOfUsedProcs == 1)
 				{
-					Console.WriteLine(UsedProcs[r].Parent + "." + UsedProcs[r].ProcName + ":"+ UsedProcs[r].Code);
-					SourceWriter.WriteLine(UsedProcs[r].Parent + "." + UsedProcs[r].ProcName + ":");
-					procused = UsedProcs[r].Code.Split(new char[]{});
+					Console.WriteLine("DONE!");
+					while(true){}
+				}
+				Console.Write(NumberofProcs + "DERP!" + ProcList.Count);
+				r = 0;
+				while(r < NumberofProcs)
+				{
+					if(ProcList[r].isextern == 0){
+					Console.WriteLine(ProcList[r].Parent + "." + ProcList[r].ProcName + ":"+ ProcList[r].Code);
+					SourceWriter.WriteLine(ProcList[r].Parent + "." + ProcList[r].ProcName + ":");
+					string[] procused = ProcList[r].Code.Split(new char[]{});
 					Console.WriteLine("L"  + index + " " + procused.Length);
 					CodeGen(procused);
+					}
 					r++;
 				}
 				if(libcompile != 1)
@@ -391,6 +411,7 @@ namespace yc
 					Console.Write("__");
 					index++;
 						break;
+					case "$REF":
 					case "LOAD_R0":
 					if(isnumber || maincode[index+1] == "R1" || maincode[index+1] == "R0" || maincode[index+1] == "R2" || maincode[index+1] == "R3" || maincode[index+1] == "R4" || maincode[index+1] == "R5")
 						{
@@ -485,6 +506,33 @@ namespace yc
 						SourceWriter.Flush();
 						index++;
 						break;
+					case "RETURN":
+						SourceWriter.Write("POP R5" + Environment.NewLine + "PUSH " + maincode[index+1] + Environment.NewLine + "PUSH R5" + Environment.NewLine + "RETF");
+						index++;
+						break;
+					case "LOAD":
+						SourceWriter.Write("PUSH R0" + Environment.NewLine + "LOAD_R0 " + maincode[index+1] + Environment.NewLine + "LOAD_REG_DWORD R1" + Environment.NewLine + "POP R0");
+						SourceWriter.Flush();
+						index++;
+						break;
+					case "LOAD_ARG":
+						Int32 ijk = 0;
+						string temporary = maincode[index+1].Substring(1);
+							try {
+								ijk = Convert.ToInt32(temporary);
+							}
+							catch (FormatException e)
+							{
+								Console.WriteLine("#error: Format Exception Caught!");
+							}
+							catch (OverflowException e)
+							{
+								Console.WriteLine("#error OverflowException Caught!");
+							}
+							SourceWriter.Write("LOAD_FROM_SP " + (ijk + 1).ToString() + Environment.NewLine );
+							index++;
+							SourceWriter.Flush();
+							break;
 					case "INVOKE":
 						callproc = 1;
 						regstring = "CALLF";
@@ -601,7 +649,7 @@ namespace yc
 									{
 										classandproc[0] = classandproc[0].Substring(1);
 										Console.WriteLine("Found $");
-									Console.WriteLine(classandproc[0]);
+										Console.WriteLine(classandproc[0]);
 										// Yup
 										while(xt < NumberofInts)
 										{

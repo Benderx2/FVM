@@ -1,9 +1,22 @@
 $include console.h
 class MainClass {
-	string string1 = " Hello, World "
+	string string1 = " Hello, World %n "
+	int crapint = 203932
 	proc Main {
+		$REF MainClass->Cool
+		INVOKE MainClass->Cool MainClass->crapint
 		INVOKE Console->WriteLine MainClass->string1
+		LOAD MainClass.crapint
+		INVOKE MainClass->shit Mainclass->string1
+		VM_DEBUG
 		VM_EXIT
 	}
-	
+	proc Cool {
+		VM_EXIT
+	}
+	proc shit {
+		LOAD_ARG $2
+		RETF
+	}
 }
+
