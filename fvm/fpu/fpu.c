@@ -68,6 +68,18 @@ float do_atan_x(int32_t numIEEE754)
 	union FloatAndInt* temp = returnfloatunion(numIEEE754);
 	return atan(temp->f);
 }
+float do_fact_x(int32_t numIEEE754)
+{
+	union FloatAndInt* temp = returnfloatunion(numIEEE754);
+	float n = temp->f;
+  	float c;
+ 	float result = 1;
+  	for (c = 1; c <= n; c++){
+	    	result = result * c; 
+	}
+	printf("\nfactorial result: %f", result);
+  	return result;
+}
 float do_arithmetic_operation(int32_t IEEE7541, int32_t IEEE7542, int operation)
 {
 	union FloatAndInt* temp = returnfloatunion(IEEE7541);
@@ -87,4 +99,3 @@ float do_arithmetic_operation(int32_t IEEE7541, int32_t IEEE7542, int operation)
 	}
 	return 0;
 }
-

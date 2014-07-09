@@ -29,9 +29,14 @@ dd _end_bss + 200
 db 'FVVENDOR'
 ; No classes required!
 dd 0
+; No relocatable function table!
+dd 0
 ; V_SLEEP - Processor Sleep
 macro V_SLEEP {
 	dd 0x0
+}
+macro LEAVE {
+	 dd 0x42
 }
 ; LOAD_R0 - Load Register R0
 macro LOAD_R0 VALUE {	
@@ -271,12 +276,6 @@ macro F_DIV {
 macro F_ADD {
 	dd 0x35
 }
-macro F_ASIN {
-	dd 0x39
-}
-macro F_ACOS {
-	dd 0x40
-}
-macro F_ATAN {
-	dd 0x41
+macro CREATE_RELOCATABLE_LABEL address {
+	JMPF address
 }

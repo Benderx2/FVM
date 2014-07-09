@@ -39,14 +39,14 @@ FV11_RETURN_t* fv11_load(FVM_BYTE_t* Memory, int32_t memsize)
 			UNUSED(classes_required[0]);
 		}	
 	}
-	if(ROM_HEADER->isreloc > 0) // Does this executable have a relocation section?
-	{
-		reloc_label_t* reloc_table = (reloc_label_t*)&(Memory[ROM_HEADER->pointer_to_reloc_function_table]);
-		for(int i = 0; i < ROM_HEADER->isreloc; i++)
-		{
-			reloc_table[i].address += _where_to_load; // Set it to the load address.
-		}
-	}
+	//if(ROM_HEADER->isreloc > 0) // Does this executable have a relocation section?
+	//{
+	//	reloc_label_t* reloc_table = (reloc_label_t*)&(Memory[ROM_HEADER->pointer_to_reloc_function_table]);
+	//	for(int i = 0; i < ROM_HEADER->isreloc; i++)
+	//	{
+	//		reloc_table[i].address += _where_to_load; // Set it to the load address.
+	//	}
+	//}
 	// Zero out BSS
 	memset(Memory + ROM_HEADER->bss_start, '\0', ROM_HEADER->bss_length);
 	returnval.r11 = _where_to_load / 4;

@@ -10,6 +10,7 @@ float do_abs_x(int32_t numIEEE754);
 float do_asin_x(int32_t numIEEE754);
 float do_acos_x(int32_t numIEEE754);
 float do_atan_x(int32_t numIEEE754);
+float do_fact_x(int32_t numIEEE754);
 float do_arithmetic_operation(int32_t IEEE7541, int32_t IEEE7542, int operation);
 #endif
 

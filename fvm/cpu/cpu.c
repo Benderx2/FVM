@@ -18,6 +18,7 @@ union tempuni {
 	int32_t a;
 	float b;
 };
+int32_t save_r12 = -1;
 void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
 {
 	UNUSED(NewCPU_state);
@@ -237,6 +238,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				Memory[CPU_regs->r12] = returnaddress;
 				CPU_regs->IP = Memory[CPU_regs->IP+1] / 4;
 				CPU_regs->r12--;
+				save_r12 = CPU_regs->r12;
 				StackCount++;
 				//printf("\nR12: [%X]", CPU_regs->r12);
 				//CPU_regs->r17 = CPU_regs->IP + 2;
@@ -246,10 +248,22 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 			case FVM_RET:
 				//CPU_regs->IP = CPU_regs->r17;
 				//CPU_regs->r17 = 0;
+				save_r12 = -1;
 				CPU_regs->IP = Memory[CPU_regs->r12+1];
 				CPU_regs->r12++;
 				///printf("\nR12: [%X]", CPU_regs->r12);
 				StackCount--;
+				break;
+			case FVM_LEAVE:
+				CPU_regs->IP++;
+				if(save_r12 == -1)
+				{
+					break;
+				}
+				else {
+					CPU_regs->r12 = save_r12;
+					break;
+				}
 				break;
 			/* CMPR - Compare Register with value */
 			case FVM_CMPV:
@@ -708,7 +722,6 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				CPU_regs->IP += 2;
 				break;
 			// LDD - Load Register DWORD
-				
 			case FVM_LDD:
 				CPU_regs->IP = CPU_regs->IP;
 				uint8_t* tmp5 = (uint8_t*)Memory;
@@ -914,6 +927,14 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				pushfloat(Memory, CPU_regs->r12, do_abs_x(Memory[CPU_regs->r12+1]));
 				CPU_regs->r12--;
 				break;
+			case FPU_FACT:
+				pushfloat(Memory, CPU_regs->r12, do_fact_x(Memory[CPU_regs->r12+1]));
+				printf("factorial of stuff: %f", *(float*)&Memory[CPU_regs->r12]);
+				CPU_regs->IP++;
+				// TODO: Stop acting like an asshole and do some stack checks before decrementing the stack pointer.
+				// TODO(2):  Shut the fuck up and add stack checks everywhere!s
+				CPU_regs->r12--;
+				break; 
 			case FPU_ASIN:
 				pushfloat(Memory, CPU_regs->r12, do_asin_x(Memory[CPU_regs->r12+1]));
 				printf("asin of shit: %f\n", *(float*)&Memory[CPU_regs->r12]);

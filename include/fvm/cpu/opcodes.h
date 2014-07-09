@@ -110,5 +110,9 @@
 #define FPU_ASIN 0x0039
 // ATAN - Arctan
 #define FPU_ATAN 0x0041
+// LEAVE - Clear stack space
+#define FVM_LEAVE 0x0042
+// F_FACT - Calculate factorial 
+#define FPU_FACT 0x0043
 #endif
 

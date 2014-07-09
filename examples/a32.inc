@@ -24,7 +24,7 @@ dd _data
 dd _end_data - _data
 dd _bss
 dd _end_bss - _bss
-dd _end_bss + 200 
+dd _end_bss + 2000 
 ; Vendor String
 db 'FVVENDOR'
 ; No classes required!
@@ -34,6 +34,9 @@ dd 0
 ; V_SLEEP - Processor Sleep
 macro V_SLEEP {
 	dd 0x0
+}
+macro LEAVE {
+	 dd 0x42
 }
 ; LOAD_R0 - Load Register R0
 macro LOAD_R0 VALUE {	
@@ -272,6 +275,9 @@ macro F_DIV {
 }
 macro F_ADD {
 	dd 0x35
+}
+macro F_FACT {
+	dd 0x0043
 }
 macro CREATE_RELOCATABLE_LABEL address {
 	JMPF address

@@ -5,12 +5,14 @@ _start:
 	CALLF print
 	VM_EXIT
 print:
-	PUSH R0
-	PUSH R1
-	LOAD_FROM_SP 4
-	LOAD_R0 R1
 	; For debugging
 	VM_DEBUG
+	PUSH R0
+	PUSH R1
+	; For debugging
+	VM_DEBUG
+	LOAD_FROM_SP 4
+	LOAD_R0 R1
 .ploop:
 	LOAD_BYTE
 	CMPR R1, 0
@@ -18,8 +20,9 @@ print:
 	VM_CALL 0
 	JMPF .ploop
 .done:
-	POP R1
-	POP R0
+	LEAVE
+	; For debugging
+	VM_DEBUG
 	RETF
 _end_start:
 string_address:
