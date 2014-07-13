@@ -28,6 +28,7 @@
 #include <fvm/tweaks.h>
 #include <fvm/initrd/initrd.h>
 #include <fvm/fpu/fpu.h>
+#include <fvm/gc/objects.h>
 #ifdef _USE_PTHREAD
 #include <pthread.h>
 #endif
@@ -74,7 +75,6 @@ int main (int argc, const char *argv[])
 	signal(SIGSEGV, SIGSEGV_handler);
 	/** SIGILL **/
 	signal(SIGILL, SIGILL_handler);
-	
 	//! Proccess command line arguments
 	uint32_t total_mem = atoi(argv[1]);
 	#ifdef __USE_GRAPHICS
@@ -183,6 +183,8 @@ int main (int argc, const char *argv[])
 	#else
 	printf("Program Output : In Graphics Mode (Please see SDL Window instead of Console)\n");
 	#endif
+	/** Create idle object **/
+	VM_CreateObject(INT_TYPE, OBJ_IDLE);
 	while(CPU_regs->ON == 0x0001)
 	{
 		//! Any pending clocks?
