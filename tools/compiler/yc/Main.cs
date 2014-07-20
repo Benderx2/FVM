@@ -506,6 +506,11 @@ namespace yc
 						SourceWriter.Flush();
 						index++;
 						break;
+					case "SUBLEQ":
+						SourceWriter.Write(maincode[index] + " " + maincode[index+1] + "," + maincode[index+2] + "," + maincode[index+3]);
+						SourceWriter.Flush();
+						index += 3;
+						break;
 					case "RETURN":
 						SourceWriter.Write("POP R5" + Environment.NewLine + "PUSH " + maincode[index+1] + Environment.NewLine + "PUSH R5" + Environment.NewLine + "RETF");
 						index++;
