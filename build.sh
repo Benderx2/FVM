@@ -30,10 +30,11 @@ gcc $CFLAGS -c fvm/rom/fv11.c -o fv11.o -I$FVM_INCLUDE
 gcc $CFLAGS -c fvm/initrd/initrd.c -o initrd.o -I$FVM_INCLUDE
 gcc $CFLAGS -c fvm/sighandle.c -o sighandle.o -I$FVM_INCLUDE
 gcc $CFLAGS -c fvm/fpu/fpu.c -o fpu.o -I$FVM_INCLUDE
+gcc $CFLAGS -c fvm/gc/objects.c -o objects.o -I$FVM_INCLUDE
 fasm examples/mtask.asm 
 mv examples/mtask.bin .
 ./diskgen.out mtask.bin mtask.bin
-gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o fv11.o  cpu.o initrd.o sighandle.o fpu.o -lm -lSDL -lSDL_ttf -pthread
+gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o fv11.o  cpu.o initrd.o sighandle.o fpu.o objects.o -lm -lSDL -lSDL_ttf -pthread
 # Remove all object files
 rm *.o
 echo 'FVM Compilation Complete.'

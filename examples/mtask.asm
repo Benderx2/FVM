@@ -7,7 +7,10 @@ LOAD_R0 0x01 ;; Register ISR 1
 LOAD_R1 int1a ;; Load ISR Handler Address
 LOAD_INTERRUPT ;; Load Interrupt!
 ;; Task 0 Infinite Loop!
+SUBLEQ _data.d2, _data.d1, troll
+VM_DEBUG
 dead_end:
+troll:
 	JMPF dead_end
 task1:
 	LOAD_R1 'A'
@@ -56,6 +59,10 @@ int1a:
 	IRETF
 _end_start:
 _data:
+.d1:
+db 0
+.d2:
+db 1
 which_task: db 0
 _end_data:
 _bss:

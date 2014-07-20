@@ -184,6 +184,7 @@ int main (int argc, const char *argv[])
 	printf("Program Output : In Graphics Mode (Please see SDL Window instead of Console)\n");
 	#endif
 	/** Create idle object **/
+	printf("GC_INIT: Creating embryo object....\n");
 	VM_CreateObject(INT_TYPE, OBJ_IDLE);
 	while(CPU_regs->ON == 0x0001)
 	{

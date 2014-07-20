@@ -114,5 +114,11 @@
 #define FVM_LEAVE 0x0042
 // F_FACT - Calculate factorial 
 #define FPU_FACT 0x0043
+// OBJ_CREAT - Create Object 
+#define OBJ_CREAT 0x0044
+// OBJ_STORE - Store Object
+#define OBJ_STORE 0x0045
+// FVM_SUBLEQ - SUbtract and Branch if EQual
+#define FVM_SUBLEQ 0x0046
 #endif
 

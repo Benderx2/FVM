@@ -24,7 +24,12 @@ dd _data
 dd _end_data - _data
 dd _bss
 dd _end_bss - _bss
-dd _end_bss + 2000 
+if defined STACK_SIZE 
+	dd _end_bss + STACK_SIZE
+else 
+; Fall back to default stack size.
+dd _end_bss + 200
+end if
 ; Vendor String
 db 'FVVENDOR'
 ; No classes required!
@@ -281,4 +286,10 @@ macro F_FACT {
 }
 macro CREATE_RELOCATABLE_LABEL address {
 	JMPF address
+}
+macro SUBLEQ a, b, c {
+	dd 0x0046
+	dd a
+	dd b
+	dd c
 }

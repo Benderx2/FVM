@@ -13,7 +13,10 @@
 #include <fvm/fcall/fcall.h>
 #include <fvm/cpu/idt.h>
 #include <fvm/error.h>
+#include <fvm/gc/objects.h>
 #include <fvm/sdl.h>
+uint8_t* byteptr;
+uint32_t* dwordptr;
 union tempuni {
 	int32_t a;
 	float b;
@@ -899,6 +902,30 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 					CPU_regs->r1 = Memory[CPU_regs->r12 + Memory[CPU_regs->IP+1]];
 					CPU_regs->IP += 2;
 					break;
+			/** SUBLEQ - Subtract and store and jump if equal. **/
+		        case FVM_SUBLEQ: 	 
+					CPU_regs->IP++;
+					byteptr = (uint8_t*)Memory;
+					byteptr[(Memory[CPU_regs->IP+1])] = byteptr[(Memory[CPU_regs->IP+1])] - byteptr[(Memory[CPU_regs->IP])];  
+					printf("SUBLEQ: Result of Operation: %u, operand a : %u\n", byteptr[(Memory[CPU_regs->IP+1])], byteptr[(Memory[CPU_regs->IP])]);
+					int8_t temporary = byteptr[(Memory[CPU_regs->IP+1])];
+					if(temporary <= 0)
+					{
+						CPU_regs->IP = Memory[CPU_regs->IP+2] / 4;
+					}
+					else {
+						CPU_regs->IP += 3;
+					}
+					break;
+			case OBJ_CREAT:
+				 CPU_regs->IP++;
+				 Object* objtemp = VM_CreateObject(Memory[CPU_regs->IP] /** Type **/, Memory[CPU_regs->IP+1] /** Value/Address **/);
+				 Memory[CPU_regs->r12] = objtemp->index;
+				 CPU_regs->IP++;
+				 break;
+			case OBJ_STORE:
+				CPU_regs->IP++;
+				break;
 			/** FPU Functions **/
 			case FPU_SIN:	
 				CPU_regs->IP++;
@@ -932,7 +959,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 				printf("factorial of stuff: %f", *(float*)&Memory[CPU_regs->r12]);
 				CPU_regs->IP++;
 				// TODO: Stop acting like an asshole and do some stack checks before decrementing the stack pointer.
-				// TODO(2):  Shut the fuck up and add stack checks everywhere!s
+				// TODO(2):  Shut the fuck up and add stack checks everywhere!
 				CPU_regs->r12--;
 				break; 
 			case FPU_ASIN:
