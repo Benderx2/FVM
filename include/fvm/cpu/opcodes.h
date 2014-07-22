@@ -118,7 +118,11 @@
 #define OBJ_CREAT 0x0044
 // OBJ_STORE - Store Object
 #define OBJ_STORE 0x0045
-// FVM_SUBLEQ - SUbtract and Branch if EQual
+// FVM_SUBLEQ - SUbtract and Branch if LEss than or EQual
 #define FVM_SUBLEQ 0x0046
+// INIT_MP - Intialize cpu2 with IP.
+#define FVM_INIT_MP 0x0047
+// DEINIT_MP - Deinitialize cpu2
+#define FVM_DEINIT_MP 0x0048
 #endif
 

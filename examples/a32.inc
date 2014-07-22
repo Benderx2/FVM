@@ -293,3 +293,10 @@ macro SUBLEQ a, b, c {
 	dd b
 	dd c
 }
+macro DEINIT_MP {
+	dd 0x48
+}
+macro INIT_MP ip {
+	dd 0x47
+	dd ip
+}

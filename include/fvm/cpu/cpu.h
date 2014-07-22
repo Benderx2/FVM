@@ -52,7 +52,7 @@ struct FVM_REGISTERS {
 	FVM_REG_t r15;
 	/* Fault registereax */
 	FVM_REG_t r16;
-	/* Return Register */
+	/* CPU2 Register */
 	FVM_REG_t r17;
 	/* IRET Register */
 	FVM_REG_t r18;
@@ -96,5 +96,5 @@ struct FVM_CPU {
 };
 typedef struct FVM_CPU FVM_CPU_t;
 extern int StackCount;
-void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable);
+void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable);
 #endif

@@ -114,20 +114,8 @@ int main (int argc, const char *argv[])
 	printf("\nCPU State Settings are to default, now allocating memory for CPU Registers");
 	//! Initialize Registers
 	FVM_REGISTERS_t* CPU_regs = (FVM_REGISTERS_t*)malloc(sizeof(FVM_REGISTERS_t));
+	FVM_REGISTERS_t* CPU2_regs = (FVM_REGISTERS_t*)malloc(sizeof(FVM_REGISTERS_t));
 	printf("\nAllocation Complete, now setting registers to default state.");
-	//! All general purpose registers must be 0
-	CPU_regs->r0 = 0x0000;
-	CPU_regs->r1 = 0x0000;
-	/* GNU nano is cool */
-	CPU_regs->r2 = 0x0000;
-	CPU_regs->r3 = 0x0000;
-	CPU_regs->r4 = 0x0000;
-	CPU_regs->r5 = 0x0000;
-	CPU_regs->r6 = 0x0000;
-	CPU_regs->r7 = 0x0000;
-	CPU_regs->r8 = 0x0000;
-	CPU_regs->r9 = 0x0000;
-	CPU_regs->r10 = 0x0000;
 	/* Configure r12 to be the end of memory */
 	CPU_regs->r12 = (FVM_REG_t)total_mem;
 	CPU_regs->ON = 0x0001;
@@ -138,6 +126,7 @@ int main (int argc, const char *argv[])
 	NewCPU->CPU_STATE = NewCPU_state;
 	printf("Allocating Memory for FFLAGS\n");
 	FFLAGS_t* CPU_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
+	FFLAGS_t* CPU2_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
 	CPU_Flags->VMM = false;
 	printf("FFLAGS Allocation Complete Address = [%p]\n", (void*)CPU_Flags);
 	printf("FVM Initialization Complete.\n");
@@ -199,8 +188,13 @@ int main (int argc, const char *argv[])
 			CPU_regs->IP = FVM_IDTR[1].address;
 			FVM_TIMER = clock();
 		}
-		// Emulate instruction then
-		emulate_FVM_instruction(CPU_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, Memory32, FVM_IDTR, vtable);
+		// Emulate instruction then (Core I)
+		emulate_FVM_instruction(CPU_regs, CPU2_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, Memory32, FVM_IDTR, vtable);
+		if(CPU_regs->r17 == 1)
+		{
+			/** CORE II Wakeup message received **/
+			emulate_FVM_instruction(CPU2_regs, CPU2_regs, NewCPU_state, CPU2_Flags, FVM_IOADDR_SPACE, Memory32, FVM_IDTR, vtable);
+		}
 	}
 	printf("EXIT(1)\n");
 	FVM_SDL_setwincaption("Flouronix VM (Dormant)");

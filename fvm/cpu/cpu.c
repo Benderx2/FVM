@@ -22,7 +22,7 @@ union tempuni {
 	float b;
 };
 int32_t save_r12 = -1;
-void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
+void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
 {
 	UNUSED(NewCPU_state);
 	FVM_BYTE_t* temp;
@@ -917,6 +917,18 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_CPU_STATE_t* NewCPU_
 						CPU_regs->IP += 3;
 					}
 					break;
+			/** Initialize Core 2 with IP. **/
+			case FVM_INIT_MP:
+				CPU_regs->r17 = 1;
+				CPU2_regs->IP = Memory[CPU_regs->IP+1] / 4;	
+				CPU_regs->IP += 2;
+				break;
+			/** Deintialize Core 2 **/
+			case FVM_DEINIT_MP:
+				CPU_regs->r17 = 0;
+				CPU_regs->IP++;
+				break;
+			/** Memory Management **/
 			case OBJ_CREAT:
 				 CPU_regs->IP++;
 				 Object* objtemp = VM_CreateObject(Memory[CPU_regs->IP] /** Type **/, Memory[CPU_regs->IP+1] /** Value/Address **/);
