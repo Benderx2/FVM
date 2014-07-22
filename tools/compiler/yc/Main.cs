@@ -502,6 +502,8 @@ namespace yc
 					case "JMPF_E":
 					case "JMPF_G":
 					case "LOAD_SP":
+					case "INIT_MP":
+					case "DEINIT_MP":
 						SourceWriter.Write(maincode[index]+ " " + maincode[index+1]);
 						SourceWriter.Flush();
 						index++;
