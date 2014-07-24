@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <fvm/devices/fgx.h>
 #include <fvm/tweaks.h>
 #include <fvm/version.h>
 #include <fvm/cpu/opcodes.h>
@@ -26,6 +27,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 {
 	UNUSED(NewCPU_state);
 	FVM_BYTE_t* temp;
+	FGX_refresh(IOADDRSPACE);
 	switch(Memory[CPU_regs->IP])
 		{
 			//! Sleep
@@ -496,12 +498,12 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				break;
 			// Grab a DWORD from port
 			case FVM_IN0:
-				CPU_regs->r0 = IOADDRSPACE[CPU_regs->IP+1].in;
+				CPU_regs->r0 = IOADDRSPACE[Memory[CPU_regs->IP+1]].out;
 				CPU_regs->IP += 2;
 				break;
 			/* Send a DWORD to port */
 			case FVM_OUT0:
-				IOADDRSPACE[CPU_regs->IP+1].out = CPU_regs->r0;
+				IOADDRSPACE[Memory[CPU_regs->IP+1]].in = CPU_regs->r0;
 				CPU_regs->IP += 2;
 				break;
 			case FVM_XOR:

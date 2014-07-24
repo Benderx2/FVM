@@ -184,13 +184,13 @@ macro IRETF
 	dd 0x15
 }
 ; IN_R0 - Grab value into R0 from port
-macro IN_R0 PORT
+macro IN PORT
 {	
 	dd 0x1D
 	dd PORT
 }
 ; OUT_R0 - Send out R0 to port
-macro OUT_R0 PORT
+macro OUT PORT
 {
 	dd 0x1C
 	dd PORT

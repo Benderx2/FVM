@@ -8,6 +8,7 @@
 #include <fvm/error.h>
 int screen_x = 0;
 int screen_y = 0;
+int init = 0;
 uint32_t keycode;
 GL_EVENT_t event;
 GL_SURFACE_t* screen;
@@ -16,8 +17,17 @@ SDL_Color COLOR = { 255, 255, 255, 60 };
 void FVM_SDL_init(GL_WIDTH_t width, GL_HEIGHT_t height, GL_DEPTH_t color)
 {
 	//! Init everything.
-	SDL_Init(SDL_INIT_EVERYTHING);
+	if(init == 0)
+	{
+		SDL_Init(SDL_INIT_EVERYTHING);
+		init = 1;
+	}
 	screen = SDL_SetVideoMode(width, height, color, SDL_SWSURFACE);
+	if(screen == NULL)
+	{
+		printf("FATAL: SDL_INIT -> 'screen' pointer is NULL\n");
+	}
+	SDL_Flip(screen);
 }
 GL_SURFACE_t* FVM_SDL_loadbmp(const char* FILENAME)
 {
