@@ -22,11 +22,18 @@ void FVM_SDL_init(GL_WIDTH_t width, GL_HEIGHT_t height, GL_DEPTH_t color)
 		SDL_Init(SDL_INIT_EVERYTHING);
 		init = 1;
 	}
+	else {
+		SDL_QuitSubSystem( SDL_INIT_VIDEO );
+		SDL_Init(SDL_INIT_EVERYTHING);
+	}
 	screen = SDL_SetVideoMode(width, height, color, SDL_SWSURFACE);
 	if(screen == NULL)
 	{
 		printf("FATAL: SDL_INIT -> 'screen' pointer is NULL\n");
 	}
+	GL_MAX_X = width;
+	GL_MAX_Y = height;
+	GL_COLOR = color;
 	SDL_Flip(screen);
 }
 GL_SURFACE_t* FVM_SDL_loadbmp(const char* FILENAME)

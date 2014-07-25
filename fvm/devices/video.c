@@ -12,7 +12,7 @@ void FGX_refresh(FVM_PORT_t* IO_ADDR_SPACE)
 		/** Reinitialize graphics with resolution **/
 		FVM_SDL_init(IO_ADDR_SPACE[0x3D].in, IO_ADDR_SPACE[0x3E].in, IO_ADDR_SPACE[0x3F].in);
 		IO_ADDR_SPACE[0x3C].out = 0x3FF; /** Send SET_RESOLUTION command to port 0x3C **/
-		IO_ADDR_SPACE[0x3B].out = 0;
+		IO_ADDR_SPACE[0x3B].in = 0;
 	}
 	else {
 		return;
