@@ -124,5 +124,7 @@
 #define FVM_INIT_MP 0x0047
 // DEINIT_MP - Deinitialize cpu2
 #define FVM_DEINIT_MP 0x0048
+// NATIVE_CALL - Call native procedure
+#define FVM_NATIVE_CALL 0x0049
 #endif
 

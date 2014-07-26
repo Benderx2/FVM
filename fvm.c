@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <time.h>
 #include <errno.h>
+#include <fvm/native/native.h>
 #include <fvm/bitutils.h>
 #include <fvm/error.h>
 #include <fvm/sighandle.h>
@@ -50,7 +51,10 @@ pthread_t* sdl_poll_thread;
 #endif
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
-{
+{	
+	load_native_library("./hello.so");
+	//void* fptr = returnhandle("./hello.so");
+	//native_call("hello", fptr, (void*)(0));
 	if(argc == 2)
 	{
 		if(strcmp(argv[1], "-v") == 0)
@@ -79,7 +83,7 @@ int main (int argc, const char *argv[])
 	uint32_t total_mem = atoi(argv[1]);
 	#ifdef __USE_GRAPHICS
 	SDL_EnableUNICODE(1);
-	FVM_SDL_init(GL_MAX_X, GL_MAX_Y, GL_COLOR);
+	FVM_SDL_init(640, 480, 32);
 	GL_SURFACE_t* bmp = FVM_SDL_loadbmp("init.bmp");
 	assert(bmp != NULL);
 	FVM_SDL_updatedisplay(bmp);

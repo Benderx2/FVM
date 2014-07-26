@@ -3,14 +3,12 @@
 #define __NATIVE_H
 #include <stdint.h>
 #include <dlfcn.h>
-struct FVM_NATIVE_LIB {
-	const char* name[64];
+typedef struct native_handle {
+	char* soname;
 	void* handle;
-	FVM_NATIVE_LIB* next;
-};
-typedef struct FVM_NATIVE_LIB NATIVE_LIB_t;
-struct FVM_NATIVE_LIST {
-	NATIVE_LIB_t* flib;
-};
-typedef FVM_NATIVE_LIST FVM_NATIVE_LIST_t;
+	struct native_handle* next;
+} native_handle_t;
+void* load_native_library(char* name);
+uint32_t native_call(char* name, void* handle, void* arg);
+void* returnhandle(char* soname);
 #endif

@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <fvm/native/native.h>
 #include <fvm/devices/fgx.h>
 #include <fvm/tweaks.h>
 #include <fvm/version.h>
@@ -27,7 +28,8 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 {
 	UNUSED(NewCPU_state);
 	FVM_BYTE_t* temp;
-	FGX_refresh(IOADDRSPACE);
+	// Refresh FGX video device.
+	//FGX_refresh(IOADDRSPACE);	
 	switch(Memory[CPU_regs->IP])
 		{
 			//! Sleep
@@ -929,6 +931,30 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 			case FVM_DEINIT_MP:
 				CPU_regs->r17 = 0;
 				CPU_regs->IP++;
+				break;
+			case FVM_NATIVE_CALL:
+				// Call a native procedure
+				CPU_regs->IP++;
+				char* libname = (char*)Memory + Memory[CPU_regs->IP];
+				char* functionname = (char*)Memory + Memory[CPU_regs->IP+1];
+				uint32_t* arg = (uint32_t*)Memory + Memory[CPU_regs->IP+2];
+				void* handle = returnhandle(libname);
+				if(handle == NULL){
+					/** try loading it then **/
+					printf("Loading library : %s\n", libname);
+					if(handle == NULL) {
+						handle = load_native_library(libname);
+						if(handle == NULL){
+						// Not found then :P
+						printf("FATAL: NATIVE_CALL, Library Not found, %s, Requested procedure, %s.\n", libname, functionname);
+						}
+						CPU_regs->r0 = native_call(functionname, handle, (void*)arg);
+					}
+				}
+				else {
+					CPU_regs->r0 = native_call(functionname, handle, (void*)arg);
+				}
+				CPU_regs->IP += 3;
 				break;
 			/** Memory Management **/
 			case OBJ_CREAT:

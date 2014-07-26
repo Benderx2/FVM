@@ -36,6 +36,12 @@ db 'FVVENDOR'
 dd 0
 ; No relocatable function table!
 dd 0
+; .so (shared object files)
+if defined REQUIRE_SO
+	dd so_init
+else 
+	dd 0
+end if
 ; V_SLEEP - Processor Sleep
 macro V_SLEEP {
 	dd 0x0
@@ -299,4 +305,16 @@ macro DEINIT_MP {
 macro INIT_MP ip {
 	dd 0x47
 	dd ip
+}
+macro DECLARE_NATIVE_LIB name {
+	db name, 0
+}
+macro DECLARE_NATIVE_PROC name {
+	db name, 0
+}
+macro NATIVE_CALL lib, name, arg {
+	dd 0x49
+	dd lib
+	dd name
+	dd arg
 }
