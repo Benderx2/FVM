@@ -509,6 +509,7 @@ namespace yc
 						index++;
 						break;
 					case "SUBLEQ":
+					case "NATIVE_CALL":
 						SourceWriter.Write(maincode[index] + " " + maincode[index+1] + "," + maincode[index+2] + "," + maincode[index+3]);
 						SourceWriter.Flush();
 						index += 3;
