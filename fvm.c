@@ -52,7 +52,7 @@ pthread_t* sdl_poll_thread;
 //! Start point of the Emulator
 int main (int argc, const char *argv[])
 {	
-	load_native_library("./hello.so");
+	load_native_library("./embryo.so");
 	//void* fptr = returnhandle("./hello.so");
 	//native_call("hello", fptr, (void*)(0));
 	if(argc == 2)

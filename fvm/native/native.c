@@ -3,6 +3,7 @@
 #include <string.h>
 #include <dlfcn.h> /** For dlopen(), dlsym(), and dlerror()s **/
 #include <fvm/native/native.h>
+#include <fvm/sdl.h> /** Exposing SDL functions **/
 native_handle_t* head;
 native_handle_t* tail;
 int number_of_handles;
@@ -13,10 +14,20 @@ void* load_native_library(char* name)
 	if(!handle){	
 		printf("FATAL: Unable to load shared objekt: %s", name);
 	}	
+	
 	native_handle_t* newhandle = (native_handle_t*)malloc(sizeof(native_handle_t));
 	newhandle->soname = name;
 	newhandle->handle = handle;
 	newhandle->next = NULL;
+	void (*lib_init)(void*);
+	*(void**)(&lib_init) = dlsym(handle, "lib_init");
+	if(lib_init == NULL)
+	{
+		printf("WARNING: lib_init not found! Expect SIGSEGV!\n");
+	}
+	else {
+		(*lib_init)(&SDL_scrn_printf);
+	}
 	if(number_of_handles == 0)
 	{
 		head = newhandle;
@@ -50,5 +61,9 @@ uint32_t native_call(char* name, void* handle, void* arg)
 	dlerror();
 	uint32_t (*function)(void*);
 	*(void**)(&function) = dlsym(handle, name);
+	if(function == NULL)
+	{
+		printf("WARNING: Requested function not found! Name: %s\n", name);
+	}
 	return (*function)(arg);
 }

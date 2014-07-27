@@ -169,6 +169,18 @@ void FVM_SDL_putstringat(GL_SURFACE_t* font, GL_SURFACE_t* dest, int x, int y, c
 		i++;
 	}
 }
+void SDL_scrn_printf(const char* fmt, ...)
+{	
+	char buf[512];
+	buf[511] = '\0'; // Null terminate
+        va_list pvar;
+        va_start(pvar, fmt);
+
+        vsnprintf(buf, 511, fmt, pvar);
+	printf("dump: %s", buf);
+        FVM_SDL_putstring(bmpfont, screen, buf);
+	FVM_SDL_updatedisplay(screen);
+}
 void SDL_printf(GL_SURFACE_t* font, GL_SURFACE_t*  dest, const char *fmt, ...) {
        	char buf[512];
 	buf[511] = '\0'; // Null terminate

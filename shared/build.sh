@@ -1,0 +1,1 @@
+gcc -shared -o hello1.so -fPIC hello.c

@@ -7,7 +7,7 @@ _start:
 	VM_EXIT  
 _end_start:
 _data:
-hello_lib: DECLARE_NATIVE_LIB "./hello1.so"
+hello_lib: DECLARE_NATIVE_LIB "./hello.so"
 hello_proc: DECLARE_NATIVE_PROC "hello"
 _end_data:
 _bss:
