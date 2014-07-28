@@ -38,4 +38,5 @@ void SDL_printf(GL_SURFACE_t* font, GL_SURFACE_t*  dest, const char *fmt, ...);
 void FVM_SDL_putpixel(GL_SURFACE_t *surface, int x, int y, uint32_t pixel);
 void SDL_printf(GL_SURFACE_t* font, GL_SURFACE_t*  dest, const char *fmt, ...);
 void SDL_scrn_printf(const char* fmt, ...);
+GL_SURFACE_t* SDL_get_scrn_buffer(void);
 #endif

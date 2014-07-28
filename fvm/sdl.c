@@ -223,4 +223,7 @@ void FVM_SDL_putpixel(GL_SURFACE_t *surface, int x, int y, uint32_t pixel)
         break;
     }
 }
-
+GL_SURFACE_t* SDL_get_scrn_buffer(void)
+{
+	return screen;
+}
