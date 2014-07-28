@@ -41,6 +41,9 @@ void* SDL_PollThread(void);
 FVM_IDT_HANDLER_t FVM_IDTR[0xFF];
 // FVM IO Address Space
 FVM_PORT_t FVM_IOADDR_SPACE[0xFF];
+FVM_REGISTERS_t* CPU_regs;
+FVM_BYTE_t* Memory32;
+FFLAGS_t* CPU_Flags;
 // FVM Vtable
 V_TABLE_t* vtable = 0;
 // FVM Timer
@@ -118,7 +121,7 @@ int main (int argc, const char *argv[])
 	NewCPU_state->reserved3 = 0;
 	printf("\nCPU State Settings are to default, now allocating memory for CPU Registers");
 	//! Initialize Registers
-	FVM_REGISTERS_t* CPU_regs = (FVM_REGISTERS_t*)malloc(sizeof(FVM_REGISTERS_t));
+	CPU_regs = (FVM_REGISTERS_t*)malloc(sizeof(FVM_REGISTERS_t));
 	FVM_REGISTERS_t* CPU2_regs = (FVM_REGISTERS_t*)malloc(sizeof(FVM_REGISTERS_t));
 	printf("\nAllocation Complete, now setting registers to default state.");
 	/* Configure r12 to be the end of memory */
@@ -130,7 +133,7 @@ int main (int argc, const char *argv[])
 	NewCPU->CPU_REGS = CPU_regs;
 	NewCPU->CPU_STATE = NewCPU_state;
 	printf("Allocating Memory for FFLAGS\n");
-	FFLAGS_t* CPU_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
+	CPU_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
 	FFLAGS_t* CPU2_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
 	CPU_Flags->VMM = false;
 	printf("FFLAGS Allocation Complete Address = [%p]\n", (void*)CPU_Flags);
@@ -139,7 +142,7 @@ int main (int argc, const char *argv[])
 	FVM_MEM_t* CPU_memory = (FVM_MEM_t*)malloc(sizeof(FVM_MEM_t));
 	uint8_t* MemoryAllocate = (uint8_t*)malloc(total_mem);
 	//FVM_BYTE_t* Memory32 = (FVM_BYTE_t*)malloc(total_mem); 
-	FVM_BYTE_t* Memory32 = (FVM_BYTE_t*)&MemoryAllocate[0];
+	Memory32 = (FVM_BYTE_t*)&MemoryAllocate[0];
 	CPU_memory->MEM_START = Memory32;
 	CPU_memory->MEM_SIZE = total_mem;
 	printf("Emulator has allocated Memory, Memory Address = [%p], Memory Range = [%d]\n", (void *)CPU_memory->MEM_START, CPU_memory->MEM_SIZE);

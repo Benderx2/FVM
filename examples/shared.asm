@@ -1,14 +1,21 @@
 include 'a32.inc'
-; Yes we need an .so file
-REQUIRE_SO = 1
-so_init:
 _start:
-	NATIVE_CALL hello_lib, hello_proc, 0
-	VM_EXIT  
+PUSH R0
+JMPF MainClass.Main
+MainClass.Main:
+; whoops :P
+; This is a simple application written for the VM!
+; As you can see we do a "NATIVE_CALL" instruction right here.
+
+NATIVE_CALL lib_test,proc_test,0
+
+VM_EXIT
+
+
 _end_start:
 _data:
-hello_lib: DECLARE_NATIVE_LIB "./hello.so"
-hello_proc: DECLARE_NATIVE_PROC "hello"
+lib_test: db "./test.so", 0 ; Is the name of the library.
+proc_test: db "test_function", 0 ; Is the name of our function
 _end_data:
 _bss:
 _end_bss:

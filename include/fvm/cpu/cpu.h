@@ -96,5 +96,8 @@ struct FVM_CPU {
 };
 typedef struct FVM_CPU FVM_CPU_t;
 extern int StackCount;
+extern FFLAGS_t* CPU_Flags;
+extern FVM_BYTE_t* Memory32;
+extern FVM_REGISTERS_t* CPU_regs;
 void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable);
 #endif

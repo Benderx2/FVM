@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dlfcn.h> /** For dlopen(), dlsym(), and dlerror()s **/
+#include <fvm/cpu/cpu.h>
 #include <fvm/native/native.h>
 #include <fvm/sdl.h> /** Exposing SDL functions **/
 native_handle_t* head;
 native_handle_t* tail;
 int number_of_handles;
+uint32_t* get_mem_buf(void);
+FVM_REGISTERS_t* get_cpu_regs(void);
+FFLAGS_t* get_fflags(void);
 void* load_native_library(char* name)
 {
 	void *handle;
@@ -19,14 +23,14 @@ void* load_native_library(char* name)
 	newhandle->soname = name;
 	newhandle->handle = handle;
 	newhandle->next = NULL;
-	void (*lib_init)(void*, void*);
+	void (*lib_init)(void*, void*, void*, void*, void*);
 	*(void**)(&lib_init) = dlsym(handle, "lib_init");
 	if(lib_init == NULL)
 	{
 		printf("WARNING: lib_init not found! Expect SIGSEGV!\n");
 	}
 	else {
-		(*lib_init)(&SDL_scrn_printf, &SDL_get_scrn_buffer);
+		(*lib_init)(&SDL_scrn_printf, &SDL_get_scrn_buffer, &get_mem_buf, &get_cpu_regs, &get_fflags );
 	}
 	if(number_of_handles == 0)
 	{
@@ -66,4 +70,16 @@ uint32_t native_call(char* name, void* handle, void* arg)
 		printf("WARNING: Requested function not found! Name: %s\n", name);
 	}
 	return (*function)(arg);
+}
+uint32_t* get_mem_buf(void)
+{
+	return Memory32;
+}
+FVM_REGISTERS_t* get_cpu_regs(void)
+{
+	return CPU_regs;
+}
+FFLAGS_t* get_fflags(void)
+{
+	return CPU_Flags;
 }
