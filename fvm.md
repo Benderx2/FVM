@@ -38,6 +38,10 @@ STD - Store Register (DWORD) to address at R0 (can be UA).<br>
 LOAD_FROM_SP - Load Value into R1 from offset in stack. (Each offset is 4 bytes) <br>
 SUBLEQ - SUBtract and brance if Less than or EQual to zero. <br>
 EXIT - Exit Program <br>
+VM_CREATE_THREAD - Create new thread with stack and IP (4-byte aligned) <br>
+THREAD_EXIT - Exit current thread <br>
+NATIVE_CALL - Call native procedure stored in library <br>
+INIT_MP - Initialise Core II with IP <br>
 <h1>Not implemented instructions (Planned)</h1>
 OR - Bitwise OR <br>
 BTS - Bit set <br>

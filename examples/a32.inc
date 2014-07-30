@@ -312,9 +312,20 @@ macro DECLARE_NATIVE_LIB name {
 macro DECLARE_NATIVE_PROC name {
 	db name, 0
 }
+macro DECLARE_STACK_SPACE no {
+	times no db 0
+}
 macro NATIVE_CALL lib, name, arg {
 	dd 0x49
 	dd lib
 	dd name
 	dd arg
+}
+macro VM_CREATE_THREAD ip, stack {
+	dd 0x004A
+	dd ip 
+	dd stack
+}
+macro THREAD_EXIT {
+	dd 0x004B
 }

@@ -16,6 +16,7 @@
 #include <fvm/cpu/idt.h>
 #include <fvm/error.h>
 #include <fvm/gc/objects.h>
+#include <fvm/thread/thread.h>
 #include <fvm/sdl.h>
 uint8_t* byteptr;
 uint32_t* dwordptr;
@@ -956,7 +957,16 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				}
 				CPU_regs->IP += 3;
 				break;
+			
 			/** Memory Management **/
+			case CREAT_THREAD:
+				CPU_regs->r0 = (uint32_t)create_thread(Memory[CPU_regs->IP+1] / 4, Memory[CPU_regs->IP+2] / 4);
+				CPU_regs->IP += 3;
+				break;
+			case THREAD_EXIT:
+				destroy_thread(CPU_regs->no);
+				CPU_regs->IP++;
+				break;
 			case OBJ_CREAT:
 				 CPU_regs->IP++;
 				 Object* objtemp = VM_CreateObject(Memory[CPU_regs->IP] /** Type **/, Memory[CPU_regs->IP+1] /** Value/Address **/);
@@ -1034,7 +1044,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				CPU_regs->r12--;
 				break;
 		default:
-				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] IP: [0x%X]. Shutting Down....",Memory[CPU_regs->IP], CPU_regs->IP);
+				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] IP: [0x%X]. Shutting Down...., Previous DWORD: [0x%X], Next DWORD : [0x%X]\n",Memory[CPU_regs->IP], CPU_regs->IP, Memory[CPU_regs->IP-1], Memory[CPU_regs->IP+1]);
 				CPU_regs->ON = 0x0000;
 				FVM_EXIT(FVM_PROGRAM_ERR);
 		}

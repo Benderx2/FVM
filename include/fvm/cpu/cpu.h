@@ -58,6 +58,8 @@ struct FVM_REGISTERS {
 	FVM_REG_t r18;
 	/* ON Register */
 	FVM_REG_t ON;
+	/* thread number (used for shit) */
+	FVM_REG_t no;
 };
 typedef struct FVM_REGISTERS FVM_REGISTERS_t;
 struct FVM_CPU_STATE {
@@ -85,6 +87,7 @@ struct FFLAGS
 	uint32_t L;
 	/* VMM Flag */
 	bool VMM;
+	/* IS_THREAD */
 };
 typedef struct FFLAGS FFLAGS_t;
 typedef struct FVM_CPU_STATE FVM_CPU_STATE_t;

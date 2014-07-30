@@ -35,6 +35,11 @@ void* load_native_library(char* name)
 	if(number_of_handles == 0)
 	{
 		head = newhandle;
+		tail = newhandle;
+	}
+	else {		
+		tail->next = newhandle;
+		tail = newhandle;
 	}
 	number_of_handles++;
 	return handle;
@@ -49,7 +54,6 @@ void* returnhandle(char* soname)
 			return current_handle->handle;
 		}
 		else {
-			i++;
 			if(current_handle->next == NULL)
 			{
 				return NULL;

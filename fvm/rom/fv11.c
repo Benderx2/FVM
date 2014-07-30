@@ -23,7 +23,7 @@ FV11_RETURN_t* fv11_load(FVM_BYTE_t* Memory, int32_t memsize)
 	int32_t _length_of_data = ROM_HEADER->length_of_data;
 	if(memsize < _where_to_load || memsize < _where_to_load_data || memsize < ROM_HEADER->stack_buf)
 	{
-		printf("fatal: This ROM requires more memory than provided\n");
+		printf("fatal: This ROM requires more memory than provided [%d] [%d] [%d] [%d]\n", memsize, _where_to_load, _where_to_load_data, ROM_HEADER->stack_buf);
 		FVM_EXIT(FVM_LESS_MEM_ERR);
 	}
 	// Do a memcpy!

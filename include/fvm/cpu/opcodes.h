@@ -126,5 +126,9 @@
 #define FVM_DEINIT_MP 0x0048
 // NATIVE_CALL - Call native procedure
 #define FVM_NATIVE_CALL 0x0049
+// CREAT_THREAD - Create a new thread
+#define CREAT_THREAD 0x0004A
+// THREAD_EXIT - Exit current thread;
+#define THREAD_EXIT 0x004B
 #endif
 
