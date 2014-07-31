@@ -329,3 +329,27 @@ macro VM_CREATE_THREAD ip, stack {
 macro THREAD_EXIT {
 	dd 0x004B
 }
+macro RELOC_JMP addr {
+	dd 0x004C
+	dd addr
+}
+macro RELOC_JE addr {
+	dd 0x004F
+	dd addr
+}
+macro RELOC_JG addr {	
+	dd 0x0050
+	dd addr
+}
+macro RELOC_JL addr {
+	dd 0x0051
+	dd addr
+}
+macro RELOC_LDD reg {
+	dd 0x004E
+	dd reg
+}
+macro RELOC_STD reg {
+	dd 0x004D
+	dd reg
+}

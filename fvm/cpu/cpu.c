@@ -976,6 +976,84 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 			case OBJ_STORE:
 				CPU_regs->IP++;
 				break;
+			/** Instructions used by relocatable code **/
+			case FVM_RELOC_JMP:
+				CPU_regs->IP = CPU_regs->thread_local_storage + (Memory[CPU_regs->IP+1] / 4);
+				break;
+			/** Load from relative address in R0 **/
+			case FVM_RELOC_STD:
+				CPU_regs->IP = CPU_regs->IP;
+				uint8_t* tmp6 = (uint8_t*)Memory;
+				switch(Memory[CPU_regs->IP+1])
+				{
+					case OPCODE_R0:
+						tmp6[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)] = CPU_regs->r0;
+					case OPCODE_R1:
+						tmp6[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)] = CPU_regs->r1;
+					case OPCODE_R2:
+						tmp6[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)] = CPU_regs->r2;
+					case OPCODE_R3:
+						tmp6[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)] = CPU_regs->r3;
+					case OPCODE_R4:
+						tmp6[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)] = CPU_regs->r4;
+					case OPCODE_R5:
+						tmp6[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)] = CPU_regs->r5;
+					case OPCODE_R12:
+						tmp6[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)] = CPU_regs->r12;
+					default:
+						tmp6[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)] = Memory[CPU_regs->IP+1];
+						
+				}
+				CPU_regs->IP += 2;
+				break;
+			case FVM_RELOC_LDD:
+				CPU_regs->IP = CPU_regs->IP;
+				uint8_t* tmp7 = (uint8_t*)Memory;
+				switch(Memory[CPU_regs->IP+1])
+				{
+					case OPCODE_R0:
+						CPU_regs->r1 = tmp7[CPU_regs->r0 + (CPU_regs->thread_local_storage * 4)];
+					case OPCODE_R1:
+						CPU_regs->r1 = tmp7[CPU_regs->r1 + (CPU_regs->thread_local_storage * 4)];
+					case OPCODE_R2:
+						CPU_regs->r1 = tmp7[CPU_regs->r2 + (CPU_regs->thread_local_storage * 4)];
+					case OPCODE_R3:
+						CPU_regs->r1 = tmp7[CPU_regs->r3 + (CPU_regs->thread_local_storage * 4)];
+					case OPCODE_R4:
+						CPU_regs->r1 = tmp7[CPU_regs->r4 + (CPU_regs->thread_local_storage *   4)];	
+					case OPCODE_R5:
+						CPU_regs->r1 = tmp7[CPU_regs->r5 + (CPU_regs->thread_local_storage * 4)];	
+					case OPCODE_R12:
+						CPU_regs->r1 = tmp7[CPU_regs->r12 + (CPU_regs->thread_local_storage * 4)];
+					default:
+						CPU_regs->r1 = tmp7[Memory[CPU_regs->IP+1] + (CPU_regs->thread_local_storage * 4)];
+				}
+				CPU_regs->IP += 2;
+				break;	
+			case FVM_RELOC_JMPFE:
+				if(CPU_Flags->E == 1)
+				{	
+					CPU_regs->IP = (CPU_regs->thread_local_storage + (Memory[CPU_regs->IP+1] / 4));
+					break;
+				}
+				CPU_regs->IP += 2;
+				break;
+			case FVM_RELOC_JMPFL:
+				if(CPU_Flags->L == 1)
+				{	
+					CPU_regs->IP = (CPU_regs->thread_local_storage + (Memory[CPU_regs->IP+1] / 4));
+					break;
+				}
+				CPU_regs->IP += 2;
+				break;
+			case FVM_RELOC_JMPFG:
+				if(CPU_Flags->G == 1)
+				{	
+					CPU_regs->IP = (CPU_regs->thread_local_storage + (Memory[CPU_regs->IP+1] / 4));
+					break;
+				}
+				CPU_regs->IP += 2;
+				break;
 			/** FPU Functions **/
 			case FPU_SIN:	
 				CPU_regs->IP++;

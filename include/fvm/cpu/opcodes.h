@@ -130,5 +130,17 @@
 #define CREAT_THREAD 0x0004A
 // THREAD_EXIT - Exit current thread;
 #define THREAD_EXIT 0x004B
+// RELOC_JMP - Relative JMPF
+#define FVM_RELOC_JMP 0x004C
+// RELOC_STD - Relative Store
+#define FVM_RELOC_STD 0x004D
+// RELOC_LDD - Relative Load
+#define FVM_RELOC_LDD 0x004E
+// RELOC_JMP_F_E - Relative Jump if equal
+#define FVM_RELOC_JMPFE 0x004F
+// RELOC_JMP_F_G - Relative jump if greater
+#define FVM_RELOC_JMPFG 0x0050
+// RELOC_JMP_F_L - Relative jump if lesser
+#define FVM_RELOC_JMPFL 0x0051
 #endif
 

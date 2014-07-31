@@ -20,6 +20,7 @@ void init_thread(uint32_t ip, uint32_t sp)
 	Thread_queue[0].Thread_regs->IP = ip;
 	Thread_queue[0].Thread_regs->r12 = sp;	
 	Thread_queue[0].Thread_regs->ON = 1;
+	Thread_queue[0].Thread_regs->thread_local_storage = ip;
 	printf("Embryo Thread Created!\n");
 }
 int create_thread(uint32_t ip, uint32_t sp)
@@ -36,6 +37,7 @@ int create_thread(uint32_t ip, uint32_t sp)
 			Thread_queue[i].Thread_regs->r12 = sp;	
 			Thread_queue[i].Thread_regs->no = i;
 			Thread_queue[i].Thread_regs->ON = 1;
+			Thread_queue[0].Thread_regs->thread_local_storage = ip;
 			Thread_queue[i].is_used = true;
 			return i;
 		}

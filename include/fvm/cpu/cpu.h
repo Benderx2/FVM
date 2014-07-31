@@ -60,6 +60,8 @@ struct FVM_REGISTERS {
 	FVM_REG_t ON;
 	/* thread number (used for shit) */
 	FVM_REG_t no;
+	/* thread start ip */
+	FVM_REG_t thread_local_storage;
 };
 typedef struct FVM_REGISTERS FVM_REGISTERS_t;
 struct FVM_CPU_STATE {
