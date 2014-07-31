@@ -42,6 +42,13 @@ VM_CREATE_THREAD - Create new thread with stack and IP (4-byte aligned) <br>
 THREAD_EXIT - Exit current thread <br>
 NATIVE_CALL - Call native procedure stored in library <br>
 INIT_MP - Initialise Core II with IP <br>
+<h1>Instructions for PIC (Position Independent Code)</h1>
+RELOC_JE - Jump if equal (relative to TLS->load_addr) <br>
+RELOC_JL - Jump if lesser (relative to TLS->load_addr)<br>
+RELOC_JG - Jump if greater (relative to TLS->load_addr) <br>
+RELOC_JMP - Jump to address (relative to TLS->load_addr) <br>
+RELOC_STD - Store to address or register, value of address is in R1 (relative to TLS->load_addr) <br>
+RELOC_LDD - Load from address or a register pointing to an address into R1 (relative to TLS_load->addr) <br>
 <h1>Not implemented instructions (Planned)</h1>
 OR - Bitwise OR <br>
 BTS - Bit set <br>
