@@ -31,6 +31,8 @@
 #include <fvm/fpu/fpu.h>
 #include <fvm/gc/objects.h>
 #include <fvm/thread/thread.h>
+#include <fvm/cpu/m_cpu.h>
+#include <fvm/mm/mm.h>
 #ifdef _USE_PTHREAD
 #include <pthread.h>
 #endif
@@ -38,6 +40,8 @@
 #include <fvm/sdl.h>
 #endif
 void* SDL_PollThread(void);
+FVM_REGISTERS_t* CPU2_regs;
+FFLAGS_t* CPU2_Flags;
 // FVM IDT
 FVM_IDT_HANDLER_t FVM_IDTR[0xFF];
 // FVM IO Address Space
@@ -50,6 +54,7 @@ V_TABLE_t* vtable = 0;
 // FVM Timer
 clock_t FVM_TIMER = 0;
 int StackCount = 0;
+FVM_CPU_STATE_t* NewCPU_state;
 #ifdef _USE_PTHREAD
 pthread_t* sdl_poll_thread;
 #endif
@@ -109,11 +114,11 @@ int main (int argc, const char *argv[])
 	printf("Allocated Memory for CPU struct, address: %p\n", (void*)NewCPU);
 	//! Create a CPU state
 	printf("Now Creating New CPU state.....\n");
-	FVM_CPU_STATE_t* NewCPU_state = (FVM_CPU_STATE_t*)malloc(sizeof(FVM_CPU_STATE_t));
+	NewCPU_state = (FVM_CPU_STATE_t*)malloc(sizeof(FVM_CPU_STATE_t));
 	printf("CPU State Created, address : %p\n", (void*)NewCPU_state);
 	//! Set CPU to Default State
 	NewCPU_state->interrupts_enabled = true; //! Enable Interrupts
-	NewCPU_state->fpu_present = false; //! No FPU present
+	NewCPU_state->fpu_present = true;
 	NewCPU_state->stack_limit = total_mem; //! Maximum stack limit
 	//! Zero all this out
 	NewCPU_state->reserved0 = 0;
@@ -123,7 +128,7 @@ int main (int argc, const char *argv[])
 	printf("\nCPU State Settings are to default, now allocating memory for CPU Registers");
 	//! Initialize Registers
 	CPU_regs = (FVM_REGISTERS_t*)malloc(sizeof(FVM_REGISTERS_t));
-	FVM_REGISTERS_t* CPU2_regs = (FVM_REGISTERS_t*)malloc(sizeof(FVM_REGISTERS_t));
+	CPU2_regs = (FVM_REGISTERS_t*)malloc(sizeof(FVM_REGISTERS_t));
 	printf("\nAllocation Complete, now setting registers to default state.");
 	/* Configure r12 to be the end of memory */
 	CPU_regs->r12 = (FVM_REG_t)total_mem;
@@ -135,13 +140,15 @@ int main (int argc, const char *argv[])
 	NewCPU->CPU_STATE = NewCPU_state;
 	printf("Allocating Memory for FFLAGS\n");
 	CPU_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
-	FFLAGS_t* CPU2_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
+	CPU2_Flags = (FFLAGS_t*)malloc(sizeof(FFLAGS_t));
 	CPU_Flags->VMM = false;
 	printf("FFLAGS Allocation Complete Address = [%p]\n", (void*)CPU_Flags);
 	printf("FVM Initialization Complete.\n");
 	printf("Preparing to allocate memory for emulator\n");
 	FVM_MEM_t* CPU_memory = (FVM_MEM_t*)malloc(sizeof(FVM_MEM_t));
 	uint8_t* MemoryAllocate = (uint8_t*)malloc(total_mem);
+	// Initalize Memory Manager
+	mm_init(MemoryAllocate, total_mem);
 	//FVM_BYTE_t* Memory32 = (FVM_BYTE_t*)malloc(total_mem); 
 	Memory32 = (FVM_BYTE_t*)&MemoryAllocate[0];
 	CPU_memory->MEM_START = Memory32;
@@ -186,40 +193,10 @@ int main (int argc, const char *argv[])
 	VM_CreateObject(INT_TYPE, OBJ_IDLE);
 	printf("THREAD_INIT: Creating Embryo thread....\n");
 	init_thread(CPU_regs->IP, CPU_regs->r12);
-	while(CPU_regs->ON == 0x0001)
-	{
-		//! Any pending clocks?
-		for(int i = 0; i < return_number_of_threads(); i++)
-		{
-			if(Thread_queue[i].is_used == false)
-			{
-				// Do nothing
-			}
-			else
-			{
-				CPU_regs = Thread_queue[i].Thread_regs;
-				CPU_Flags = Thread_queue[i].Thread_flags;
-				printf("CPU_regs : %p, CPU_Flags : %p, IP : %d, SP : %d\n",(void*)CPU_regs, (void*)CPU_Flags, CPU_regs->IP, CPU_regs->r12);
-				if(((clock() - FVM_TIMER) / (CLOCKS_PER_SEC/10000)) >= 1 && FVM_IDTR[1].address != 0 && NewCPU_state->interrupts_enabled == true)
-				{
-					CPU_regs->IP = CPU_regs->IP;
-					uint32_t returnaddress2 = CPU_regs->IP;
-					Memory32[CPU_regs->r12] = returnaddress2;
-					CPU_regs->r12--;
-					StackCount++;
-					CPU_regs->IP = FVM_IDTR[1].address;
-					FVM_TIMER = clock();
-				}
-				emulate_FVM_instruction(CPU_regs, CPU2_regs, NewCPU_state, CPU_Flags, FVM_IOADDR_SPACE, Memory32, FVM_IDTR, vtable);
-			}
-		}
-		// Emulate instruction then (Core I)
-		if(CPU_regs->r17 == 1)
-		{
-			/** CORE II Wakeup message received **/
-			emulate_FVM_instruction(CPU2_regs, CPU2_regs, NewCPU_state, CPU2_Flags, FVM_IOADDR_SPACE, Memory32, FVM_IDTR, vtable);
-		}
-	}
+	UNUSED(CPU_Flags);
+	UNUSED(CPU2_regs);
+	UNUSED(CPU2_Flags);
+	do_cpu();
 	printf("EXIT(1)\n");
 	FVM_SDL_setwincaption("Flouronix VM (Dormant)");
 	int END = 0;

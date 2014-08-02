@@ -33,15 +33,15 @@ end if
 ; Vendor String
 db 'FVVENDOR'
 ; No classes required!
+if defined CLASS_REQ
+dd class_req
+dd class_table
+else 
 dd 0
+dd 0
+end if
 ; No relocatable function table!
 dd 0
-; .so (shared object files)
-if defined REQUIRE_SO
-	dd so_init
-else 
-	dd 0
-end if
 ; V_SLEEP - Processor Sleep
 macro V_SLEEP {
 	dd 0x0
