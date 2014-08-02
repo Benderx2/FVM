@@ -57,14 +57,16 @@ typedef struct sVM_api {
 	uint32_t* (*VM_get_memory_buffer)(void);
 	FVM_REGISTERS_t* (*VM_get_regs)(void);
 	FFLAGS_t* (*VM_get_flags)(void);
+	void (*VM_set_resolution)(int x, int y, int col);
 } VM_api_t;
 VM_api_t VM_API;
-void lib_init(void* vm_printf_ptr, void* vm_get_surface, void* vm_get_mem, void* vm_get_regs, void* vm_get_flags)
+void lib_init(void* vm_printf_ptr, void* vm_get_surface, void* vm_get_mem, void* vm_get_regs, void* vm_get_flags, void* vm_set_res)
 {
 	VM_API.VM_printf = vm_printf_ptr;
 	VM_API.VM_get_surface = vm_get_surface;
 	VM_API.VM_get_memory_buffer = vm_get_mem;
 	VM_API.VM_get_regs = vm_get_regs;
 	VM_API.VM_get_flags = vm_get_flags; 
+	VM_API.VM_set_resolution = vm_set_res;
 }
 #endif

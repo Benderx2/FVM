@@ -23,14 +23,14 @@ void* load_native_library(char* name)
 	newhandle->soname = name;
 	newhandle->handle = handle;
 	newhandle->next = NULL;
-	void (*lib_init)(void*, void*, void*, void*, void*);
+	void (*lib_init)(void*, void*, void*, void*, void*, void*);
 	*(void**)(&lib_init) = dlsym(handle, "lib_init");
 	if(lib_init == NULL)
 	{
 		printf("WARNING: lib_init not found! Expect SIGSEGV!\n");
 	}
 	else {
-		(*lib_init)(&SDL_scrn_printf, &SDL_get_scrn_buffer, &get_mem_buf, &get_cpu_regs, &get_fflags );
+		(*lib_init)(&SDL_scrn_printf, &SDL_get_scrn_buffer, &get_mem_buf, &get_cpu_regs, &get_fflags, &FVM_SDL_init);
 	}
 	if(number_of_handles == 0)
 	{
