@@ -1,6 +1,7 @@
 FVM
 ===
-
+![alt tag](http://i.imgur.com/cq0EQDP.png)<br>
+<i>An FVM application calls a shared library which displays a bitmap.</i><br>
 <h2>The Flouronix Virtual Machine Architecture (or FVM)</h2>
 <h2>INTRODUCTION</h2>
 The Flouronix Virtual Machine was written to provide a secure and architecture-independant userspace to the Flouronix operating system.<br>
