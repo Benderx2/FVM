@@ -1,7 +1,7 @@
 include 'a32.inc'
 _start:
-	LOAD_R0 file_name
-	VM_CALL 0x5	
+	LOAD_R0 file_name ; file name
+	VM_CALL 0x5 ; fopen
 	LOAD_R1 3 ; Length 
 	LOAD_R2 file_string ; the file name 
 	VM_CALL 0x7 ; Call the fread()
