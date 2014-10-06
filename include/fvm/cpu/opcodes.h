@@ -142,5 +142,7 @@
 #define FVM_RELOC_JMPFG 0x0050
 // RELOC_JMP_F_L - Relative jump if lesser
 #define FVM_RELOC_JMPFL 0x0051
+// FVM_GET_MEM - Get Total Memory in R1
+#define FVM_GETMEM 0x0052
 #endif
 

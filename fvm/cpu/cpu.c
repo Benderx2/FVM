@@ -18,6 +18,7 @@
 #include <fvm/gc/objects.h>
 #include <fvm/thread/thread.h>
 #include <fvm/sdl.h>
+extern int total_mem;
 uint8_t* byteptr;
 uint32_t* dwordptr;
 union tempuni {
@@ -187,7 +188,8 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 			//! fcall call_number
 			case FVM_FCALL:
 				CPU_regs->IP = CPU_regs->IP;
-				int a = fcall(Memory[CPU_regs->IP+1], CPU_regs->r1, CPU_regs->r0, CPU_regs->r2);
+				byteptr = (uint8_t*)Memory;
+				int a = fcall(Memory[CPU_regs->IP+1], CPU_regs->r1, CPU_regs->r0, CPU_regs->r2, byteptr);
 				if (a == -2)
 				{
 					CPU_regs->r1 = 0;
@@ -1053,6 +1055,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 					break;
 				}
 				CPU_regs->IP += 2;
+				break;
+			case FVM_GETMEM:
+				CPU_regs->r0 = total_mem;
+				CPU_regs->IP++;
 				break;
 			/** FPU Functions **/
 			case FPU_SIN:	

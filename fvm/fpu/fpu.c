@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
+#include <complex.h>
 #include <fvm/fpu/fpu.h>
 #include <fvm/tweaks.h>
 union FloatAndInt retval;
