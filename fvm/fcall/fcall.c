@@ -73,6 +73,7 @@ int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2, uint8_t* 
 			FVM_SDL_updatedisplay(screen);
 		case FCALL_FOPEN:
 			file_string = (char*)(Memory + CPU_regs->r0);
+			printf("fopen requested by program. file_string %s\n", file_string);
 			tempfile = fopen(file_string, "r+w");
 			CPU_regs->r0 = (uintptr_t)tempfile;
 			return 0;	
@@ -80,9 +81,22 @@ int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2, uint8_t* 
 			ptr = (void*)(Memory + CPU_regs->r2);
 			intptr = (uintptr_t)CPU_regs->r0;
 			tempfile = (FILE*)intptr;
-			CPU_regs->r1 = fread(ptr, CPU_regs->r1, sizeof(uint8_t), tempfile); 
 			printf("fread() Requested by program, ptr_address = %p, size = %x\n", ptr, CPU_regs->r1);
+			CPU_regs->r1 = fread(ptr, CPU_regs->r1, sizeof(uint8_t), tempfile); 
 			return 0;
+		case FCALL_FWRITE:
+			ptr = (void*)(Memory + CPU_regs->r2);
+			intptr = (uintptr_t)(CPU_regs->r0);
+			tempfile = (FILE*)intptr;
+			printf("fwrite() Requested by program, ptr_address = %p, size = %x\n", ptr, CPU_regs->r1);
+			CPU_regs->r1 = fwrite(ptr, CPU_regs->r1, sizeof(uint8_t), tempfile);
+			return 0;
+		case FCALL_FSEEK:
+			intptr = (uintptr_t)(CPU_regs->r0);
+			tempfile = (FILE*)intptr;
+			// R1 = Offset, R2 = Origin
+			printf("fwrite() Requested by program, ptr_address = %p, size = %x\n", ptr, CPU_regs->r1);
+			fseek(CPU_regs->r0, CPU_regs->r1, CPU_regs->r2);
 		default:
 			return F_ERR;
 	}
