@@ -1060,6 +1060,28 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				CPU_regs->r0 = total_mem;
 				CPU_regs->IP++;
 				break;
+			case FVM_MEMCMP:
+				CPU_Flags->E = true; // Is Equal.
+				// Let's do a memory compare. R0 is the first block memory to compare, and R1 the second. 
+				// The length is in R2.
+				uint8_t* mem8aux = (uint8_t*)Memory;
+				for(int i = 0; i < CPU_regs->r2; i++)
+				{
+					printf("R1 %c\n", mem8aux[CPU_regs->r1 + i]);
+					printf("R0 %c\n", mem8aux[CPU_regs->r0 + i]);
+					if(mem8aux[CPU_regs->r1 + i] == mem8aux[CPU_regs->r0 + i])	
+					{
+						// Keep goin'!
+					}
+					else {
+						CPU_regs->r2 = i;
+						CPU_Flags->E = false;
+						break; 
+					}
+				}
+				printf("E = %d\n", CPU_Flags->E);
+				CPU_regs->IP++;
+				break;
 			/** FPU Functions **/
 			case FPU_SIN:	
 				CPU_regs->IP++;

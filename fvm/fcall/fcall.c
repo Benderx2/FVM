@@ -49,6 +49,7 @@ int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2, uint8_t* 
             			{
 					SDL_EnableUNICODE( SDL_ENABLE );
 					keycode = (char)event.key.keysym.unicode;
+					keycode = toupper(keycode);
 				}
 			}
 			if (keycode != 0)
@@ -95,8 +96,8 @@ int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2, uint8_t* 
 			intptr = (uintptr_t)(CPU_regs->r0);
 			tempfile = (FILE*)intptr;
 			// R1 = Offset, R2 = Origin
-			printf("fwrite() Requested by program, ptr_address = %p, size = %x\n", ptr, CPU_regs->r1);
-			fseek(CPU_regs->r0, CPU_regs->r1, CPU_regs->r2);
+			printf("fseek() Requested by program, ptr_address = %p, size = %x\n", ptr, CPU_regs->r1);
+			fseek(tempfile, CPU_regs->r1, CPU_regs->r2);
 		default:
 			return F_ERR;
 	}

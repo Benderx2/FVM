@@ -24,11 +24,22 @@ dd _data
 dd _end_data - _data
 dd _bss
 dd _end_bss - _bss
-dd _end_bss + 200 
+if defined STACK_SIZE 
+	dd _end_bss + STACK_SIZE
+else 
+; Fall back to default stack size.
+dd _end_bss + 200
+end if
 ; Vendor String
 db 'FVVENDOR'
 ; No classes required!
+if defined CLASS_REQ
+dd class_req
+dd class_table
+else 
 dd 0
+dd 0
+end if
 ; No relocatable function table!
 dd 0
 ; V_SLEEP - Processor Sleep
@@ -179,13 +190,13 @@ macro IRETF
 	dd 0x15
 }
 ; IN_R0 - Grab value into R0 from port
-macro IN_R0 PORT
+macro IN PORT
 {	
 	dd 0x1D
 	dd PORT
 }
 ; OUT_R0 - Send out R0 to port
-macro OUT_R0 PORT
+macro OUT PORT
 {
 	dd 0x1C
 	dd PORT
@@ -276,6 +287,75 @@ macro F_DIV {
 macro F_ADD {
 	dd 0x35
 }
+macro F_FACT {
+	dd 0x0043
+}
 macro CREATE_RELOCATABLE_LABEL address {
 	JMPF address
+}
+macro SUBLEQ a, b, c {
+	dd 0x0046
+	dd a
+	dd b
+	dd c
+}
+macro DEINIT_MP {
+	dd 0x48
+}
+macro INIT_MP ip {
+	dd 0x47
+	dd ip
+}
+macro DECLARE_NATIVE_LIB name {
+	db name, 0
+}
+macro DECLARE_NATIVE_PROC name {
+	db name, 0
+}
+macro DECLARE_STACK_SPACE no {
+	times no db 0
+}
+macro NATIVE_CALL lib, name, arg {
+	dd 0x49
+	dd lib
+	dd name
+	dd arg
+}
+macro VM_CREATE_THREAD ip, stack {
+	dd 0x004A
+	dd ip 
+	dd stack
+}
+macro THREAD_EXIT {
+	dd 0x004B
+}
+macro RELOC_JMP addr {
+	dd 0x004C
+	dd addr
+}
+macro RELOC_JE addr {
+	dd 0x004F
+	dd addr
+}
+macro RELOC_JG addr {	
+	dd 0x0050
+	dd addr
+}
+macro RELOC_JL addr {
+	dd 0x0051
+	dd addr
+}
+macro RELOC_LDD reg {
+	dd 0x004E
+	dd reg
+}
+macro RELOC_STD reg {
+	dd 0x004D
+	dd reg
+}
+macro GETMEM {
+	dd 0x52
+}
+macro MEMCMP {
+	dd 0x53
 }

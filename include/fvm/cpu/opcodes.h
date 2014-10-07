@@ -144,5 +144,7 @@
 #define FVM_RELOC_JMPFL 0x0051
 // FVM_GET_MEM - Get Total Memory in R1
 #define FVM_GETMEM 0x0052
+// MEM_CMP - Compare Memory blocks (R0, R1) with a specific length (R2)
+#define FVM_MEMCMP 0x0053
 #endif
 

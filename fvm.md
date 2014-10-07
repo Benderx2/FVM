@@ -42,6 +42,8 @@ VM_CREATE_THREAD - Create new thread with stack and IP (4-byte aligned) <br>
 THREAD_EXIT - Exit current thread <br>
 NATIVE_CALL - Call native procedure stored in library <br>
 INIT_MP - Initialise Core II with IP <br>
+MEMCMP - Compare Memory Blocks (R1, R0 - Blocks, R2 - Size)<br>
+GETMEM - Get System Memory (R1 - Memory)<br>
 <h1>Instructions for PIC (Position Independent Code)</h1>
 RELOC_JE - Jump if equal (relative to TLS->load_addr) <br>
 RELOC_JL - Jump if lesser (relative to TLS->load_addr)<br>
