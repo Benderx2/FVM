@@ -53,6 +53,10 @@ RELOC_JG - Jump if greater (relative to TLS->load_addr) <br>
 RELOC_JMP - Jump to address (relative to TLS->load_addr) <br>
 RELOC_STD - Store to address or register, value of address is in R1 (relative to TLS->load_addr) <br>
 RELOC_LDD - Load from address or a register pointing to an address into R1 (relative to TLS_load->addr) <br>
+<h1>PPU Instructions</h1>
+PPU_READ - Read from PPU 
+PPU_WRITE - Write to PPU 
+PPU_UPDATE - Upadte screen 
 <h1>Not implemented instructions (Planned)</h1>
 OR - Bitwise OR <br>
 BTS - Bit set <br>
