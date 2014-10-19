@@ -289,13 +289,23 @@ macro F_MUL {
 	dd 0x37
 }
 macro F_DIV {
-	dd 0x38
+	dd 0CPU_regs-x38
 }
 macro F_ADD {
 	dd 0x35
 }
 macro F_FACT {
 	dd 0x0043
+}
+; PPU Stuff
+macro PPU_WRITE {
+	dd 0x55 
+}
+macro PPU_READ {
+	dd 0x56
+}
+macro PPU_UPDATE {
+	dd 0x57
 }
 macro CREATE_RELOCATABLE_LABEL address {
 	JMPF address

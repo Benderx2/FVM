@@ -20,6 +20,7 @@ void FVM_SDL_init(GL_WIDTH_t width, GL_HEIGHT_t height, GL_DEPTH_t color)
 	if(init == 0)
 	{
 		SDL_Init(SDL_INIT_EVERYTHING);
+		IMG_Init( IMG_INIT_TIF |  IMG_INIT_JPG |  IMG_INIT_PNG);
 		init = 1;
 	}
 	else {

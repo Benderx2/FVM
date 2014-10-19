@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <fvm/native/native.h>
 #include <fvm/devices/fgx.h>
+#include <fvm/devices/ppu.h>
 #include <fvm/tweaks.h>
 #include <fvm/version.h>
 #include <fvm/cpu/opcodes.h>
@@ -1239,6 +1240,21 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				CPU_regs->IP++;
 				CPU_regs->r12--;
 				break;
+			// PPU Instruction Set 
+			// Note: Operands are pushed on stack
+			// Write to PPU, operand 1 - bitmap to write to, op 2 - length, op 3 - memory offset
+			case FVM_WRITE_PPU:
+				CPU_regs->IP++;
+				write_ppu(FVM_PPU,  (void*)((uintptr_t)(Memory + Memory[CPU_regs->r12+3])), (int)Memory[CPU_regs->r12+1], (int)(Memory[CPU_regs->r12+2]));
+				break;
+			case FVM_READ_PPU:
+				CPU_regs->IP++;
+				read_ppu(FVM_PPU,  (void*)((uintptr_t)(Memory + Memory[CPU_regs->r12+3])), (int)Memory[CPU_regs->r12+1], (int)Memory[CPU_regs->r12+2]);
+				break;
+			case FVM_UPDATE_PPU:
+				update_ppu_display(FVM_PPU);
+				CPU_regs->IP++;
+				break; 
 		default:
 				printf("\n>>>>>>Emulator Halted by unknown opcode: [0x%X] IP: [0x%X]. Shutting Down...., Previous DWORD: [0x%X], Next DWORD : [0x%X]\n",Memory[CPU_regs->IP], CPU_regs->IP, Memory[CPU_regs->IP-1], Memory[CPU_regs->IP+1]);
 				CPU_regs->ON = 0x0000;

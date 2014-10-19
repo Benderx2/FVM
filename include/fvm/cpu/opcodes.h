@@ -148,5 +148,8 @@
 #define FVM_MEMCMP 0x0053
 // LOADM
 #define FVM_LOADM 0x0054
+#define FVM_WRITE_PPU 0x55
+#define FVM_READ_PPU 0x56
+#define FVM_UPDATE_PPU 0x57
 #endif
 

@@ -33,6 +33,8 @@
 #include <fvm/thread/thread.h>
 #include <fvm/cpu/m_cpu.h>
 #include <fvm/mm/mm.h>
+#include <fvm/devices/fgx.h>
+#include <fvm/devices/ppu.h>
 #ifdef _USE_PTHREAD
 #include <pthread.h>
 #endif
@@ -40,6 +42,7 @@
 #include <fvm/sdl.h>
 #endif
 void* SDL_PollThread(void);
+uint32_t total_mem;
 FVM_REGISTERS_t* CPU2_regs;
 FFLAGS_t* CPU2_Flags;
 // FVM IDT
@@ -90,7 +93,7 @@ int main (int argc, const char *argv[])
 	/** SIGILL **/
 	signal(SIGILL, SIGILL_handler);
 	//! Proccess command line arguments
-	uint32_t total_mem = atoi(argv[1]);
+	total_mem = atoi(argv[1]);
 	#ifdef __USE_GRAPHICS
 	SDL_EnableUNICODE(1);
 	FVM_SDL_init(640, 480, 32);
@@ -193,6 +196,8 @@ int main (int argc, const char *argv[])
 	VM_CreateObject(INT_TYPE, OBJ_IDLE);
 	printf("THREAD_INIT: Creating Embryo thread....\n");
 	init_thread(CPU_regs->IP, CPU_regs->r12);
+	// Initialize PPU
+	init_ppu();
 	UNUSED(CPU_Flags);
 	UNUSED(CPU2_regs);
 	UNUSED(CPU2_Flags);
