@@ -88,6 +88,13 @@ macro LOAD_SP VALUE
 	dd 0x07
 	dd VALUE
 }
+; Load Memory from second register to first
+macro LOAD_M reg1, reg2
+{
+	dd 0x54
+	dd reg1
+	dd reg2
+}
 ; PUSH - Push a Value or Register to addressof(sp)
 macro PUSH VALUE
 {	

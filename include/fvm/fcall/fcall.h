@@ -11,6 +11,8 @@
 #define FCALL_FREAD 7
 #define FCALL_FWRITE 8
 #define FCALL_FSEEK 9
+#define FCALL_SETCUR 0xA
+#define FCALL_GETCUR 0xB
 #define F_ERR -1
 int fcall(FVM_REG_t callnum, FVM_REG_t r1, FVM_REG_t r0, FVM_REG_t r2, uint8_t* Memory);
 extern uint32_t retval;

@@ -146,5 +146,7 @@
 #define FVM_GETMEM 0x0052
 // MEM_CMP - Compare Memory blocks (R0, R1) with a specific length (R2)
 #define FVM_MEMCMP 0x0053
+// LOADM
+#define FVM_LOADM 0x0054
 #endif
 

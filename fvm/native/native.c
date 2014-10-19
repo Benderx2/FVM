@@ -42,8 +42,8 @@ void* load_native_library(char* name)
 		tail = newhandle;
 	}
 	number_of_handles++;
+	printf("Library Loaded!\n");
 	return handle;
-	
 }
 void* returnhandle(char* soname)
 {

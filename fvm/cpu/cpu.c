@@ -25,6 +25,7 @@ union tempuni {
 	int32_t a;
 	float b;
 };
+int32_t* regsave1 = NULL;
 int32_t save_r12 = -1;
 void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
 {
@@ -52,6 +53,74 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				printf("R3, R4, R5, SP are zeroed, VM_EXIT()\n");
 				CPU_regs->ON = 0x0000;
 				break;
+			case FVM_LOADM:
+				switch(Memory[CPU_regs->IP+1])
+				{
+					case OPCODE_R0:	
+						regsave1 = &CPU_regs->r0;	
+						goto loadm_instruction;
+					case OPCODE_R1:
+						regsave1 = &CPU_regs->r1;
+						goto loadm_instruction;
+					case OPCODE_R2:
+						regsave1 = &CPU_regs->r2;
+						goto loadm_instruction;
+					case OPCODE_R3:
+						regsave1 = &CPU_regs->r3;
+						goto loadm_instruction;
+					case OPCODE_R4:
+						regsave1 = &CPU_regs->r4;
+						goto loadm_instruction;
+					case OPCODE_R5:
+						regsave1 = &CPU_regs->r5;
+						goto loadm_instruction;
+					case OPCODE_R12:
+						regsave1 = &CPU_regs->r12;
+						goto loadm_instruction;
+					default:
+						FVM_EXIT(FVM_PROGRAM_ERR);
+				}
+					loadm_instruction:
+					byteptr = (uint8_t*)Memory;
+					switch(Memory[CPU_regs->IP+2]) {
+						case OPCODE_R0:
+							dwordptr = (uint32_t*)&byteptr[CPU_regs->r0];	
+							*regsave1 = *dwordptr;
+							break;
+						case OPCODE_R1:
+							dwordptr = (uint32_t*)&byteptr[CPU_regs->r1];
+							*regsave1 = *dwordptr;
+							break;
+						case OPCODE_R2:
+							dwordptr = (uint32_t*)&byteptr[CPU_regs->r2];
+							*regsave1 = *dwordptr;
+							break;	
+						case OPCODE_R3:
+							dwordptr = (uint32_t*)&byteptr[CPU_regs->r3];
+							*regsave1 = *dwordptr;
+							break;
+						case OPCODE_R4:
+							dwordptr = (uint32_t*)&byteptr[CPU_regs->r4];
+							*regsave1 = *dwordptr;
+							break;
+						case OPCODE_R5:
+							dwordptr = (uint32_t*)&byteptr[CPU_regs->r5];
+							*regsave1 = *dwordptr;
+							break;
+						case OPCODE_R12:
+							dwordptr = (uint32_t*)&byteptr[CPU_regs->r12];
+							*regsave1 = *dwordptr;
+							break;
+						default:
+							CPU_regs->IP = CPU_regs->IP;
+							int cool1337xd = Memory[CPU_regs->IP+1];
+							dwordptr = (uint32_t*)&byteptr[cool1337xd];
+							*regsave1 = *dwordptr;
+							break;
+					}
+					CPU_regs->IP += 3;
+					break;
+				
 			//! LD0 - Load R0
 			case FVM_LD0:
 				temp  = &CPU_regs->r0;
@@ -597,6 +666,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				{
 					CPU_regs->r0 = CPU_regs->r0 * CPU_regs->r5;
 				}
+				else if(Memory[CPU_regs->IP+1] == OPCODE_R12)
+				{
+					CPU_regs->r12 = CPU_regs->r0 * CPU_regs->r12;
+				}
 				else {
 					CPU_regs->r0 = CPU_regs->r0 * Memory[CPU_regs->IP+1];
 				}
@@ -800,6 +873,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				{
 					 ADD_VAL2 = CPU_regs->r5;
 				}
+				else if(Memory[CPU_regs->IP+1+1] == OPCODE_R12)
+				{
+					 ADD_VAL2 = CPU_regs->r12;
+				}
 				else {
 					 ADD_VAL2 =  Memory[CPU_regs->IP+1+1];
 				}
@@ -827,6 +904,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				else if(Memory[CPU_regs->IP+1] == OPCODE_R5)
 				{
 					CPU_regs->r5 = CPU_regs->r5 +  ADD_VAL2;
+				}
+				else if(Memory[CPU_regs->IP+1] == OPCODE_R5)
+				{
+					CPU_regs->r12 = CPU_regs->r12 +  ADD_VAL2;
 				}
 				printf(">>>>>>>LOG AND VAL 2 %d\n", ADD_VAL2);
 				CPU_regs->IP += 3;
@@ -859,6 +940,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				{
 					 SUB_VAL2 = CPU_regs->r5;
 				}
+				else if(Memory[CPU_regs->IP+1+1] == OPCODE_R12)
+				{
+					SUB_VAL2 = CPU_regs->r12;
+				}
 				else {
 					 SUB_VAL2 =  Memory[CPU_regs->IP+1+1];
 				}
@@ -886,6 +971,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				else if(Memory[CPU_regs->IP+1] == OPCODE_R5)
 				{
 					CPU_regs->r5 = CPU_regs->r5 - SUB_VAL2;
+				}
+				else if(Memory[CPU_regs->IP+1] == OPCODE_R12)
+				{
+					CPU_regs->r12 = CPU_regs->r12 - SUB_VAL2;
 				}
 				CPU_regs->IP += 3;
 				break;
@@ -940,7 +1029,8 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				CPU_regs->IP++;
 				char* libname = (char*)Memory + Memory[CPU_regs->IP];
 				char* functionname = (char*)Memory + Memory[CPU_regs->IP+1];
-				uint32_t* arg = (uint32_t*)Memory + Memory[CPU_regs->IP+2];
+				void* arg = (void*)(Memory + Memory[CPU_regs->IP+2]);
+				printf("Passing arg! %p\n", arg);
 				void* handle = returnhandle(libname);
 				if(handle == NULL){
 					/** try loading it then **/

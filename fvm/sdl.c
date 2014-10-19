@@ -112,6 +112,7 @@ void FVM_SDL_putchar(GL_SURFACE_t* font, GL_SURFACE_t* dest, unsigned char c)
 		}
 		else {	
 			screen_x -= FONT_WIDTH;
+			FVM_SDL_putentry(font, dest, screen_x, screen_y, ' ');
 		}
 	}
 	else {
