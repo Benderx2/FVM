@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <SDL.h>
 #include <fvm/sdl.h>
+#include <fvm/tweaks.h>
 #include <fvm/error.h>
 int screen_x = 0;
 int screen_y = 0;
@@ -35,6 +36,17 @@ void FVM_SDL_init(GL_WIDTH_t width, GL_HEIGHT_t height, GL_DEPTH_t color)
 	GL_MAX_X = width;
 	GL_MAX_Y = height;
 	GL_COLOR = color;
+	#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	GL_rmask = 0xff000000;
+	GL_gmask = 0x00ff0000;
+	GL_bmask = 0x0000ff00;
+	GL_amask = 0x000000ff;
+	#else
+	GL_rmask = 0x000000ff;
+	GL_gmask = 0x0000ff00;
+	GL_bmask = 0x00ff0000;
+	GL_amask = 0xff000000;
+	#endif
 	SDL_Flip(screen);
 }
 GL_SURFACE_t* FVM_SDL_loadbmp(const char* FILENAME)
@@ -49,9 +61,10 @@ GL_SURFACE_t* FVM_SDL_loadbmp(const char* FILENAME)
 	}
 	return NULL;
 }
-void FVM_SDL_updatedisplay(GL_SURFACE_t* SURFACE)
+void FVM_SDL_updatedisplay(GL_SURFACE_t* SURFACE_src)
 {
-	 SDL_BlitSurface(SURFACE, NULL, screen, NULL); 
+	 SDL_BlitSurface(SURFACE_src, NULL, screen, NULL);
+	 if(screen == NULL) { printf("screen == NULL. FATAL. Lost Connection to Video Output.\n"); }
 	 SDL_Flip(screen);
 }
 void FVM_SDL_delay(uint32_t time)

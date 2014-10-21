@@ -3,13 +3,13 @@
 #define TOTAL_PPU_MEM 16*1024
 typedef struct sPPU {
 	int memsize;
-	uint8_t memory[16*1024]; // 16K of Memory
+	uint8_t* memory; // 16K of Memory
 	int x_res;
 	int y_res;
 } PPU_t;
 extern PPU_t* FVM_PPU;
 void read_ppu(PPU_t* ppu, void* dest, int off, int len);
 void update_ppu_display(PPU_t* ppu);
-void write_ppu(PPU_t* ppu, void* src, int off, int len);
+void write_ppu(PPU_t* ppu, uint8_t* src, int off, int len);
 void init_ppu(void);
 #endif

@@ -8,6 +8,7 @@
 int GL_MAX_X;
 int GL_MAX_Y;
 int GL_COLOR;
+uint32_t GL_rmask, GL_gmask, GL_bmask, GL_amask;
 #define FONT_WIDTH 10
 #define FONT_HEIGHT 20
 #define FONT_PTSIZE 12

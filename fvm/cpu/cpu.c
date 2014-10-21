@@ -1244,8 +1244,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 			// Note: Operands are pushed on stack
 			// Write to PPU, operand 1 - bitmap to write to, op 2 - length, op 3 - memory offset
 			case FVM_WRITE_PPU:
+				printf("src: %d, off : %d, len : %d\n", (int)((uintptr_t)Memory[CPU_regs->r12+3]), (int)Memory[CPU_regs->r12+1], (int)Memory[CPU_regs->r12+2]);
 				CPU_regs->IP++;
-				write_ppu(FVM_PPU,  (void*)((uintptr_t)(Memory + Memory[CPU_regs->r12+3])), (int)Memory[CPU_regs->r12+1], (int)(Memory[CPU_regs->r12+2]));
+				byteptr = (uint8_t*)Memory;
+				write_ppu(FVM_PPU,  (uint8_t*)((uintptr_t)(Memory + Memory[CPU_regs->r12+3])), (int)Memory[CPU_regs->r12+1], (int)(Memory[CPU_regs->r12+2]));
 				break;
 			case FVM_READ_PPU:
 				CPU_regs->IP++;

@@ -10,8 +10,9 @@ export CFLAGS='-O3 -Werror -Wstrict-prototypes -Wmissing-prototypes -fstack-prot
 else 
 export CFLAGS='-O0 -Werror -Wstrict-prototypes -Wmissing-prototypes -fstack-protector-all -Wall -Wextra -pedantic -std=gnu99'
 fi
-set -o verbose
 echo 'CFLAGS: ' $CFLAGS
+echo 'Compilation Starting.....'
+set -o verbose
 # Build the disk generator
 gcc ./tools/diskgen/diskgen.c -o diskgen.out
 # Build the romdump tool
@@ -31,9 +32,12 @@ gcc $CFLAGS -c fvm/initrd/initrd.c -o initrd.o -I$FVM_INCLUDE
 gcc $CFLAGS -c fvm/sighandle.c -o sighandle.o -I$FVM_INCLUDE
 gcc $CFLAGS -c fvm/fpu/fpu.c -o fpu.o -I$FVM_INCLUDE
 gcc $CFLAGS -c fvm/gc/objects.c -o objects.o -I$FVM_INCLUDE
-gcc -c fvm/devices/video.c -o video.o -I$FVM_INCLUDE -I$SDL_INCLUDE 
+gcc -std=gnu99 -c fvm/devices/video.c -o video.o -I$FVM_INCLUDE -I$SDL_INCLUDE 
 gcc -c fvm/native/native.c -o native.o -std=gnu99  -I$FVM_INCLUDE -I$SDL_INCLUDE
-gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o fv11.o native.o  cpu.o initrd.o sighandle.o fpu.o objects.o video.o -lm -lSDL -lSDL_ttf -pthread
+gcc -c fvm/thread/thread.c -o thread.o -std=gnu99 -I$FVM_INCLUDE
+gcc $CFLAGS -c fvm/mm/mm.c -o mm.o -std=gnu99 -I$FVM_INCLUDE
+gcc $CFLAGS -c fvm/cpu/m_cpu.c -o m_cpu.o -std=gnu99 -I$FVM_INCLUDE
+gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o fv11.o native.o  cpu.o initrd.o thread.o sighandle.o fpu.o objects.o video.o mm.o m_cpu.o -lm -lSDL -lSDL_ttf -lSDL_image -ldl -pthread
 # Remove all object files
 rm *.o
 echo 'FVM Compilation Complete.'
