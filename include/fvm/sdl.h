@@ -3,6 +3,7 @@
 #define __SDL___H
 #include <stdint.h>
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <SDL_keyboard.h>
 #include <SDL_image.h>
 int GL_MAX_X;

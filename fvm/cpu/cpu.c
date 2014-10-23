@@ -33,7 +33,9 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 	UNUSED(NewCPU_state);
 	FVM_BYTE_t* temp;
 	// Refresh FGX video device.
-	//FGX_refresh(IOADDRSPACE);	
+	//FGX_refresh(IOADDRSPACE);
+	if(CPU_regs->IP >= total_mem / 4) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
+	if(CPU_regs->r12 < 0 || CPU_regs->r12 > total_mem / 4) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 	switch(Memory[CPU_regs->IP])
 		{
 			//! Sleep
@@ -85,36 +87,44 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 					byteptr = (uint8_t*)Memory;
 					switch(Memory[CPU_regs->IP+2]) {
 						case OPCODE_R0:
+							if(CPU_regs->r0 > total_mem) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 							dwordptr = (uint32_t*)&byteptr[CPU_regs->r0];	
 							*regsave1 = *dwordptr;
 							break;
 						case OPCODE_R1:
+							if(CPU_regs->r1 > total_mem) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 							dwordptr = (uint32_t*)&byteptr[CPU_regs->r1];
 							*regsave1 = *dwordptr;
 							break;
 						case OPCODE_R2:
+							if(CPU_regs->r2 > total_mem) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 							dwordptr = (uint32_t*)&byteptr[CPU_regs->r2];
 							*regsave1 = *dwordptr;
 							break;	
 						case OPCODE_R3:
+							if(CPU_regs->r3 > total_mem) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 							dwordptr = (uint32_t*)&byteptr[CPU_regs->r3];
 							*regsave1 = *dwordptr;
 							break;
 						case OPCODE_R4:
+							if(CPU_regs->r4 > total_mem) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 							dwordptr = (uint32_t*)&byteptr[CPU_regs->r4];
 							*regsave1 = *dwordptr;
 							break;
 						case OPCODE_R5:
+							if(CPU_regs->r5 > total_mem) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 							dwordptr = (uint32_t*)&byteptr[CPU_regs->r5];
 							*regsave1 = *dwordptr;
 							break;
-						case OPCODE_R12:
+						case OPCODE_R12:	
+							if(CPU_regs->r12 > total_mem) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 							dwordptr = (uint32_t*)&byteptr[CPU_regs->r12];
 							*regsave1 = *dwordptr;
 							break;
 						default:
 							CPU_regs->IP = CPU_regs->IP;
 							int cool1337xd = Memory[CPU_regs->IP+1];
+							if(cool1337xd > total_mem) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 							dwordptr = (uint32_t*)&byteptr[cool1337xd];
 							*regsave1 = *dwordptr;
 							break;
@@ -302,6 +312,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 						FVM_EXIT(FVM_PROGRAM_ERR);
 					}
 					else {
+						if(CPU_regs->r0 > total_mem / 4) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 						CPU_regs->r1 = tmp2[physaddr1];
 					}
 				}
@@ -773,6 +784,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				CPU_regs->IP = CPU_regs->IP;
 				uint8_t* tmp4 = (uint8_t*)Memory;
 				int32_t saver0 = CPU_regs->r0;
+				if(CPU_regs->r0 > total_mem / 4) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 				if(CPU_Flags->VMM == true)
 				{
 					CPU_regs->r0 = vmm_virtual_to_physical(vtable, CPU_regs->r0);
@@ -810,6 +822,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				CPU_regs->IP = CPU_regs->IP;
 				uint8_t* tmp5 = (uint8_t*)Memory;
 				int32_t saver0_1 = CPU_regs->r0;
+				if(CPU_regs->r0 > total_mem / 4) { FVM_EXIT(FVM_OUT_OF_BOUNDS); }
 				if(CPU_Flags->VMM == true)
 				{	
 					CPU_regs->r0 = vmm_virtual_to_physical(vtable, CPU_regs->r0);

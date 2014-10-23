@@ -12,6 +12,7 @@
 #define FVM_RESOURCE_ERR -9
 #define FVM_LESS_MEM_ERR -10
 #define FVM_ROM_ERR -11
+#define FVM_OUT_OF_BOUNDS -12
 #define FVM_NO_ERR 0
 void FVM_EXIT(int ERR_CODE);
 #endif

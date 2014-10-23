@@ -66,8 +66,6 @@ int main (int argc, const char *argv[])
 {	
 	// Load "embryo" shared object.
 	load_native_library("./embryo.so");
-	//void* fptr = returnhandle("./hello.so");
-	//native_call("hello", fptr, (void*)(0));
 	if(argc == 2)
 	{
 		if(strcmp(argv[1], "-v") == 0)

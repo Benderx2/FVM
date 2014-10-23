@@ -7,6 +7,7 @@
 #include <fvm/sdl.h>
 #include <fvm/tweaks.h>
 #include <fvm/error.h>
+#define USE_TTF
 int screen_x = 0;
 int screen_y = 0;
 int init = 0;
@@ -107,7 +108,7 @@ void FVM_SDL_putentry(GL_SURFACE_t* font, GL_SURFACE_t* dest, int x, int y, unsi
         SDL_BlitSurface(font, &font_rect, dest, &dest_rect);
 }
 void FVM_SDL_putchar(GL_SURFACE_t* font, GL_SURFACE_t* dest, unsigned char c)
-{	
+{
 	if (c == '\n')
 	{
 		screen_x = 0;
@@ -124,7 +125,7 @@ void FVM_SDL_putchar(GL_SURFACE_t* font, GL_SURFACE_t* dest, unsigned char c)
 			screen_x = GL_MAX_X;
 			return;
 		}
-		else {	
+		else {
 			screen_x -= FONT_WIDTH;
 			FVM_SDL_putentry(font, dest, screen_x, screen_y, ' ');
 		}
