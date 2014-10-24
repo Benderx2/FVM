@@ -5,7 +5,7 @@
 #include <string.h>
 #include <fvm/initrd/initrd.h>
 #include <fvm/error.h>
-void load_file_from_disk(uint8_t* mem, const char* file_name, uint8_t* buffer)
+void load_file_from_disk(uint8_t* mem, const char* file_name, uint8_t* buffer, int memsize)
 {
 	initrd_header_t* header = (initrd_header_t*)&buffer[0];
 	initrd_file_header_t* file_headers = (initrd_file_header_t*)&buffer[sizeof(initrd_header_t)];
@@ -14,6 +14,7 @@ void load_file_from_disk(uint8_t* mem, const char* file_name, uint8_t* buffer)
 	{
 		if(strcmp(file_headers[i].name, file_name) == 0)
 		{
+			if((int)file_headers[i].length > memsize) { FVM_EXIT(FVM_LARGE_ROM); }
 			memcpy(mem, buffer + file_headers[i].offset, file_headers[i].length);
 			i = 0;
 			break;
@@ -22,7 +23,7 @@ void load_file_from_disk(uint8_t* mem, const char* file_name, uint8_t* buffer)
 	}
 	if(i != 0)
 	{
-		printf("#error: Requested executable not found\n");
+		printf("error: Requested executable not found\n");
 		FVM_EXIT(FVM_ROM_ERR);
 	}
 }

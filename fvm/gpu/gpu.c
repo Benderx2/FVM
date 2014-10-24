@@ -3,13 +3,21 @@
 #include <fvm/cpu/cpu.h>
 #include <fvm/gpu/gpu.h>
 #include <fvm/gpu/opcodes.h>
+#include <fvm/sdl.h>
+GL_SURFACE_t* tempsdl_image;
 /* GPU of the FVM Machine */
-int gpu_emulate_instruction(GPU_REGS_t* GPU_REGS, FVM_MEM_t* Memory, CPU_REGS_t* CPU_REGS)
+int vpu_emulate_instruction(uint32_t* memory, int ip)
 {
-	switch(Memory[CPU_REGS->r11)
+	switch(memory[ip])
 	{
-		// COS? - Calculate Cosine
-		case GPU_COS:
-			
+		case VPU_LOADBITMAP:
+			tempsdl_image = FVM_SDL_LoadBMP(memory[(memory[ip+1])]);
+			FVM_SDL_updatedisplay(tempsdl_image);
+			SDL_FreeSurface(tempsdl_image);
+			return 2;
+		case VPU_DISPLAY_PIXEL:
+			display_pixel(memory[ip+1], memory[ip+2], memory[ip+3]);
+			return 4;
+		
 	}
 }

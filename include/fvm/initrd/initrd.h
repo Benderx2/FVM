@@ -14,5 +14,5 @@ typedef struct
    uint32_t length;   // Length of the file.
 } initrd_file_header_t;
 
-void load_file_from_disk(uint8_t* mem, const char* file_name, uint8_t* buffer);
+void load_file_from_disk(uint8_t* mem, const char* file_name, uint8_t* buffer, int memsize);
 #endif

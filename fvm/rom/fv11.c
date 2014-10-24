@@ -21,6 +21,8 @@ FV11_RETURN_t* fv11_load(FVM_BYTE_t* Memory, int32_t memsize)
 	int32_t _start_of_data = ROM_HEADER->start_of_data;
 	int32_t _where_to_load_data = ROM_HEADER->where_to_load_data;
 	int32_t _length_of_data = ROM_HEADER->length_of_data;
+	printf("Generating Executable Information....\n");
+	printf("text_section (OFFSET) : 0x%x\ntext_section (IP) : 0x%x\ntext_section (LENGTH) : 0x%x\ndata_section (OFFSET) : 0x%x\ndata_section (IP) : 0x%x\ndata_section (LENGTH) : 0x%x\nbss_section (OFFSET) : 0x%x\nbss_section (LENGTH) : 0x%x\nstack_buf: 0x%x\n", _start_address, _where_to_load, _length_of_text_section, _start_of_data, _where_to_load_data, _length_of_data, ROM_HEADER->bss_start, ROM_HEADER->bss_length, ROM_HEADER->bss_length); 
 	if(memsize < _where_to_load || memsize < _where_to_load_data || memsize < ROM_HEADER->stack_buf)
 	{
 		printf("fatal: This ROM requires more memory than provided [%d] [%d] [%d] [%d]\n", memsize, _where_to_load, _where_to_load_data, ROM_HEADER->stack_buf);
