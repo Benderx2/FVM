@@ -1,6 +1,0 @@
-All the code in FVM/tools is under "Public Domain". Use as you like, except the fact that the AUTHOR IS NOT RESPONSIBLE FOR ANY DAMAGES, AND THIS SOFTWARE COMES WITH NO WARRANTY. USE AT YOUR OWN RISK!
-Help:
-fas - A work-in-progress assembler for FVM in C#.
-romdump - ROM Information Dumping tool.
-fdisasm - Disassembler for FVM. (NOT USABLE YET!)
-diskgen - Disk Generator (Not used yet. Thanks to JamesM)
