@@ -16,7 +16,7 @@ void* load_native_library(char* name)
 	void *handle;
 	handle = dlopen(name, RTLD_LAZY);
 	if(!handle){	
-		printf("FATAL: Unable to load shared objekt: %s", name);
+		printf("FATAL: Unable to load shared objekt: %s\n", name);
 	}	
 	
 	native_handle_t* newhandle = (native_handle_t*)malloc(sizeof(native_handle_t));
