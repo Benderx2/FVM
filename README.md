@@ -33,6 +33,8 @@ After this you must specifiy the inital ROM when you're about to run the VM.<br>
 ./fvm.out memory romdisk.img initrom.bin
 <h2>LICENSE</h2>
 Please see LICENSE.
+<h2>VERSION</h2>
+Current Version is: 0.2.6.7 BETA
 <h2>TODO</h2>
 ....
 
