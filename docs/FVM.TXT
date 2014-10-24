@@ -1,0 +1,6 @@
+Flouronix Virtual Machine --- DOCUMENTATION
+This directory holds all possible documentation for FVM, till date.
+Each file carries specific information about each part of the emulator.
+
+All possible documentation is licensed as PUBLIC DOMAIN.
+

@@ -1,0 +1,49 @@
+Floruonix Virtual Machine --- DOCUMENTATION
+						Flouronix Instruction Set
+
+BREIF
+-------------------------------------------------------------------
+Like any other virtual machine Flouronix has an instruction
+set but rather of it's own. However there is a crucial difference
+FVM does not have an instruction "encoding", meaning that operands
+and instructions are of the same size i.e. 4 bytes long.
+This, of course, introduces a problem, small instructions 
+consuming large space, however memory usage for today's computers
+is hardly a problem while running runtime VMs. Also, today's PCs
+are households of gigabytes of RAM, so we don't think current
+generation of computers face any memory shortages.
+And now to the point, the reason why FVM uses a "naked"
+instruction set is simply to increase efficiency, the CPU 
+can quickly resolve operands without the need to decode them.
+
+INSTRUCTIONS
+--------------------------------------------------------------------
+V_SLEEP:
+	This instruction simply tells the CPU to increment the
+	instruction pointer and continue forward with execution.
+	NOTES: 
+	a) This may also be used by the CPU to skip regions with
+	zeroed memory.
+LOAD_R(N):
+	Loads register N (0-5) with a value or another register.
+	NOTES:
+	a) Values -257 to -264 WILL be ignored due to an design
+	flaw. Use SUBR if you need these values
+LOAD_SP:
+	Loads register SP with a with of another register or 
+	immediate.
+LOAD_M:
+	Loads operand 1 with the value at address operand 2. 
+	NOTES:
+	a) Operand 1 MUST be a register
+	b) Operand 2 CAN be either a register or a direct value
+JMPF, JMPF_E, JMPF_L, JMPF_G:
+	Jump to address, jump to if equal, lesser or greater.
+	NOTES:
+	a) The addresses MUST be 4 bytes aligned.
+	
+	
+ 
+
+
+ 
