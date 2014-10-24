@@ -48,7 +48,7 @@ int destroy_thread(int index)
 {
 	for(int i = 0; i <= no_of_threads; i++)
 	{
-		if(i <= no_of_threads && i > 0 && Thread_queue[i].is_used == true)
+		if(i <= no_of_threads && i > 0 && Thread_queue[i].is_used == true && i == index)
 		{
 			Thread_queue[i].is_used = false;
 			free(Thread_queue[i].Thread_regs);
