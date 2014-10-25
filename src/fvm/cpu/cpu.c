@@ -19,6 +19,12 @@
 #include <fvm/gc/objects.h>
 #include <fvm/thread/thread.h>
 #include <fvm/sdl.h>
+#define MUL_XY 0
+#define DIV_XY 1
+#define SUB_XY 2
+#define ADD_XY 3
+#define SET_XY 4
+typedef int32_t* CPU_REG_X;
 extern int total_mem;
 uint8_t* byteptr;
 uint32_t* dwordptr;
@@ -28,6 +34,8 @@ union tempuni {
 };
 int32_t* regsave1 = NULL;
 int32_t save_r12 = -1;
+void SetOperand(int, int, int);
+CPU_REG_X getRegisterOperand(int);
 void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
 {
 	UNUSED(NewCPU_state);
@@ -55,6 +63,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				printf("R2 - FVM Version Minor: %X\n", CPU_regs->r2);
 				printf("R3, R4, R5, SP are zeroed, VM_EXIT()\n");
 				CPU_regs->ON = 0x0000;
+				break;
+			case FVM_LOADR:
+				SetOperand(Memory[CPU_regs->IP+1], Memory[CPU_regs->IP+2], SET_XY);
+				CPU_regs->IP += 3;
 				break;
 			case FVM_LOADM:
 				switch(Memory[CPU_regs->IP+1])
@@ -1277,3 +1289,40 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 		}
 			return;
 	}
+void SetOperand(int op1, int op2, int proc)
+{
+	int32_t op1_val, op2_val;
+	CPU_REG_X op1_ptr = getRegisterOperand(op1);
+	CPU_REG_X op2_ptr = getRegisterOperand(op2);
+	if(op1_ptr == NULL) { return; }
+	op1_val = *op1_ptr;
+	if(op2_ptr == NULL) { op2_val = op2; } else { op2_val = *op2_ptr; }
+	switch(proc) {
+		case MUL_XY:
+			*op1_ptr = op1_val * op2_val;
+			return;
+		case SUB_XY:
+			*op1_ptr = op1_val - op2_val;
+			return;
+		case DIV_XY:
+			*op1_ptr = op1_val / op2_val;
+			return;
+		case ADD_XY:
+			*op1_ptr = op1_val + op2_val;
+			return;
+		case SET_XY:
+			*op1_ptr = op2_val;
+	}
+	
+}
+CPU_REG_X getRegisterOperand(int op1)
+{
+	if(op1 == OPCODE_R0) { return (CPU_REG_X)&CPU_regs->r0; } 
+	if(op1 == OPCODE_R1) { return (CPU_REG_X)&CPU_regs->r1; } 
+	if(op1 == OPCODE_R2) { return (CPU_REG_X)&CPU_regs->r2; }
+	if(op1 == OPCODE_R3) { return (CPU_REG_X)&CPU_regs->r3; }
+	if(op1 == OPCODE_R4) { return (CPU_REG_X)&CPU_regs->r4; }
+	if(op1 == OPCODE_R5) { return (CPU_REG_X)&CPU_regs->r5; }
+	if(op1 == OPCODE_R12) { return (CPU_REG_X)&CPU_regs->r12; }
+	return NULL;
+}

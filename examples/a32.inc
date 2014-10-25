@@ -43,6 +43,11 @@ end if
 ; No relocatable function table!
 dd 0
 ; V_SLEEP - Processor Sleep
+macro LOAD_R op1, op2 {
+	dd 0x58
+	dd op1 
+	dd op2
+}
 macro V_SLEEP {
 	dd 0x0
 }

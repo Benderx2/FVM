@@ -9,7 +9,7 @@ _start:
 _end_start:
 _data:
 _alien:	
-	db 37, 34, 32, 64, 255, 0, 23, 24, 56, 60, 20, 84, 72
+	file 't.rgba'
 _end_data:
 _bss:
 _end_bss:

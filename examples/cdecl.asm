@@ -1,6 +1,8 @@
 ; C Default Calling convention
 include 'a32.inc'
 _start:
+	LOAD_R R0, 0x3508	
+	VM_DEBUG
 	PUSH string_address
 	CALLF print
 	VM_EXIT
