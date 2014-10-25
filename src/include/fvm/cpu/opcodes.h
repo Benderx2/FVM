@@ -152,5 +152,6 @@
 #define FVM_READ_PPU 0x56
 #define FVM_UPDATE_PPU 0x57
 #define FVM_LOADR 0x58
+#define FVM_OPERATE 0x59
 #endif
 

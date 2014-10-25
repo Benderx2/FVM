@@ -68,6 +68,10 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				SetOperand(Memory[CPU_regs->IP+1], Memory[CPU_regs->IP+2], SET_XY);
 				CPU_regs->IP += 3;
 				break;
+			case FVM_OPERATE:
+				SetOperand(Memory[CPU_regs->IP+1], Memory[CPU_regs->IP+2], Memory[CPU_regs->IP+3]);
+				CPU_regs->IP += 4;
+				break;
 			case FVM_LOADM:
 				switch(Memory[CPU_regs->IP+1])
 				{

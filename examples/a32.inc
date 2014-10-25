@@ -9,6 +9,11 @@ define R4 -262
 define R5 -263
 define BP -264
 define SP -260
+define MUL_XY 0 
+define DIV_XY 1
+define SUB_XY 2
+define ADD_XY 3
+define SET_XY 4
 org 0
 align 4
 use32
@@ -47,6 +52,12 @@ macro LOAD_R op1, op2 {
 	dd 0x58
 	dd op1 
 	dd op2
+}
+macro OPERATE op1, op2, op3 {
+	dd 0x59
+	dd op1
+	dd op2
+	dd op3
 }
 macro V_SLEEP {
 	dd 0x0
@@ -301,6 +312,15 @@ macro F_ADD {
 }
 macro F_FACT {
 	dd 0x0043
+}
+macro F_ASIN {
+	dd 0x39
+}
+macro F_ACOS {
+	dd 0x40
+}
+macro F_ATAN {
+	dd 0x41
 }
 ; PPU Stuff
 macro PPU_WRITE {

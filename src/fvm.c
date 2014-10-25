@@ -66,13 +66,9 @@ pthread_t* sdl_poll_thread;
 int main (int argc, const char *argv[])
 {	
 	printf("Flouronix Virtual Machine (FVM) --- starting..\n");
-	printf("Do you want to redirect output to stdout.txt (WARNING: only for UNIX systems) (Y/N): ");
-	if(getchar() == 'Y')
-	{
-		if(dup2(fileno(popen("tee stdout.txt", "w")), STDOUT_FILENO) < 0) {
-        					printf("couldn't redirect output\n");
-    		}
-	}
+	if(dup2(fileno(popen("tee stdout.txt", "w")), STDOUT_FILENO) < 0) {
+        		printf("couldn't redirect output\n");
+    	}
 	// Load "embryo" shared object.
 	if(argc == 2)
 	{
