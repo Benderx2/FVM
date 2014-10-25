@@ -10,6 +10,7 @@ LD3 - Load R3 <br>
 LD4 - Load R4 <br>
 LD5 - Load R5 <br>
 LD12 - Load Stack Pointer <br>
+LOAD_R - Load register 1 with value of register 2 (replacement for the above) <br> 
 LOAD_M - Load Memory from Register to Register. Loads value at operand 1 (4 bytes) to operand 2.
 JTX - Jump to address <br>
 FCALL - Call Operating System specific function<br>
