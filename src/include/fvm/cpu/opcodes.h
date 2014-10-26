@@ -153,5 +153,11 @@
 #define FVM_UPDATE_PPU 0x57
 #define FVM_LOADR 0x58
 #define FVM_OPERATE 0x59
+#define FVM_OR 0x5A
+#define FVM_RSHIFT 0x5B
+#define FVM_LSHIFT 0x5C
+#define FVM_PUSHF 0x5D
+#define FVM_POPF 0x5E
+#define FVM_JMPFZ 0x5F
 #endif
 

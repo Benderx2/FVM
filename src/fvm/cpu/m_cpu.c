@@ -14,6 +14,7 @@ void do_cpu(void)
 			{
 				CPU_regs = Thread_queue[i].Thread_regs;
 				CPU_Flags = Thread_queue[i].Thread_flags;
+				CPU_Flags->VMM = false;
 				printf("CPU_regs : %p, CPU_Flags : %p, IP : %d, SP : %d\n",(void*)CPU_regs, (void*)CPU_Flags, CPU_regs->IP, CPU_regs->r12);
 				if(((clock() - FVM_TIMER) / (CLOCKS_PER_SEC/10000)) >= 1 && FVM_IDTR[1].address != 0 && NewCPU_state->interrupts_enabled == true)
 				{

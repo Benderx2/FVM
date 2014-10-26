@@ -24,16 +24,30 @@
 #define SUB_XY 2
 #define ADD_XY 3
 #define SET_XY 4
+#define OR_XY 5
+#define RSHIFT_XY 6
+#define LSHIFT_XY 7
 typedef int32_t* CPU_REG_X;
 extern int total_mem;
 uint8_t* byteptr;
 uint32_t* dwordptr;
+typedef struct cpu_int_flag {
+	 signed int E : 8;
+	 signed int G : 8;
+	 signed int L : 8;
+	 signed int Z : 8;
+} cpu_int_flag_t;
+typedef union __convt_flag_uni__ {
+	cpu_int_flag_t cpu_flag;
+	int32_t integer32;
+} __convt_flag_uni__;
 union tempuni {
 	int32_t a;
 	float b;
 };
 int32_t* regsave1 = NULL;
 int32_t save_r12 = -1;
+__convt_flag_uni__ flaguni;
 void SetOperand(int, int, int);
 CPU_REG_X getRegisterOperand(int);
 void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_regs, FVM_CPU_STATE_t* NewCPU_state, FFLAGS_t* CPU_Flags, FVM_PORT_t* IOADDRSPACE, int32_t* Memory,  FVM_IDT_HANDLER_t* FVM_IDTR, V_TABLE_t* vtable)
@@ -66,6 +80,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				break;
 			case FVM_LOADR:
 				SetOperand(Memory[CPU_regs->IP+1], Memory[CPU_regs->IP+2], SET_XY);
+				printf("LOADR: %x %x\n", CPU_regs->r0, Memory[CPU_regs->IP+2]);
 				CPU_regs->IP += 3;
 				break;
 			case FVM_OPERATE:
@@ -300,7 +315,13 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 			//! JTX - Jump to Address X
 			//! jtx address
 			case FVM_JTX:
-				CPU_regs->IP = Memory[CPU_regs->IP+1] / 4;
+				if(getRegisterOperand(Memory[CPU_regs->IP+1]) != NULL)
+				{
+					CPU_regs->IP = *(getRegisterOperand(Memory[CPU_regs->IP+1])) / 4;	
+				}
+				else {
+					CPU_regs->IP = Memory[CPU_regs->IP+1] / 4;
+				}
 				break;
 			case FVM_DEBUG:
 				printf("\033[31m");
@@ -1202,6 +1223,34 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				printf("E = %d\n", CPU_Flags->E);
 				CPU_regs->IP++;
 				break;
+			case FVM_OR:
+				SetOperand(Memory[CPU_regs->IP+1], Memory[CPU_regs->IP+2], OR_XY);
+				CPU_regs->IP += 3;
+			case FVM_RSHIFT:
+				SetOperand(Memory[CPU_regs->IP+1], Memory[CPU_regs->IP+2], RSHIFT_XY);
+				CPU_regs->IP += 3;
+			case FVM_LSHIFT:
+				SetOperand(Memory[CPU_regs->IP+1], Memory[CPU_regs->IP+2], LSHIFT_XY);
+				CPU_regs->IP += 3;
+			case FVM_PUSHF:
+				flaguni.cpu_flag.E = CPU_Flags->E;
+				flaguni.cpu_flag.G = CPU_Flags->G;
+				flaguni.cpu_flag.L = CPU_Flags->L;
+				flaguni.cpu_flag.Z = CPU_Flags->Z;
+				Memory[CPU_regs->r12] = flaguni.integer32;
+				CPU_regs->r12--;
+				CPU_regs->IP++;
+				break;
+			case FVM_POPF:
+				printf("popf: %x\n", Memory[CPU_regs->r12+1]);
+				flaguni.integer32 = Memory[CPU_regs->r12+1];
+				CPU_Flags->E = flaguni.cpu_flag.E;
+				CPU_Flags->G = flaguni.cpu_flag.G;
+				CPU_Flags->L = flaguni.cpu_flag.L;
+				CPU_Flags->Z  = flaguni.cpu_flag.Z;
+				CPU_regs->r12++;
+				CPU_regs->IP++;
+				break;
 			/** FPU Functions **/
 			case FPU_SIN:	
 				CPU_regs->IP++;
@@ -1316,6 +1365,16 @@ void SetOperand(int op1, int op2, int proc)
 			return;
 		case SET_XY:
 			*op1_ptr = op2_val;
+			return;
+		case OR_XY:
+			*op1_ptr = op1_val | op2_val;
+			return;
+		case RSHIFT_XY:
+			*op1_ptr = op1_val >> op2_val;
+			return;
+		case LSHIFT_XY:
+			*op1_ptr = op1_val << op2_val;
+			return;
 	}
 	
 }

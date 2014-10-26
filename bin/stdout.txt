@@ -5,21 +5,21 @@ Processing Command Line Arguments...
 dump: FVM 0.2.6.7 BETA Running.......
 FVM Version : 0.2.6.7 BETA, Requested Emulator Memory: 1200, Requested ROM File: cdecl.bin
 Creating New FVM CPU......
-Allocated Memory for CPU struct, address: 0xeefa70
+Allocated Memory for CPU struct, address: 0x6bc220
 Now Creating New CPU state.....
-CPU State Created, address : 0xeca1a0
+CPU State Created, address : 0x6bbf40
 CPU State Settings are to default, now allocating memory for CPU Registers
 Allocation Complete, now setting registers to default state.
 Allocating Memory for FFLAGS
-FFLAGS Allocation Complete Address = [0xeefa50]
+FFLAGS Allocation Complete Address = [0x6bc1b0]
 FVM Initialization Complete.
 Preparing to allocate memory for emulator
 Initalizing Memory Manager...
-Emulator has allocated Memory for program, Memory Address = [0xef0ba0], Memory Range = [1200]
+Emulator has allocated Memory for program, Memory Address = [0x6baba0], Memory Range = [1200]
 Preparing to load ROM into memory....
 ROM Image Address to be loaded at: [0], ROM Name: [cdecl.bin]
 Size of ROM Disk File : [5081]
-ROM Disk Address to be loaded at : [0xef6700]
+ROM Disk Address to be loaded at : [0x6c05f0]
 Reading ROM Image......
 ROM Reading Done.
 Disk Image Reading Done.
@@ -38,193 +38,194 @@ IP: [15] and SP: [103]
 ROM Loaded, 
 Program Output : In Graphics Mode (Please see SDL Window instead of Console)
 GC_INIT: Creating embryo object....
-Creating Object, ID is $0, Address : $0xecafb0, Value is $0, Type is $2
+Creating Object, ID is $0, Address : $0x6bc1f0, Value is $0, Type is $2
 THREAD_INIT: Creating Embryo thread....
 Embryo Thread Created!
 Initializing FVM PPU
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 15, SP : 103
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 18, SP : 103
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 15, SP : 103
+LOADR: 3508 3508
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 18, SP : 103
 [31m
 >>>>>>DEBUG Instruction OPCODE:{A} Executed, Will print CPU status: 
 >R0 : [3508]
->R1 : [7FAA]
->R2 : [B035D808]
->R3 : [7FAA]
+>R1 : [7FFF]
+>R2 : [F71F7808]
+>R3 : [7FFF]
 >R4 : [0]
 >R5 : [0]
 >RX : [0]
 >SP : [67]
 >IP : [12]
-EF : [B035D7E8]
-GF : [B035D7E8]
-LF : [7FAA]
-[0mCPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 19, SP : 103
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 21, SP : 102
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 24, SP : 101
+EF : [F71F77C8]
+GF : [F71F77C8]
+LF : [7FFF]
+[0mCPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 19, SP : 103
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 21, SP : 102
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 24, SP : 101
 [31m
 >>>>>>DEBUG Instruction OPCODE:{A} Executed, Will print CPU status: 
 >R0 : [3508]
->R1 : [7FAA]
->R2 : [B035D808]
->R3 : [7FAA]
+>R1 : [7FFF]
+>R2 : [F71F7808]
+>R3 : [7FFF]
 >R4 : [0]
 >R5 : [0]
 >RX : [0]
 >SP : [65]
 >IP : [18]
-EF : [B035D7E8]
-GF : [B035D7E8]
-LF : [7FAA]
-[0mCPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 25, SP : 101
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 27, SP : 100
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 29, SP : 99
+EF : [F71F77C8]
+GF : [F71F77C8]
+LF : [7FFF]
+[0mCPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 25, SP : 101
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 27, SP : 100
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 29, SP : 99
 [31m
 >>>>>>DEBUG Instruction OPCODE:{A} Executed, Will print CPU status: 
 >R0 : [3508]
->R1 : [7FAA]
->R2 : [B035D808]
->R3 : [7FAA]
+>R1 : [7FFF]
+>R2 : [F71F7808]
+>R3 : [7FFF]
 >R4 : [0]
 >R5 : [0]
 >RX : [0]
 >SP : [63]
 >IP : [1D]
-EF : [B035D7E8]
-GF : [B035D7E8]
-LF : [7FAA]
-[0mCPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 30, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 32, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 40, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 42, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 34, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 35, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 38, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 44, SP : 99
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 45, SP : 101
+EF : [F71F77C8]
+GF : [F71F77C8]
+LF : [7FFF]
+[0mCPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 30, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 32, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 40, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 42, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 34, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 35, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 38, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 44, SP : 99
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 45, SP : 101
 [31m
 >>>>>>DEBUG Instruction OPCODE:{A} Executed, Will print CPU status: 
 >R0 : [D5]
 >R1 : [0]
->R2 : [B035D808]
->R3 : [7FAA]
+>R2 : [F71F7808]
+>R3 : [7FFF]
 >R4 : [0]
 >R5 : [0]
 >RX : [0]
@@ -233,8 +234,8 @@ CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 45, SP : 101
 EF : [1]
 GF : [0]
 LF : [0]
-[0mCPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 46, SP : 101
-CPU_regs : 0xef20f0, CPU_Flags : 0xef1060, IP : 23, SP : 102
+[0mCPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 46, SP : 101
+CPU_regs : 0x6b9a30, CPU_Flags : 0x674670, IP : 23, SP : 102
 R0 - Processor Model: C00C1E5
 R1 - FVM Version MAJOR: 1
 R2 - FVM Version Minor: 59

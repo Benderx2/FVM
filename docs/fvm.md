@@ -48,6 +48,11 @@ NATIVE_CALL - Call native procedure stored in library <br>
 INIT_MP - Initialise Core II with IP <br>
 GETMEM - Get System Memory (R1 - Memory)<br>
 MEMCMP - Compare Memory Blocks (R1, R0 - Blocks, R2 - Size)<br>
+LSHIFT - Do Lshift <br>
+RSHIFT - Do Rshift <br>
+OR - Do bitwise OR <br>
+PUSHF - Push Flags (first 8-bit = E, second 8-bit = G, third 8-bit = L; fourth 8-bit = Z)
+POPF - Pop flags (format same as PUSHF)
 <h1>FPU Instructions </h1>
 F_SINX - Load sine of number pushed to stack, and push the result. (rad) <br>
 F_COSX - Load cosine of number pushed to stack, and push the result. (rad) <br>

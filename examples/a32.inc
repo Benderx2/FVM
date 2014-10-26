@@ -262,6 +262,30 @@ macro AND OP1, OP2
 	dd OP1
 	 dd OP2
 }
+macro LSHIFT OP1, OP2
+{
+	dd 0x5C
+	dd OP1
+	dd OP2
+}
+macro RSHIFT OP1, OP2
+{
+	dd 0x5B
+	dd OP1
+	dd OP2
+}
+macro OR OP1, OP2
+{
+	dd 0x5A
+	dd OP1
+	dd OP2
+}
+macro PUSHF {
+	dd 0x5D
+}
+macro POPF {
+	dd 0x5E
+}
 macro VM_EXIT
 {
 	dd 0xFF
