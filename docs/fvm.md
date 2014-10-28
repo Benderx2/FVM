@@ -12,8 +12,8 @@ LOAD_R5 - Load R5 <br>
 LOAD_SP - Load Stack Pointer <br>
 OPERATE - Do a operation on two operands and store result in the first. (MUL_XY - multiply, SUB_XY - Subtract, DIV_XY - Divide, ADD_XY - Add, 
 LOAD_R - Load register 1 with value of register 2 (replacement for the above) <br> 
-LOAD_M - Load Memory from Register to Register. Loads value at operand 1 (4 bytes) to operand 2.
-JMPF - Jump to address <br>
+LOAD_M - Load Memory from Register to Register. Loads value at operand 1 (4 bytes) to operand 2.<br>
+JMPF - Jump to address (registers can be used ONLY for this jump as of yet) <br>
 VM_CALL - Call Operating System specific function<br>
 CALLF - Call a procedure<br>
 RETF - Jump to return address on stack.<br>
@@ -51,8 +51,9 @@ MEMCMP - Compare Memory Blocks (R1, R0 - Blocks, R2 - Size)<br>
 LSHIFT - Do Lshift <br>
 RSHIFT - Do Rshift <br>
 OR - Do bitwise OR <br>
-PUSHF - Push Flags (first 8-bit = E, second 8-bit = G, third 8-bit = L; fourth 8-bit = Z)
-POPF - Pop flags (format same as PUSHF)
+PUSHF - Push Flags (first 8-bit = E, second 8-bit = G, third 8-bit = L; fourth 8-bit = Z)<br>
+POPF - Pop flags (format same as PUSHF)<br>
+DUP - Duplicate top value of stack and push.<br>
 <h1>FPU Instructions </h1>
 F_SINX - Load sine of number pushed to stack, and push the result. (rad) <br>
 F_COSX - Load cosine of number pushed to stack, and push the result. (rad) <br>

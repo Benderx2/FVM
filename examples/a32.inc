@@ -196,6 +196,11 @@ macro JMPF_L ADDRESS
 	dd 0x11
 	dd ADDRESS
 }
+macro JMPF_Z ADDRESS
+{
+	dd 0x5F
+	dd ADDRESS
+}
 ; LOAD_INTERRUPT - R0 = Handler Address (4-byte alinged), R1 = Interrupt Number
 macro LOAD_INTERRUPT
 {
@@ -279,6 +284,9 @@ macro OR OP1, OP2
 	dd 0x5A
 	dd OP1
 	dd OP2
+}
+macro DUP {
+	dd 0x60
 }
 macro PUSHF {
 	dd 0x5D

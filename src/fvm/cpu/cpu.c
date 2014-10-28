@@ -466,6 +466,7 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 						CPU_Flags->G = 1;
 						CPU_Flags->L = 0;
 				}
+				if(EVAL1 == 0) { CPU_Flags->Z = 1; } else { CPU_Flags->Z = 0; } 
 				CPU_regs->IP += 3;
 				break;
 			/* JEX - Jump if Equal Flag is SET */
@@ -1250,6 +1251,17 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				CPU_Flags->Z  = flaguni.cpu_flag.Z;
 				CPU_regs->r12++;
 				CPU_regs->IP++;
+				break;
+			case FVM_JMPFZ:
+				if(CPU_Flags->Z == true) {
+					CPU_regs->IP = Memory[CPU_regs->IP+1]/4;
+					break;
+				}
+				CPU_regs->IP++;
+				break;
+			case FVM_DUP:
+				Memory[CPU_regs->r12] = Memory[CPU_regs->r12+1];
+				CPU_regs->r12--; CPU_regs->IP++;
 				break;
 			/** FPU Functions **/
 			case FPU_SIN:	
