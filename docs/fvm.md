@@ -48,6 +48,7 @@ NATIVE_CALL - Call native procedure stored in library <br>
 INIT_MP - Initialise Core II with IP <br>
 GETMEM - Get System Memory (R1 - Memory)<br>
 MEMCMP - Compare Memory Blocks (R1, R0 - Blocks, R2 - Size)<br>
+MEMCPY - Copy Memory Bloacks (R0 - Dest, R1 - Src, R2 - Size)<br>
 LSHIFT - Do Lshift <br>
 RSHIFT - Do Rshift <br>
 OR - Do bitwise OR <br>

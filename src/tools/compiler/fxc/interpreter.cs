@@ -56,7 +56,6 @@ namespace fbuild
 			file.WriteLine ("PUSH R2");
 			file.WriteLine ("PUSH R4");
 			file.WriteLine (".loop:");
-
 			file.WriteLine ("_start:");
 			/** Intialize tables **/
 			tables.tokens = new List<string>();
@@ -71,8 +70,7 @@ namespace fbuild
 				Console.WriteLine("token: " + tables.tokens[i]);
 			}
 			int count=0;
-			while (count < tables.tokens.Count)
-			{
+			while (count < tables.tokens.Count) {
 				string printvalue = "";
 				if (tables.tokens [count] == "print") {
 					if (tables.tokens [count + 1] [0] == '$') {
@@ -83,7 +81,7 @@ namespace fbuild
 					} else {
 						printvalue = tables.tokens [count + 1];
 					}
-					string __str_name = "__" + datcount.ToString();
+					string __str_name = "__" + datcount.ToString ();
 					tables.DataTable.Add (__str_name + ":" + " db '" + printvalue + "'");
 					datcount++;
 					file.WriteLine ("LOAD_R0 " + __str_name + "\nCALLF _print");
@@ -93,16 +91,21 @@ namespace fbuild
 					tables.AST.Add (tables.tokens [count + 1]);
 					count += 2;
 				} else if (tables.tokens [count] == "int") {
-						temp_sint.name = tables.tokens [count + 1];
-						temp_sint.value = Convert.ToInt32 (tables.tokens [count + 2]);
-						tables.intTable.Add (temp_sint);
-						count += 3;
+					temp_sint.name = tables.tokens [count + 1];
+					temp_sint.value = Convert.ToInt32 (tables.tokens [count + 2]);
+					tables.intTable.Add (temp_sint);
+					count += 3;
 				} else if (tables.tokens [count] == "string") {
-						temp_sstring.name = tables.tokens [count + 1];
-						temp_sstring.value = tables.tokens [count + 2];
-						tables.stringTable.Add (temp_sstring);
-						count += 3;
-				} else if (tables.tokens [count] == "exit") {
+					temp_sstring.name = tables.tokens [count + 1];
+					temp_sstring.value = tables.tokens [count + 2];
+					tables.stringTable.Add (temp_sstring);
+					count += 3;
+				
+				}
+				else if(tables.tokens[count]=="asm"){
+					file.WriteLine (tables.tokens [count + 1]);
+					count += 2;
+			    } else if (tables.tokens [count] == "exit") {
 					file.WriteLine ("VM_EXIT");
 					count++;
 				} else if (tables.tokens [count] == "input") {

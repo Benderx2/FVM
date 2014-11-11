@@ -3,4 +3,5 @@ string s "wow wtf"
 print "hello world!"
 print $s
 input i
+asm "LOAD_R0 0x0"
 exit

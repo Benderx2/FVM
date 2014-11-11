@@ -21,6 +21,7 @@ CMPR R1, 13
 JMPF_E .quit
 CMPR R1, 0
 JMPF_E .loop
+VM_CALL 0x0
 STORE_BYTE
 JMPF .loop
 .quit:
@@ -30,6 +31,12 @@ RETF
 _strcmp:
 MEMCMP
 RETF
+_memcpy
+PUSH R0
+PUSH R1
+PUSH R2
+PUSH R4
+.loop:
 _start:
 LOAD_R0 __0
 CALLF _print
@@ -37,6 +44,7 @@ LOAD_R0 __1
 CALLF _print
 LOAD_R0 i
 CALLF _read
+LOAD_R0 0x0
 VM_EXIT
 _end_start:
 _data:
