@@ -1,0 +1,46 @@
+include "a32.inc"
+_print:
+PUSH R0
+PUSH R1
+.loop:
+LOAD_BYTE
+CMPR R1, 0
+JMPF_E .quit
+VM_CALL 0x0
+JMPF .loop
+.quit:
+POP R1
+POP R0
+RETF
+_read:
+PUSH R0
+PUSH R1
+.loop:
+VM_CALL 0x1
+STORE_BYTE
+CMPR R1, 0
+JMPF_E .quit
+JMPF .loop
+.quit:
+POP R1
+POP R0
+RETF
+_strcmp:
+MEMCMP
+RETF
+_start:
+LOAD_R0 __0
+CALLF _print
+LOAD_R0 __1
+CALLF _print
+LOAD_R0 i
+CALLF _read
+VM_EXIT
+_end_start:
+_data:
+__0: db 'hello world!'
+__1: db 'wow wtf'
+_end_data:
+_bss:
+i: times 256 db 0
+_end_bss:

@@ -36,6 +36,7 @@
 #include <fvm/mm/mm.h>
 #include <fvm/devices/fgx.h>
 #include <fvm/devices/ppu.h>
+#include <fvm/v_stack/v_stack.h>
 #ifdef _USE_PTHREAD
 #include <pthread.h>
 #endif
@@ -89,6 +90,8 @@ int main (int argc, const char *argv[])
 	signal(SIGILL, SIGILL_handler);
 	printf("Loading embryo library....\n");
 	load_native_library("./embryo.so");
+	printf("Initialising VM Stack Interface\n");
+	init_stack();
 	printf("Processing Command Line Arguments...\n");
 	if (argc < FVM_MIN_ARGS)
 	{

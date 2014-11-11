@@ -558,6 +558,14 @@ void emulate_FVM_instruction(FVM_REGISTERS_t* CPU_regs, FVM_REGISTERS_t* CPU2_re
 				FVM_IDTR[CPU_regs->r0].address = CPU_regs->r1 / 4;
 				CPU_regs->IP++;
 				break;
+			case FVM_MEMCPY:
+				byteptr = (uint8_t*)Memory;
+				int ____mem1 = CPU_regs->r0;
+				int ____mem2 = CPU_regs->r1;
+				for(int i = 0; i < CPU_regs->r2; i++)
+				{
+					Memory[____mem1+i] = Memory[____mem2+i];
+				}
 			/* IRETX - Return from interrupt */
 			case FVM_IRETX:
 				CPU_regs->IP = Memory[CPU_regs->r12+1];

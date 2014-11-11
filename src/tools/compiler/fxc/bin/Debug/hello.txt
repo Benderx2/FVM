@@ -1,0 +1,6 @@
+buffer i 256
+string s "wow wtf"
+print "hello world!"
+print $s
+input i
+exit

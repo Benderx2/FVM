@@ -160,5 +160,6 @@
 #define FVM_POPF 0x5E
 #define FVM_JMPFZ 0x5F
 #define FVM_DUP 0x60
+#define FVM_MEMCPY 0x61
 #endif
 

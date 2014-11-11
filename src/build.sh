@@ -32,8 +32,9 @@ gcc $CFLAGS $DFLAGS -c fvm/devices/video.c -o video.o -I$FVM_INCLUDE -I$SDL_INCL
 gcc $CFLAGS $DFLAGS -c fvm/thread/thread.c -o thread.o -std=gnu99 -I$FVM_INCLUDE
 gcc $CFLAGS $DFLAGS -c fvm/mm/mm.c -o mm.o -std=gnu99 -I$FVM_INCLUDE
 gcc $CFLAGS $DFLAGS -c fvm/cpu/m_cpu.c -o m_cpu.o -std=gnu99 -I$FVM_INCLUDE
+gcc $CFLAGS $DFLAGS -c fvm/v_stack/v_stack.c -o v_stack.o -std=gnu99 -I$FVM_INCLUDE
 gcc $DFLAGS -c fvm/native/native.c -o native.o -std=gnu99  -I$FVM_INCLUDE -I$SDL_INCLUDE
-gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o fv11.o native.o  cpu.o initrd.o thread.o sighandle.o fpu.o objects.o video.o mm.o m_cpu.o -lm -lSDL -lSDL_ttf -lSDL_image -ldl -pthread
+gcc -o fvm.out fvm.o error.o mem.o rom.o fcall.o sdl.o bitutils.o vmm.o fv11.o native.o  cpu.o initrd.o thread.o sighandle.o fpu.o objects.o video.o mm.o m_cpu.o v_stack.o -lm -lSDL -lSDL_ttf -lSDL_image -ldl -pthread
 # Mov to bin
 mv ./fvm.out ../bin/fvm.out 
 mv ./diskgen.out ../bin/diskgen.out
