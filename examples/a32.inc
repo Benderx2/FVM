@@ -373,6 +373,9 @@ macro SUBLEQ a, b, c {
 	dd b
 	dd c
 }
+macro MEMCMP {
+	dd 0x53
+}
 macro DEINIT_MP {
 	dd 0x48
 }
