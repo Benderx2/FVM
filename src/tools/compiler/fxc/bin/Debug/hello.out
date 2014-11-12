@@ -1,4 +1,5 @@
 include "a32.inc"
+; Flouronix Compiler Standard Library routines.
 _print:
 PUSH R0
 PUSH R1
@@ -31,25 +32,32 @@ RETF
 _strcmp:
 MEMCMP
 RETF
-_memcpy
-PUSH R0
-PUSH R1
-PUSH R2
-PUSH R4
-.loop:
+_memcpy:
+MEMCPY
+RETF
 _start:
+_main:
 LOAD_R0 __0
-CALLF _print
-LOAD_R0 __1
 CALLF _print
 LOAD_R0 i
 CALLF _read
-LOAD_R0 0x0
+PUSH 2
+PUSH 2
+LOAD_FROM_SP  2
+LOAD_R0 R1
+LOAD_FROM_SP  1
+CMPR R1, R0
+JMPF_E _lbl_0
+JMPF @f
+_lbl_0:
+LOAD_R0 __1
+CALLF _print
+@@:
 VM_EXIT
 _end_start:
 _data:
-__0: db 'hello world!'
-__1: db 'wow wtf'
+__0: db 'hello world!', 0
+__1: db 'hello again', 0
 i: times 256 db 0
 _end_data:
 _bss:

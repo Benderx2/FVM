@@ -1,7 +1,11 @@
+proc main 0
 buffer i 256
-string s "wow wtf"
 print "hello world!"
-print $s
 input i
-asm "LOAD_R0 0x0"
+int a 2
+int b 2
+if a == b
+	print "hello again"
+endif
 exit
+endf

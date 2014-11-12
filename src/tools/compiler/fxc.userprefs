@@ -2,11 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="fxc/interpreter.cs">
     <Files>
-      <File FileName="fxc/Program.cs" Line="13" Column="24" />
-      <File FileName="fxc/beginfbuild.cs" Line="13" Column="60" />
-      <File FileName="fxc/tables.cs" Line="23" Column="28" />
-      <File FileName="fxc/interpreter.cs" Line="88" Column="33" />
-      <File FileName="fxc/Properties/iconsole.cs" Line="2" Column="34" />
+      <File FileName="../../../LICENSE" Line="1" Column="1" />
+      <File FileName="fxc/Program.cs" Line="1" Column="1" />
+      <File FileName="fxc/beginfbuild.cs" Line="1" Column="1" />
+      <File FileName="fxc/tables.cs" Line="1" Column="1" />
+      <File FileName="fxc/interpreter.cs" Line="331" Column="19" />
+      <File FileName="fxc/Properties/iconsole.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

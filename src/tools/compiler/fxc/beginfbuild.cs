@@ -10,8 +10,13 @@ namespace fbuild
 		public static int buildall(string sourcefile, string output)
 		{
 			// build tables
-			fbuild.tables.intTable = new List<fbuild.tables.s_int>();
-			fbuild.tables.stringTable = new List<fbuild.tables.s_string>();
+			tables.tokens = new List<string>();
+			tables.intTable = new List<tables.s_int>();
+			tables.stringTable = new List<tables.s_string>();
+			tables.DataTable = new List<string>();
+			tables.BufferTable = new List<tables.s_buffer>();
+			tables.functionTable = new List<tables.s_function>();
+			tables.TempFunctionTable = new List<string>();
 			// Open the source file for reading
 			string readall = System.IO.File.ReadAllText(sourcefile);
 			// Yup now start interpreting
