@@ -5,7 +5,12 @@ input i
 int a 2
 int b 2
 if a == b
-	print "hello again"
+print "hello again"
 endif
+while a < b
+print "wwo"
+endw
+# writebuf - writes a byte to buffer, writebuf <buffer_name> <index> <char / int to write> #
+writebuf i 8 12
 exit
 endf

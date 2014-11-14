@@ -104,6 +104,21 @@ macro LOAD_SP VALUE
 	dd 0x07
 	dd VALUE
 }
+macro LOAD a, b {
+	if a = R0
+	LOAD_R0 b
+	else if a = R1
+	LOAD_R1 b
+	else if a = R2
+	LOAD_R2 b
+	else if a = R3
+	LOAD_R3 b
+	else if a = R4
+	LOAD_R4 b
+	else if a = R5
+	LOAD_R5 b
+	end if
+}
 ; Load Memory from second register to first
 macro LOAD_M reg1, reg2
 {
@@ -200,6 +215,15 @@ macro JMPF_Z ADDRESS
 {
 	dd 0x5F
 	dd ADDRESS
+}
+; Jump if greater or equal
+macro JMPF_GE l {
+	JMPF_E l
+	JMPF_G l
+}
+macro JMPF_LE l {
+	JMPF_E l
+	JMPF_L l
 }
 ; LOAD_INTERRUPT - R0 = Handler Address (4-byte alinged), R1 = Interrupt Number
 macro LOAD_INTERRUPT

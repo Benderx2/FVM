@@ -36,28 +36,45 @@ _memcpy:
 MEMCPY
 RETF
 _start:
+JMPF _main
 _main:
-LOAD_R0 __0
+LOAD_FROM_SP 0
+LOAD_R5 R1
+LOAD R0, __0
 CALLF _print
-LOAD_R0 i
+LOAD R0, i
 CALLF _read
 PUSH 2
 PUSH 2
 LOAD_FROM_SP  2
-LOAD_R0 R1
+LOAD R0, R1
 LOAD_FROM_SP  1
 CMPR R1, R0
 JMPF_E _lbl_0
 JMPF @f
 _lbl_0:
-LOAD_R0 __1
+LOAD R0, __1
 CALLF _print
 @@:
+_wlbl__1:
+LOAD_FROM_SP 2
+LOAD R0, R1
+LOAD_FROM_SP 1
+CMPR R0, R1
+JMPF_GE _wlbl__1_end
+LOAD R0, __2
+CALLF _print
+JMPF _wlbl__1
+_wlbl__1_end:
+LOAD R1, 12
+LOAD R0, i+8
+STORE_BYTE
 VM_EXIT
 _end_start:
 _data:
 __0: db 'hello world!', 0
 __1: db 'hello again', 0
+__2: db 'wwo', 0
 i: times 256 db 0
 _end_data:
 _bss:
