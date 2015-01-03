@@ -1,3 +1,10 @@
+<h1>Please note: R3X is replacing FVM</h1>
+This project had it coming, firstly, the CPU core was horribly written, and I apologise<br>
+for that, secondly it had loads of bugs, and thirdly it was getting unmaintainable. I've made an attempt to revive the project by almost rewriting the entire thing. I won't say it's good, but it's definitely better. The current project support things FVM couldn't, dynamic linking, exception handling, streams, multithreading and a whole lot of new features<br>
+It's <b>more</b> portable than FVM too, and has been tested on x86, x86_64, PPC, and ARM64<br>
+architectures. Please find the new repository here: https://github.com/Benderx2/R3X<br>
+This project is for archival purposes only, don't bother to use the code <b>at all</b>!
+
 FVM
 ===
 ![alt tag](http://i.imgur.com/cq0EQDP.png)<br>
